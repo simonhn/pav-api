@@ -1,0 +1,5 @@
+<%= @har %>([
+<% for artist in @artists %>
+{"artistname": "<%= artist.artistname %>"},
+<% end %>
+])

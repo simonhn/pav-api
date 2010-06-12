@@ -1,0 +1,15 @@
+<h1>Tracks for <%= @album.albumname %></h1>
+<% @tracks.each do |track| %>
+<ul>
+<% if !track.id.nil? %><li>id: <%= track.id %></li><% end %>
+<% if !track.title.nil? %><li>title: <%= track.title %></li><% end %>
+<% if !track.tracknote.nil? %><li><%= track.tracknote %></li><% end %>
+<% if !track.tracklink.nil? %><li><%= track.tracklink %></li><% end %>
+<% if !track.show.nil? %><li><%= track.show %></li><% end %>
+<% if !track.talent.nil? %><li><%= track.talent %></li><% end %>
+<% if !track.duration.nil? %><li><%= track.duration %></li><% end %>
+<% if !track.publisher.nil? %><li><%= track.publisher %></li><% end %>
+<% if !track.datecopyrighted.nil? %><li><%= track.datecopyrighted %></li><% end %>
+<li>date: <%= track.date %></li>
+</ul>
+<% end %>

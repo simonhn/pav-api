@@ -1,0 +1,10 @@
+<h1>Plays for <%= @track.title %></h1>
+<p>
+<% for play in @plays %>
+	<ul>
+		<li>id: <%= play.id %></li>
+		<li>played time: <%= play.playedtime %></li>
+		<li>channel id: <%= play.channel_id %></li>
+	</ul>
+<% end %>
+</p>

@@ -1,0 +1,9 @@
+<h1>Artists for <%= @track.title %></h1>
+<p>
+<% for artist in @artists %>
+	<ul>
+		<li>id: <%= artist.id %></li>
+		<li>artist name: <%= artist.artistname %></li>
+	</ul>
+<% end %>
+</p>

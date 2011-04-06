@@ -29,11 +29,11 @@ end
 
 #Error handling
 not_found do
-  'This is nowhere to be found'
+  json_status 404, "Not found"
 end
 
 error do
-  'Sorry there was a nasty error - ' + request.env['sinatra.error'].name
+  json_status 500, env['sinatra.error'].message
 end
 
 helpers do
@@ -51,6 +51,14 @@ helpers do
        @user = @config['authuser']
        @pass = @config['authpass']
       @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [@user.to_s, @pass.to_s]
+    end
+    
+    def json_status(code, reason)
+          status code
+          {
+            :status => code,
+            :reason => reason
+          }.to_json
     end
     
     def make_to_from(played_from, played_to)
@@ -77,6 +85,11 @@ end
 
 #ROUTES
 
+
+post '/api' do
+   data = JSON.parse params[:param1].to_s
+   data
+end
 #GET
 # Front page
 get '/' do
@@ -330,4 +343,5 @@ get '/stats' do
   respond_to do |wants|
     wants.html { erb :stats }
   end
+
 end

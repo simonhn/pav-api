@@ -6,10 +6,7 @@
 adapter: mysql
 host: localhost
 username: simonhn
+database:  <%= Capistrano::CLI.ui.ask("Enter MySQL database to connect to: ") %>
 password: <%= Capistrano::CLI.ui.ask("Enter MySQL database password: ") %>
-database: ratpack
 encoding: utf8
 timeout: 5000
-
-authuser: admin
-authpass: <%= Capistrano::CLI.ui.ask("Enter Basic http password: ") %>

@@ -1,8 +1,6 @@
 require 'rubygems'
-#gem 'sinatra', '=0.9.6'
 require 'sinatra'
-#require 'rack/cache'
-require 'pavapi'
+require './pavapi'
 
 #use Rack::Cache,
 #  :verbose     => true,

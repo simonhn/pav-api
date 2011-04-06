@@ -1,7 +1,7 @@
 #core stuff
 require 'rubygems'
 require 'sinatra'
-require 'models'
+require './models'
 
 #template systems
 require 'json' 

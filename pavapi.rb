@@ -93,17 +93,17 @@ end
 
 post '/artist' do
    data = JSON.parse params[:data].to_s
-   puts data['artistname']
+   puts data['artistname'].inspect
 end
 
 post '/track' do
    data = JSON.parse params[:data].to_s
-   puts data['title']
+   puts data['title'].inspect
 end
 
 post '/play' do
    data = JSON.parse params[:data].to_s
-   data
+   puts data.inspect
 end
 #GET
 # Front page

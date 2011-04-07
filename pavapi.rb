@@ -87,7 +87,22 @@ end
 
 
 post '/api' do
-   data = JSON.parse params[:param1].to_s
+   data = JSON.parse params[:data].to_s
+   data
+end
+
+post '/artist' do
+   data = JSON.parse params[:data].to_s
+   data
+end
+
+post '/track' do
+   data = JSON.parse params[:data].to_s
+   data
+end
+
+post '/play' do
+   data = JSON.parse params[:data].to_s
    data
 end
 #GET

@@ -93,11 +93,13 @@ end
 
 post '/artist' do
    data = JSON.parse params[:data].to_s
+   puts data.inspect
    puts data['artistname'].inspect
 end
 
 post '/track' do
    data = JSON.parse params[:data].to_s
+   puts data.inspect
    puts data['title'].inspect
 end
 

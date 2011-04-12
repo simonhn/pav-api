@@ -100,7 +100,7 @@ end
 post "/#{@version}/track" do
    protected!
    data = JSON.parse params[:data].to_s
-   puts data
+   data.inspect
 end
 
 post "/#{@version}/play" do

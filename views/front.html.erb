@@ -4,7 +4,7 @@
 </style>
 
 <div class="snippet">
- <!-- <form action="/" method="POST">
+ <!-- <form action ="/1/" method="POST">
 		<p>
     <label for="artistname">Artist:</label>
     <input type="text" name="artistname" id="artistname"  size="20"/>
@@ -21,54 +21,53 @@
 	</form> 
 	-->
 <p>
-The pav:api is under development and currently supports the following url 
-patterns. More to come.
+The pav:api exposes playlist data. It is under development and currently supports the following url patterns. More to come.
 </p>
 <p>
 Return type can either be infered by content negotiation (by setting request Accept header to 
-desired content type) or by appending the content type to the url (.html, .xml, .json). JsonP for cross-domain access is delivered to requests with callback param.
+desired content type), by appending the content type to the url (.html, .xml, .json) or by adding ?format=(html, xml, json) to the query parameter. JsonP for cross-domain access is delivered to requests with callback param. Default return type is currently html but will change to json when the api is put in production.
 </p>
 
 <ul>
-	<li><a href="/artists">/artists {html | xml | json}</a></li>
+	<li><a href ="/1/artists">/artists {html | xml | json}</a></li>
 
-	<li><a href="/artists/4">/artists/:limit {html | xml | json}</a></li>
+	<li><a href ="/1/artists/4">/artists/:limit {html | xml | json}</a></li>
 
-	<li><a href="/artist/2">/artist/:id {html | xml | json}</a></li>
+	<li><a href ="/1/artist/2">/artist/:id {html | xml | json}</a></li>
 
-	<li><a href="/artist/2/tracks">/artist/:id/tracks {html | xml}</a></li>
+	<li><a href ="/1/artist/2/tracks">/artist/:id/tracks {html | xml}</a></li>
 
-	<li><a href="/albums">/albums {html | xml | json}</a></li>
+	<li><a href ="/1/albums">/albums {html | xml | json}</a></li>
 	
-	<li><a href="/albums/10">/albums/:limit {html | xml | json}</a></li>
+	<li><a href ="/1/albums/10">/albums/:limit {html | xml | json}</a></li>
 	
-	<li><a href="/album/2">/album/:id {html | xml | json}</a></li>
+	<li><a href ="/1/album/2">/album/:id {html | xml | json}</a></li>
 
-	<li><a href="/album/2/tracks.xml">/album/:id/tracks {html | xml | json}</a></li>
+	<li><a href ="/1/album/2/tracks.xml">/album/:id/tracks {html | xml | json}</a></li>
 
-	<li><a href="/tracks">/tracks/ {html | xml | json}</a></li></li>
+	<li><a href ="/1/tracks">/tracks/ {html | xml | json}</a></li></li>
 
-	<li><a href="/tracks/40">/tracks/:limit {html | xml | json}</a></li></li>
+	<li><a href ="/1/tracks/40">/tracks/:limit {html | xml | json}</a></li></li>
 	
-	<li><a href="/track/2">/track/:id {html | xml | json}</a></li>
+	<li><a href ="/1/track/2">/track/:id {html | xml | json}</a></li>
 
-	<li><a href="/track/6/artists">/track/:id/artists {html | xml | json}</a></li>
+	<li><a href ="/1/track/6/artists">/track/:id/artists {html | xml | json}</a></li>
 
-	<li><a href="/track/6/albums">/track/:id/albums {html | xml | json}</a></li>
+	<li><a href ="/1/track/6/albums">/track/:id/albums {html | xml | json}</a></li>
 
-	<li><a href="/track/6/plays">/track/:id/plays {html | xml | json}</a></li>
+	<li><a href ="/1/track/6/plays">/track/:id/plays {html | xml | json}</a></li>
 
-	<li><a href="/channel/1.xml">/channel/:id {xml}</a></li>
+	<li><a href ="/1/channel/1.xml">/channel/:id {xml}</a></li>
 
-	<li><a href="/channel/1/plays.xml">/channel/:id/plays {xml}</a></li>
+	<li><a href ="/1/channel/1/plays.xml">/channel/:id/plays {xml}</a></li>
 
-	<li><a href="/chart/track.xml?played_from=2010-05-10">/chart/track?played_from=yyyy-mm-dd {xml}</a></li>
+	<li><a href ="/1/chart/track.xml?played_from=2010-05-10">/chart/track?played_from=yyyy-mm-dd {xml}</a></li>
 
-	<li><a href="/chart/artist.xml">/chart/artist {xml}</a></li>
+	<li><a href ="/1/chart/artist.xml">/chart/artist {xml}</a></li>
 
-	<li><a href="/chart/artist.xml?played_from=2010-05-10&played_to=2010-05-11">/chart/artist?played_from=yyyy-mm-dd&played_to=yyyy-mm-dd {xml}</a></li>
+	<li><a href ="/1/chart/artist.xml?played_from=2010-05-10&played_to=2010-05-11">/chart/artist?played_from=yyyy-mm-dd&played_to=yyyy-mm-dd {xml}</a></li>
 	
-	<li><a href="/chart/album.xml">/chart/album {xml}</a></li>
+	<li><a href ="/1/chart/album.xml">/chart/album {xml}</a></li>
 
 	<li class="missing">/chart/channel/:id/tracks</li>
 
@@ -76,8 +75,8 @@ desired content type) or by appending the content type to the url (.html, .xml, 
 
 	<li class="missing">/chart/channel/:id/albums</li>
 	
-	<li><a href="/stats">/stats</a></li>
+	<li><a href ="/1/stats">/stats</a></li>
 
-	<li><a href="/search/a">/search/query {html | xml | json}</a></li>
+	<li><a href ="/1/search/a">/search/query {html | xml | json}</a></li>
 
 </ul></div>

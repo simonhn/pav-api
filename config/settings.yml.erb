@@ -10,3 +10,6 @@ database:  <%= Capistrano::CLI.ui.ask("Enter MySQL database to connect to: ") %>
 password: <%= Capistrano::CLI.ui.ask("Enter MySQL database password: ") %>
 encoding: utf8
 timeout: 5000
+
+authuser:  admin
+authpass: <%= Capistrano::CLI.ui.ask("Enter http auth password: ") %>

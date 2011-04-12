@@ -10,16 +10,17 @@ require 'builder'
 
 require 'sinatra/respond_to'
 Sinatra::Application.register Sinatra::RespondTo
+@version = "1"
 
 # MySQL connection:
 configure do
   DataMapper::Logger.new('log/datamapper.log', :debug)
   @config = YAML::load( File.open( 'config/settings.yml' ) )
   @connection = "#{@config['adapter']}://#{@config['username']}:#{@config['password']}@#{@config['host']}/#{@config['database']}";
-  DataMapper::setup(:default, @connection)
-  
+  DataMapper::setup(:default, @connection)  
   DataMapper.auto_upgrade!
   #DataMapper::auto_migrate!
+  set :default_content, :html
 end
 
 #Caching 1 minute - must adjust
@@ -40,7 +41,7 @@ helpers do
   
   def protected!
       unless authorized?
-        response['WWW-Authenticate'] = %(Basic realm="Testing HTTP Auth")
+        response['WWW-Authenticate'] = %(Basic realm="Auth needed for post requests")
         throw(:halt, [401, "Not authorized\n"])
       end
     end
@@ -86,27 +87,27 @@ end
 #ROUTES
 
 
-post '/api' do
+post "/#{@version}/api" do
    data = JSON.parse params[:data].to_s
    data
 end
 
-post '/artist' do
+post "/#{@version}/artist" do
    data = JSON.parse params[:data].to_s
-   puts data.inspect
-   puts data['artistname'].inspect
+   data.inspect
 end
 
-post '/track' do
+post "/#{@version}/track" do
+   protected!
    data = JSON.parse params[:data].to_s
-   puts data.inspect
-   puts data['title'].inspect
+   puts data
 end
 
-post '/play' do
+post "/#{@version}/play" do
    data = JSON.parse params[:data].to_s
    puts data.inspect
 end
+
 #GET
 # Front page
 get '/' do
@@ -114,17 +115,17 @@ get '/' do
 end
 
 #show all artists
-get '/artists' do
+get "/#{@version}/artists" do
   @artists =  Artist.all(:limit => 10, :order => [:created_at.desc ])
   respond_to do |wants|
+    wants.json { @artists.to_json }
     wants.html { erb :artists }
     wants.xml { builder :artists }
-    wants.json { @artists.to_json }
   end
 end
 
 #show all artists
-get '/artists/:limit' do
+get "/#{@version}/artists/:limit" do
   @artists =  Artist.all(:limit => params[:limit].to_i, :order => [:created_at.desc ])
   respond_to do |wants|
     wants.html { erb :artists }
@@ -134,7 +135,7 @@ get '/artists/:limit' do
 end
 
 # show artist from id
-get '/artist/:id' do
+get "/#{@version}/artist/:id" do
   @artist = Artist.get(params[:id])
   respond_to do |wants|
     wants.html { erb :artist }
@@ -144,7 +145,7 @@ get '/artist/:id' do
 end
 
 # show tracks from artist
-get '/artist/:id/tracks' do
+get "/#{@version}/artist/:id/tracks" do
   @artist = Artist.get(params[:id])
   @tracks = Artist.get(params[:id]).tracks
   respond_to do |wants|
@@ -154,7 +155,7 @@ get '/artist/:id/tracks' do
 end
 
 # show tracks from artist
-get '/artist/:id/plays' do
+get "/#{@version}/artist/:id/plays" do
   @artist = Artist.get(params[:id])
   @plays = Artist.get(params[:id]).tracks.plays
   respond_to do |wants|
@@ -164,7 +165,7 @@ get '/artist/:id/plays' do
 end
 
 #show all albums
-get '/albums' do
+get "/#{@version}/albums" do
   @albums =  Album.all(:limit => 10, :order => [:created_at.desc ])
     respond_to do |wants|
       wants.html { erb :albums }
@@ -174,7 +175,7 @@ get '/albums' do
 end
 
 #show all albums with limit
-get '/albums/:limit' do
+get "/#{@version}/albums/:limit" do
   @albums =  Album.all(:limit => params[:limit].to_i, :order => [:created_at.desc ])
   respond_to do |wants|
     wants.html { erb :albums }
@@ -184,7 +185,7 @@ get '/albums/:limit' do
 end
 
 # show album from id
-get '/album/:id' do
+get "/#{@version}/album/:id" do
   @album = Album.get(params[:id])
   respond_to do |wants|
     wants.html { erb :album }
@@ -194,7 +195,7 @@ get '/album/:id' do
 end
 
 # show tracks for an album - json version not perfect
-get '/album/:id/tracks' do
+get "/#{@version}/album/:id/tracks" do
   @album = Album.get(params[:id])
   @tracks = Album.get(params[:id]).tracks
   respond_to do |wants|
@@ -205,7 +206,7 @@ get '/album/:id/tracks' do
 end
 
 #show tracks
-get '/tracks' do
+get "/#{@version}/tracks" do
  @tracks = Track.all(:limit => 10, :order => [:created_at.desc ])
  respond_to do |wants|
     wants.html { erb :tracks }
@@ -215,7 +216,7 @@ get '/tracks' do
 end
 
 #show tracks with limit
-get '/tracks/:limit' do
+get "/#{@version}/tracks/:limit" do
   @tracks = Track.all(:limit => params[:limit].to_i, :order => [:created_at.desc ])
   respond_to do |wants|
     wants.html { erb :tracks }
@@ -225,7 +226,7 @@ get '/tracks/:limit' do
 end
 
 # show track
-get '/track/:id' do
+get "/#{@version}/track/:id" do
   @track = Track.get(params[:id])
   respond_to do |wants|
     wants.html { erb :track }
@@ -235,7 +236,7 @@ get '/track/:id' do
 end
 
 #show artists for a track
-get '/track/:id/artists' do
+get "/#{@version}/track/:id/artists" do
   @track = Track.get(params[:id])
   @artists = Track.get(params[:id]).artists
   respond_to do |wants|
@@ -246,7 +247,7 @@ get '/track/:id/artists' do
 end
 
 #show albums for a track
-get '/track/:id/albums' do
+get "/#{@version}/track/:id/albums" do
   @track = Track.get(params[:id])
   @albums = Track.get(params[:id]).albums
   respond_to do |wants|
@@ -257,7 +258,7 @@ get '/track/:id/albums' do
 end
 
 # show plays for a track
-get '/track/:id/plays' do
+get "/#{@version}/track/:id/plays" do
   @track = Track.get(params[:id])
   @plays = Track.get(params[:id]).plays
   respond_to do |wants|
@@ -268,7 +269,7 @@ get '/track/:id/plays' do
 end
 
 # show all channels
-get '/channels' do
+get "/#{@version}/channels" do
     @channels = Channel.all
     respond_to do |wants|
       wants.xml { @channels.to_xml }
@@ -277,7 +278,7 @@ get '/channels' do
 end
 
 # show channel from id
-get '/channel/:id' do
+get "/#{@version}/channel/:id" do
     @channel = Channel.get(params[:id])
     respond_to do |wants|
       wants.xml { @channel.to_xml }
@@ -286,7 +287,7 @@ get '/channel/:id' do
 end
 
 # show tracks for specific channel
-get '/channel/:id/plays' do
+get "/#{@version}/channel/:id/plays" do
   @channel_plays = Channel.get(params[:id]).plays
   @channel_tracks = Channel.get(params[:id]).plays(:limit =>10,:order => [:playedtime.desc ]).tracks
   respond_to do |wants|
@@ -296,7 +297,7 @@ get '/channel/:id/plays' do
 end
 
 # chart of top tracks by name
-get '/chart/track' do
+get "/#{@version}/chart/track" do
   #date in this format: 2010-05-11 01:06:14
   to_from = make_to_from(params[:played_from], params[:played_to])
   @tracks = repository(:default).adapter.select("select artists.artistname, tracks.id, tracks.title, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id order by cnt DESC limit 10")
@@ -306,7 +307,7 @@ get '/chart/track' do
 end
 
 # chart of top tracks by name
-get '/chart/track/channel/:id' do
+get "/#{@version}/chart/track/channel/:id" do
   #date in this format: 2010-05-11 01:06:14
   to_from = make_to_from(params[:f], params[:t])
   limit = params[:l]
@@ -320,7 +321,7 @@ end
 
 
 # chart of top artist by name
-get '/chart/artist' do
+get "/#{@version}/chart/artist" do
  to_from = make_to_from(params[:played_from], params[:played_to])
  @artists = repository(:default).adapter.select("select sum(cnt) as count, har.artistname, har.id from (select artists.artistname, artists.id, artist_tracks.artist_id, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id= artists.id #{to_from} group by tracks.id) as har group by har.artistname order by count desc limit 10")
  respond_to do |wants|
@@ -328,7 +329,7 @@ get '/chart/artist' do
   end
 end
 
-get '/chart/album' do
+get "/#{@version}/chart/album" do
   to_from = make_to_from(params[:played_from], params[:played_to])
   @albums = repository(:default).adapter.select("select albums.albumname, albums.id as album_id, tracks.id as track_id, count(*) as cnt from tracks, plays, albums, album_tracks where tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id order by cnt DESC limit 10")
   respond_to do |wants|
@@ -337,7 +338,7 @@ get '/chart/album' do
 end
 
 # search artist by name
-get '/search/:q' do
+get "/#{@version}/search/:q" do
   @artists = Artist.all(:artistname.like =>'%'+params[:q]+'%')
   respond_to do |wants|
     wants.html { erb :artists }
@@ -347,12 +348,12 @@ get '/search/:q' do
 end
 
 #Sinatra version info
-get '/about' do
+get "/#{@version}/about" do
   "I'm running version " + Sinatra::VERSION 
 end
 
 #Count all artists
-get '/stats' do
+get "/#{@version}/stats" do
   @artistcount = Artist.count
   @trackcount = Track.count
   @playcount = Play.count

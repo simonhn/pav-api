@@ -48,7 +48,7 @@ helpers do
 
     def authorized?
       @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-      @config = YAML::load( File.open( 'conf/settings.yml' ) )
+      @config = YAML::load( File.open( 'config/settings.yml' ) )
        @user = @config['authuser']
        @pass = @config['authpass']
       @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [@user.to_s, @pass.to_s]

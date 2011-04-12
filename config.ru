@@ -12,7 +12,6 @@ use Rack::JSONP
 set :environment,  :development
 disable :run
 enable :logging, :dump_errors, :raise_errors, :show_exceptions
-
 # so cucumber can find the view templates
 configure do
   set :views, "#{File.dirname(__FILE__)}/views"

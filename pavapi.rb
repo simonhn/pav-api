@@ -2,11 +2,20 @@
 require 'rubygems'
 require 'sinatra'
 require './models'
+require './store_methods'
 
 #template systems
 require 'json' 
 require 'rack/contrib/jsonp'
 require 'builder'
+
+#musicbrainz stuff
+require 'rbrainz'
+include MusicBrainz
+require 'logger'  
+require 'rchardet'
+
+require 'chronic_duration'
 
 require 'sinatra/respond_to'
 Sinatra::Application.register Sinatra::RespondTo
@@ -15,6 +24,9 @@ Sinatra::Application.register Sinatra::RespondTo
 # MySQL connection:
 configure do
   DataMapper::Logger.new('log/datamapper.log', :debug)
+  #DataMapper::Model.raise_on_save_failure = true
+  $LOG = Logger.new('log/pavstore.log', 'monthly')
+  
   @config = YAML::load( File.open( 'config/settings.yml' ) )
   @connection = "#{@config['adapter']}://#{@config['username']}:#{@config['password']}@#{@config['host']}/#{@config['database']}";
   DataMapper::setup(:default, @connection)  
@@ -81,32 +93,20 @@ helpers do
       if (!played_from.nil? && played_to.nil?)
        return "AND playedtime > '#{played_from}'"
       end
-    end
+    end  
 end
 
 #ROUTES
 
 
-post "/#{@version}/api" do
-   data = JSON.parse params[:data].to_s
-   data
-end
-
-post "/#{@version}/artist" do
-   data = JSON.parse params[:data].to_s
-   data.inspect
-end
-
 post "/#{@version}/track" do
-   protected!
-   data = JSON.parse params[:data].to_s
-   data.inspect
+   protected!  
+   data = JSON.parse params[:payload].to_json
+   if !data['item']['artist']['artistname'].nil? && Play.count(:playedtime => data['item']['playedtime'], :channel_id => data['channel'])==0
+      store_hash(data['item'], data['channel'])
+   end
 end
 
-post "/#{@version}/play" do
-   data = JSON.parse params[:data].to_s
-   puts data.inspect
-end
 
 #GET
 # Front page
@@ -289,7 +289,7 @@ end
 # show tracks for specific channel
 get "/#{@version}/channel/:id/plays" do
   @channel_plays = Channel.get(params[:id]).plays
-  @channel_tracks = Channel.get(params[:id]).plays(:limit =>10,:order => [:playedtime.desc ]).tracks
+  @channel_tracks = Channel.get(params[:id]).plays(:limit =>10,:order => [:playedtime.desc ])
   respond_to do |wants|
     wants.xml { @channel_tracks.to_xml }
     wants.json { @channel_tracks.to_json }

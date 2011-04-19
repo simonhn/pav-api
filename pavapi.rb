@@ -103,6 +103,21 @@ get '/' do
   erb :front
 end
 
+# show tracks from artist
+get "/#{@version}/artist/:id/tracks" do
+  if params[:type] == 'mbid' || params[:id].length == 36
+    @artist = Artist.first(:artistmbid => params[:id])
+  else
+    @artist = Artist.get(params[:id])
+  end
+  @tracks = @artist.tracks
+  
+  respond_to do |wants|
+    wants.html { erb :artist_tracks }
+    wants.xml { builder :artist_tracks }
+  end
+end
+
 #show all artists, defaults to 10, ordered by created date
 get "/#{@version}/artists" do
   limit = params[:limit]
@@ -134,26 +149,8 @@ get "/#{@version}/artist/:id" do
   end
 end
 
-# show tracks from artist
-get "/#{@version}/artist/:id/tracks" do
-  limit = params[:limit].to_i
-  limit ||= 10
-  channel = params[:channel]
-  
-  if params[:type] == 'mbid' || params[:id].length == 36
-    @artist = Artist.first(:artistmbid => params[:id])
-  else
-    @artist = Artist.get(params[:id])
-  end
-  @tracks = @artist.tracks
-  
-  respond_to do |wants|
-    wants.html { erb :artist_tracks }
-    wants.xml { builder :artist_tracks }
-  end
-end
 
-# show tracks from artist
+# show plays from artist
 get "/#{@version}/artist/:id/plays" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @artist = Artist.first(:artistmbid => params[:id])

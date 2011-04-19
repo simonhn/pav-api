@@ -1,1 +1,14 @@
-<p>There's <%= @artistcount %> artists, <%= @trackcount %> tracks, <%= @playcount %> plays and <%= @albumcount %> albums in the database!</p>
+Currently the database contains:
+<ul>
+<li><%= @artistcount %> artists (<%=@artistmbid.to_i %>% has a mbid)</li>
+<li><%= @trackcount %> tracks (<%=@trackmbid.to_i %>% has a mbid)</li>
+<li><%= @playcount %> plays</li>
+<li><%= @albumcount %> albums (<%=@albummbid.to_i %>% has a mbid)</li>
+</ul>
+<ul>
+<li>ABC Dig Music has <%= @dig_artist %> artists, <%= @dig_track %> tracks, <%= @dig_play %> plays and <%= @dig_album %> albums </li>
+<li>ABC Jazz has <%= @jazz_artist %> artists, <%= @jazz_track %> tracks, <%= @jazz_play %> plays and <%= @jazz_album %> albums </li>
+<li>ABC Country has <%= @country_artist %> artists, <%= @country_track %> tracks, <%= @country_play %> plays and <%= @country_album %> albums </li>
+<li>Triple J has <%= @jjj_artist %> artists, <%= @jjj_track %> tracks, <%= @jjj_play %> plays and <%= @jjj_album %> albums </li>
+
+</ul>

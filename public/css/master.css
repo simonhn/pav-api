@@ -21,6 +21,17 @@ margin-bottom: 10px;
 font-weight: bold;
 }
 
+h2{
+   font-family: 'Helvetica Neue', Helvetica, sans-serif;
+   text-shadow: 0 1px 0 white;
+   color: black;
+   letter-spacing: -1px;
+   font-weight: bold;
+}
+
+
 p {
 	padding: 5px 0;
 }
+
+.missing{text-decoration:line-through;}

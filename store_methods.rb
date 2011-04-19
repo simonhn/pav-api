@@ -1,12 +1,12 @@
  #Method that stores each playitem to database. Index is the id of the channel to associate the play with
  def store_hash(item, index)
-    
     duration = ChronicDuration::parse(item["duration"].to_s)     
 
      #there can be multiple artist seperated by '+' so we split them
      artist_array = item['artist']['artistname'].split("+")
+     puts artist_array.inspect
      artist_array.each{ |artist_item|
-
+        puts artist_item.strip.inspect
      begin
        #for each item, lookup in musicbrainz. Returns hash with mbids for track, album and artist if found
        mbid_hash = mbid_lookup(artist_item.strip, item['title'], item['album']['albumname'])
@@ -14,15 +14,14 @@
          $LOG.info("Issue while processing #{artist_item.strip} - #{item['title']} - #{item['album']['albumname']}")  
          raise StandardError, "A musicbrainz error has occurred - #{e}", e.backtrace
       end
-
+puts mbid_hash.inspect
      #ARTIST
      if !mbid_hash["artistmbid"].nil?
        @artist = Artist.first_or_create({:artistmbid => mbid_hash["artistmbid"]},{:artistmbid => mbid_hash["artistmbid"],:artistname => artist_item.strip, :artistnote => item['artist']['artistnote'], :artistlink => item['artist']['artistlink']})
      else
        @artist = Artist.first_or_create({:artistname => artist_item.strip},{:artistname => artist_item.strip, :artistnote => item['artist']['artistnote'], :artistlink => item['artist']['artistlink']})
      end
-
-     if @artist.save
+puts @artist.inspect
        #ALBUM
        #creating and saving album if not exists
        #there can be more than one album
@@ -31,11 +30,9 @@
            if !mbid_hash["albummbid"].nil?
              #puts "album mbid found for: " + mbid_hash["albummbid"]
              @albums = Album.first_or_create({:albummbid => mbid_hash["albummbid"]},{:albummbid => mbid_hash["albummbid"], :albumname => item['album']['albumname'], :albumimage=>item['album']['albumimage']})
-             @albums.save
              break
            else
              @albums = Album.first_or_create({:albumname => item['album']['albumname']},{:albumname => item['album']['albumname'], :albumimage=>item['album']['albumimage']})
-             @albums.save
              break
            end
          end 
@@ -43,13 +40,10 @@
 
        #Track
        #creating and saving track
-       puts mbid_hash.inspect
        if !mbid_hash["trackmbid"].nil?        
          @tracks = Track.first_or_create({:trackmbid => mbid_hash["trackmbid"]},{:trackmbid => mbid_hash["trackmbid"],:title => item['title'],:show => item['show'],:talent => item['talent'],:aust => item['aust'],:tracklink => item['tracklink'],:tracknote => item['tracknote'],:publisher => item['publisher']})
-         @tracks.save
        else
          @tracks = Track.first_or_create({:title => item['title'],:duration => duration},{:title => item['title'],:show => item['show'],:talent => item['talent'],:aust => item['aust'],:tracklink => item['tracklink'],:tracknote => item['tracknote'],:duration => duration,:publisher => item['publisher']})
-         @tracks.save
        end
 
        #add the track to album - if album exists
@@ -70,8 +64,6 @@
             @plays.save
        end
 
-       @artist.save
-     end
    }
  end
 
@@ -79,7 +71,7 @@
  result_hash = {}
 
  #we can only hit mbrainz once a second so we sleep
- sleep 1
+ #sleep 1
 
  q = MusicBrainz::Webservice::Query.new
  t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :release=>album, :limit => 5)

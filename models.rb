@@ -9,7 +9,7 @@ require 'dm-migrations'
 class Artist
     include DataMapper::Resource
     property :id, Serial
-    property :artistmbid, String, :length => 512
+    property :artistmbid, String, :length => 36
     property :artistname, String, :length => 512
     property :artistnote, Text
     property :artistlink, Text
@@ -20,7 +20,7 @@ end
 class Album
     include DataMapper::Resource
     property :id, Serial
-    property :albummbid, String, :length => 512
+    property :albummbid, String, :length => 36
     property :albumname, String, :length => 512
     property :albumimage, Text
     property :created_at, DateTime 
@@ -30,7 +30,7 @@ end
 class Track
     include DataMapper::Resource
     property :id, Serial
-    property :trackmbid, String, :length => 512
+    property :trackmbid, String, :length => 36
     property :title, String, :length => 512
     property :tracknote, Text
     property :tracklink, Text

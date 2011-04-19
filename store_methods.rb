@@ -71,7 +71,7 @@ puts @artist.inspect
  result_hash = {}
 
  #we can only hit mbrainz once a second so we sleep
- #sleep 1
+ sleep 1
 
  q = MusicBrainz::Webservice::Query.new
  t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :release=>album, :limit => 5)

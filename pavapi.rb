@@ -426,7 +426,7 @@ get "/#{@version}/stats" do
   @jazz_track = Channel.get(2).plays.tracks.count
   @jazz_artist = Channel.get(2).plays.tracks.artists.count
   @jazz_album = Channel.get(2).plays.tracks.albums.count
-  @jazz_play = Channel.get(1).plays.count
+  @jazz_play = Channel.get(2).plays.count
   
   
   @country_track = Channel.get(3).plays.tracks.count

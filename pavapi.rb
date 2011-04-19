@@ -23,7 +23,7 @@ Sinatra::Application.register Sinatra::RespondTo
 
 # MySQL connection:
 configure do
-  DataMapper::Logger.new('log/datamapper.log', :debug)
+  #DataMapper::Logger.new('log/datamapper.log', :debug)
   #DataMapper::Model.raise_on_save_failure = true
   $LOG = Logger.new('log/pavstore.log', 'monthly')
   
@@ -36,9 +36,9 @@ configure do
 end
 
 #Caching 1 minute - must adjust
-before do
+#before do
     #response['Cache-Control'] = "public, max-age=60" unless development?
-end
+#end
 
 #Error handling
 not_found do

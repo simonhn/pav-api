@@ -17,7 +17,7 @@ xml.track do
   xml.duration track.duration
   xml.publisher track.publisher
   xml.datecopyrighted track.datecopyrighted
-  xml.created_at track.created_at
+  xml.created_at track.date
 end
 end
 end

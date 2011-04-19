@@ -65,16 +65,16 @@ The pav:api exposes playlist data and is currently under development.
 	<ul> 
 		<li>channel, default is all channels</li>
 		<li>limit, default is 10</li>
+		<li>callback, for cross-domain access jsonp is delivered to requests with 'callback' query parameter and json as return type.</li>
 		<li class="missing">key, and is required for all calls to the api</li>
 		<li class="missing">to (to date)</li>
 		<li class="missing">from (from date)</li>
 	</ul>
+</p>
 
-	Lookup id for artists, track and albums can be either
-	<ul>
-		<li>an internal id</li>
-		<li>a musicbrainz id</li>
-	</ul>
+<p>
+	<h2>identifiers</h2>
+	To lookup a specific artist/track/album you can use pav IDs or Musicbrainz IDs where available.
 </p>
 
 <p>
@@ -90,7 +90,9 @@ The pav:api exposes playlist data and is currently under development.
 <p>
 	<h2>return types</h2>
 	Return type can either be infered by content negotiation (by setting request Accept header to 
-desired content type), by appending the content type to the url (.html, .xml, .json) or by adding ?format=(html, xml, json) to the query parameter. JsonP for cross-domain access is delivered to requests with callback param. Default return type is currently html but will change to json when the API is put in production.
+desired content type), by appending the content type to the url (.html, .xml, .json) or by adding ?format=(html, xml, json) to the query parameter. 
+
+ Default return type is currently html but will change to json when the API is put in production.
 </p>
 
 <p>

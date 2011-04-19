@@ -167,52 +167,6 @@ get "/#{@version}/artist/:id/plays" do
   end
 end
 
-#show all albums
-get "/#{@version}/albums" do
-  limit = params[:limit]
-  limit ||= 10
-  channel = params[:channel]
-  if !channel.nil?
-    @albums = Album.all('tracks.plays.channel_id' => channel, :limit=>limit.to_i, :order => [:created_at.desc ])
-  else
-    @albums =  Album.all(:limit => limit.to_i, :order => [:created_at.desc ])
-  end
-    respond_to do |wants|
-      wants.html { erb :albums }
-      wants.xml { builder :albums }
-      wants.json { @albums.to_json }
-    end
-end
-
-# show album from id
-get "/#{@version}/album/:id" do 
-  if params[:type] == 'mbid' || params[:id].length == 36
-    @album = Album.first(:albummbid => params[:id])
-  else
-    @album = Album.get(params[:id])
-  end
-  respond_to do |wants|
-    wants.html { erb :album }
-    wants.xml { builder :album }
-    wants.json {@album.to_json}
-  end
-end
-
-# show tracks for an album - json version not perfect
-get "/#{@version}/album/:id/tracks" do
-  if params[:type] == 'mbid' || params[:id].length == 36
-    @album = Album.first(:albummbid => params[:id])
-  else
-    @album = Album.get(params[:id])
-  end
-  @tracks = @album.tracks
-  respond_to do |wants|
-    wants.html { erb :album_tracks }
-    wants.xml { builder :album_tracks }
-    wants.json {@tracks.to_json }
-  end
-end
-
 #add new track item (an item in the playout xml)
 post "/#{@version}/track" do
    protected!  
@@ -297,6 +251,52 @@ get "/#{@version}/track/:id/plays" do
     wants.html { erb :track_plays }
     wants.xml { builder :track_plays }
     wants.json {@plays.to_json}
+  end
+end
+
+#show all albums
+get "/#{@version}/albums" do
+  limit = params[:limit]
+  limit ||= 10
+  channel = params[:channel]
+  if !channel.nil?
+    @albums = Album.all('tracks.plays.channel_id' => channel, :limit=>limit.to_i, :order => [:created_at.desc ])
+  else
+    @albums =  Album.all(:limit => limit.to_i, :order => [:created_at.desc ])
+  end
+    respond_to do |wants|
+      wants.html { erb :albums }
+      wants.xml { builder :albums }
+      wants.json { @albums.to_json }
+    end
+end
+
+# show album from id
+get "/#{@version}/album/:id" do 
+  if params[:type] == 'mbid' || params[:id].length == 36
+    @album = Album.first(:albummbid => params[:id])
+  else
+    @album = Album.get(params[:id])
+  end
+  respond_to do |wants|
+    wants.html { erb :album }
+    wants.xml { builder :album }
+    wants.json {@album.to_json}
+  end
+end
+
+# show tracks for an album - json version not perfect
+get "/#{@version}/album/:id/tracks" do
+  if params[:type] == 'mbid' || params[:id].length == 36
+    @album = Album.first(:albummbid => params[:id])
+  else
+    @album = Album.get(params[:id])
+  end
+  @tracks = @album.tracks
+  respond_to do |wants|
+    wants.html { erb :album_tracks }
+    wants.xml { builder :album_tracks }
+    wants.json {@tracks.to_json }
   end
 end
 

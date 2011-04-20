@@ -4,9 +4,7 @@
 
      #there can be multiple artist seperated by '+' so we split them
      artist_array = item['artist']['artistname'].split("+")
-     puts artist_array.inspect
      artist_array.each{ |artist_item|
-        puts artist_item.strip.inspect
      begin
        #for each item, lookup in musicbrainz. Returns hash with mbids for track, album and artist if found
        mbid_hash = mbid_lookup(artist_item.strip, item['title'], item['album']['albumname'])
@@ -14,14 +12,17 @@
          $LOG.info("Issue while processing #{artist_item.strip} - #{item['title']} - #{item['album']['albumname']}")  
          raise StandardError, "A musicbrainz error has occurred - #{e}", e.backtrace
       end
-puts mbid_hash.inspect
      #ARTIST
      if !mbid_hash["artistmbid"].nil?
        @artist = Artist.first_or_create({:artistmbid => mbid_hash["artistmbid"]},{:artistmbid => mbid_hash["artistmbid"],:artistname => artist_item.strip, :artistnote => item['artist']['artistnote'], :artistlink => item['artist']['artistlink']})
      else
        @artist = Artist.first_or_create({:artistname => artist_item.strip},{:artistname => artist_item.strip, :artistnote => item['artist']['artistnote'], :artistlink => item['artist']['artistlink']})
      end
-puts @artist.inspect
+
+      #store artist_id / channel_id to a lookup table, for faster selects 
+      @artist_channels = @artist.channels << Channel.get(index)
+      @artist_channels.save
+
        #ALBUM
        #creating and saving album if not exists
        #there can be more than one album

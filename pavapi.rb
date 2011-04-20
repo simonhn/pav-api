@@ -23,14 +23,16 @@ Sinatra::Application.register Sinatra::RespondTo
 
 # MySQL connection:
 configure do
-  #DataMapper::Logger.new('log/datamapper.log', :debug)
-  #DataMapper::Model.raise_on_save_failure = true
+  DataMapper::Logger.new('log/datamapper.log', :warn)
+  DataMapper::Model.raise_on_save_failure = true
   $LOG = Logger.new('log/pavstore.log', 'monthly')
   
   @config = YAML::load( File.open( 'config/settings.yml' ) )
   @connection = "#{@config['adapter']}://#{@config['username']}:#{@config['password']}@#{@config['host']}/#{@config['database']}";
-  DataMapper::setup(:default, @connection)  
-  DataMapper.auto_upgrade!
+  DataMapper.setup(:default, @connection)  
+  DataMapper.finalize
+  
+  #DataMapper.auto_upgrade!
   #DataMapper::auto_migrate!
   set :default_content, :html
 end

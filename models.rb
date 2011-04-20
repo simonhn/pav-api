@@ -15,6 +15,7 @@ class Artist
     property :artistlink, Text
     property :created_at, DateTime
     has n, :tracks, :through => Resource
+    has n, :channels, :through => Resource
 end
 
 class Album
@@ -73,4 +74,5 @@ class Channel
     property :logo, String, :length => 512
     property :channellink, String, :length => 512
     has n, :plays
+    has n, :artists, :through => Resource
 end

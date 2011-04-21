@@ -105,21 +105,6 @@ get '/' do
   erb :front
 end
 
-# show tracks from artist
-get "/#{@version}/artist/:id/tracks" do
-  if params[:type] == 'mbid' || params[:id].length == 36
-    @artist = Artist.first(:artistmbid => params[:id])
-  else
-    @artist = Artist.get(params[:id])
-  end
-  @tracks = @artist.tracks
-  
-  respond_to do |wants|
-    wants.html { erb :artist_tracks }
-    wants.xml { builder :artist_tracks }
-  end
-end
-
 #show all artists, defaults to 10, ordered by created date
 get "/#{@version}/artists" do
   limit = params[:limit]
@@ -131,9 +116,9 @@ get "/#{@version}/artists" do
     @artists =  Artist.all(:limit => limit.to_i, :order => [:created_at.desc ])
   end
   respond_to do |wants|
-    wants.json { @artists.to_json }
     wants.html { erb :artists }
     wants.xml { builder :artists }
+    wants.json { @artists.to_json }
   end
 end
 
@@ -151,6 +136,22 @@ get "/#{@version}/artist/:id" do
   end
 end
 
+# show tracks from artist
+get "/#{@version}/artist/:id/tracks" do
+  if params[:type] == 'mbid' || params[:id].length == 36
+    @artist = Artist.first(:artistmbid => params[:id])
+  else
+    @artist = Artist.get(params[:id])
+  end
+  @tracks = @artist.tracks
+  
+  respond_to do |wants|
+    wants.html { erb :artist_tracks }
+    wants.xml { builder :artist_tracks }
+    wants.json { @tracks.to_json }   
+  end
+end
+
 
 # show plays from artist
 get "/#{@version}/artist/:id/plays" do
@@ -163,6 +164,7 @@ get "/#{@version}/artist/:id/plays" do
   respond_to do |wants|
     wants.html { erb :artist_plays }
     wants.xml { builder :artist_plays }
+    wants.json { @plays.to_json }
   end
 end
 
@@ -284,7 +286,7 @@ get "/#{@version}/album/:id" do
   end
 end
 
-# show tracks for an album - json version not perfect
+# show tracks for an album
 get "/#{@version}/album/:id/tracks" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @album = Album.first(:albummbid => params[:id])
@@ -296,6 +298,32 @@ get "/#{@version}/album/:id/tracks" do
     wants.html { erb :album_tracks }
     wants.xml { builder :album_tracks }
     wants.json {@tracks.to_json }
+  end
+end
+
+#PLAY
+get "/#{@version}/plays" do
+  #DATE_FORMAT(playedtime, '%d %m %Y %H %i %S')
+  limit = params[:limit]
+  limit ||= 10
+  to_from = make_to_from(params[:from], params[:to])
+  channel = params[:channel]
+  if !channel.nil?
+     @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id order by plays.playedtime DESC limit #{limit}")
+  else
+    @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id order by plays.playedtime DESC limit #{limit}")
+  end
+  respond_to do |wants|
+    wants.html { erb :plays }
+    wants.xml { builder :plays }
+    wants.json { @plays.to_json }
+  end
+end
+
+get "/#{@version}/play/:id" do
+@play = Play.get(params[:id])
+  respond_to do |wants|
+    wants.json { @play.to_json }
   end
 end
 
@@ -332,15 +360,7 @@ get "/#{@version}/channel/:id" do
     end
 end
 
-# show tracks for specific channel
-get "/#{@version}/channel/:id/plays" do
-  @channel_plays = Channel.get(params[:id]).plays
-  @channel_tracks = Channel.get(params[:id]).plays(:limit =>10,:order => [:playedtime.desc ])
-  respond_to do |wants|
-    wants.xml { @channel_tracks.to_xml }
-    wants.json { @channel_tracks.to_json }
-  end
-end
+
 
 # chart of top tracks by name
 get "/#{@version}/chart/track" do

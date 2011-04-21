@@ -1,4 +1,6 @@
 <h1>Tracks for <%= @album.albumname %></h1>
+<% if !@album.albumimage.nil? %><img src="<%= @album.albumimage %>" /><% end %>
+
 <% @tracks.each do |track| %>
 <ul>
 <% if !track.id.nil? %><li>id: <%= track.id %></li><% end %>

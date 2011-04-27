@@ -386,7 +386,7 @@ get "/#{@version}/chart/artist" do
  to_from = make_to_from(params[:from], params[:to])
  limit = params[:limit]
  limit ||= 10
- @artists = repository(:default).adapter.select("select sum(cnt) as count, har.artistname, har.id from (select artists.artistname, artists.id, artist_tracks.artist_id, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id= artists.id #{to_from} group by tracks.id) as har group by har.artistname order by count, har.id desc limit #{limit}")
+ @artists = repository(:default).adapter.select("select sum(cnt) as count, har.artistname, har.id from (select artists.artistname, artists.id, artist_tracks.artist_id, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id= artists.id #{to_from} group by tracks.id) as har group by har.artistname order by count desc limit #{limit}")
  respond_to do |wants|
     wants.xml { builder :artist_chart }
     wants.json {@artists.to_json}

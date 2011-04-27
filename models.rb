@@ -5,6 +5,7 @@ require 'dm-timestamps'
 require 'dm-aggregates'
 require 'dm-migrations'
 
+#require
 #Models - to be moved to individual files
 class Artist
     include DataMapper::Resource

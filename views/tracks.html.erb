@@ -2,13 +2,13 @@
 <% for track in @tracks %>
 <ul>
 	<% if !track.id.nil? %><li>id: <%= track.id %></li><% end %>
-	<% if !track.title.nil? %><li>title: <%= track.title %></li><% end %>
-	<% if !track.tracknote.nil? %><li><%= track.tracknote %></li><% end %>
-	<% if !track.tracklink.nil? %><li><%= track.tracklink %></li><% end %>
-	<% if !track.show.nil? %><li><%= track.show %></li><% end %>
-	<% if !track.talent.nil? %><li><%= track.talent %></li><% end %>
+	<% if !track.title.empty? %><li>title: <%= track.title %></li><% end %>
+	<% if !track.tracknote.empty? %><li><%= track.tracknote %></li><% end %>
+	<% if !track.tracklink.empty? %><li><%= track.tracklink %></li><% end %>
+	<% if !track.show.empty? %><li><%= track.show %></li><% end %>
+	<% if !track.talent.empty? %><li><%= track.talent %></li><% end %>
 	<% if !track.duration.nil? %><li><%= track.duration %></li><% end %>
-	<% if !track.publisher.nil? %><li><%= track.publisher %></li><% end %>
+	<% if !track.publisher.empty? %><li><%= track.publisher %></li><% end %>
 	<% if !track.datecopyrighted.nil? %><li><%= track.datecopyrighted %></li><% end %>
 	<li>date: <%= track.created_at.strftime "%Y-%m-%d %H:%M:%S" %></li>
 </ul>

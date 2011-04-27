@@ -37,7 +37,7 @@ The pav:api exposes playlist data and is currently under development.
 	
 	
 	<br />		
-	<li><a href ="/v1/plays?channel=4&from=2010-05-10 16:00:00">/plays { html | xml | json}</a></li>
+	<li><a href ="/v1/plays?channel=4&from=2011-04-20 16:00:00">/plays { html | xml | json}</a></li>
 		
 	<li><a href ="/v1/play/2.json">/play/:id {json}</a></li>
 	
@@ -50,20 +50,23 @@ The pav:api exposes playlist data and is currently under development.
 	<li>post: /channel {json}</li>
 
 	<li>put: /channel/:id {json}</li>
+	
+	
 	<br />
+	<li><a href ="/v1/chart/track.xml">/chart/track {html | xml | json}</a></li>
+
+	<li><a href ="/v1/chart/artist.xml?from=2011-04-20&to=2011-04-27">/chart/artist?from=yyyy-mm-dd&to=yyyy-mm-dd {xml | json}</a></li>
 	
-
-	<li class="missing"><a href ="/v1/chart/track.xml">/chart/track {xml}</a></li>
-
-	<li class="missing"><a href ="/v1/chart/artist.xml?from=2010-05-10&to=2010-05-11">/chart/artist?from=yyyy-mm-dd&to=yyyy-mm-dd {xml}</a></li>
+	<li class="missing"><a href ="/v1/chart/album.xml">/chart/album {xml | json}</a></li>
 	
-	<li class="missing"><a href ="/v1/chart/album.xml">/chart/album {xml}</a></li>
-
 	
-	<li><a href ="/v1/stats">/stats</a></li>
-
+	<br />	
 	<li><a href ="/v1/search/a">/search/query {html | xml | json}</a></li>
 
+	
+	<br />
+	<li><a href ="/v1/stats">/stats</a></li>
+	
 </ul>
 
 <p>

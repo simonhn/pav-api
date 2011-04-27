@@ -4,6 +4,7 @@ require 'dm-serializer'
 require 'dm-timestamps'
 require 'dm-aggregates'
 require 'dm-migrations'
+require 'dm-ar-finders'
 
 #Models - to be moved to individual files
 class Artist

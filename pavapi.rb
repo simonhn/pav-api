@@ -373,10 +373,11 @@ get "/#{@version}/chart/track" do
   else
     @tracks = repository(:default).adapter.select("select *, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id order by cnt DESC limit #{limit}")
   end
+  hat = @tracks.collect {|o| {:count => o.cnt, :title => o.title, :artistname => o.artistname} }
   respond_to do |wants|
     wants.html { erb :track_chart }
-     wants.xml { builder :track_chart }
-     wants.json {@tracks.to_json}
+     wants.xml { builder :track_chart } 
+     wants.json { hat.to_json }
    end
 end
 

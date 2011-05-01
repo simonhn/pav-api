@@ -315,7 +315,7 @@ get "/#{@version}/plays" do
   else
     @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
   end
-  hat = @plays.collect {|o| {:title => o.title, :artistname => o.artistname, :playedtime => o.playedtime, :albumname => o.albumname} }
+  hat = @plays.collect {|o| {:title => o.title, :artistname => o.artistname, :playedtime => o.playedtime, :albumname => o.albumname, :albumimage => o.albumimage} }
   
   respond_to do |wants|
     wants.html { erb :plays }

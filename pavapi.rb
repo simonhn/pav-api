@@ -15,6 +15,8 @@ include MusicBrainz
 require 'logger'  
 require 'rchardet'
 
+require 'meta-spotify'
+
 require 'chronic_duration'
 
 require 'sinatra/respond_to'
@@ -309,9 +311,9 @@ get "/#{@version}/plays" do
   to_from = make_to_from(params[:from], params[:to])
   channel = params[:channel]
   if !channel.nil?
-     @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id order by plays.playedtime DESC limit #{limit}")
+     @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
   else
-    @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id order by plays.playedtime DESC limit #{limit}")
+    @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
   end
   respond_to do |wants|
     wants.html { erb :plays }
@@ -369,9 +371,9 @@ get "/#{@version}/chart/track" do
   to_from = make_to_from(params[:from], params[:to])
   channel = params[:channel]
   if !channel.nil?
-     @tracks = repository(:default).adapter.select("select *, count(*) as cnt from tracks, plays, artists, artist_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id order by cnt DESC limit #{limit}")
+     @tracks = repository(:default).adapter.select("select *, count(*) as cnt from tracks, plays, artists, artist_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id, plays.playedtime order by cnt DESC limit #{limit}")
   else
-    @tracks = repository(:default).adapter.select("select *, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id order by cnt DESC limit #{limit}")
+    @tracks = repository(:default).adapter.select("select *, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id, plays.playedtime order by cnt DESC limit #{limit}")
   end
   hat = @tracks.collect {|o| {:count => o.cnt, :title => o.title, :artistname => o.artistname} }
   respond_to do |wants|
@@ -387,7 +389,7 @@ get "/#{@version}/chart/artist" do
  to_from = make_to_from(params[:from], params[:to])
  limit = params[:limit]
  limit ||= 10
- @artists = repository(:default).adapter.select("select sum(cnt) as count, har.artistname, har.id from (select artists.artistname, artists.id, artist_tracks.artist_id, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id= artists.id #{to_from} group by tracks.id) as har group by har.artistname order by count desc limit #{limit}")
+ @artists = repository(:default).adapter.select("select sum(cnt) as count, har.artistname, har.id from (select artists.artistname, artists.id, artist_tracks.artist_id, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id= artists.id #{to_from} group by tracks.id, plays.playedtime) as har group by har.artistname order by count desc limit #{limit}")
  respond_to do |wants|
     wants.xml { builder :artist_chart }
     wants.json {@artists.to_json}
@@ -398,7 +400,7 @@ get "/#{@version}/chart/album" do
   to_from = make_to_from(params[:played_from], params[:played_to])
   limit = params[:limit]
   limit ||= 10
-  @albums = repository(:default).adapter.select("select albums.albumname, albums.id as album_id, tracks.id as track_id, count(*) as cnt from tracks, plays, albums, album_tracks where tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
+  @albums = repository(:default).adapter.select("select albums.albumname, albums.id as album_id, tracks.id as track_id, count(*) as cnt from tracks, plays, albums, album_tracks where tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id, plays.playedtime order by cnt DESC limit #{limit}")
   respond_to do |wants|
       wants.xml { builder :album_chart }
       wants.json {@albums.to_json}

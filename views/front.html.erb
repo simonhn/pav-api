@@ -11,7 +11,7 @@ The pav:api exposes playlist data and is currently under development.
 
 	<li><a href ="/v1/artist/2">/artist/:id {html | xml | json}</a></li>
 
-	<li><a href ="/v1/artist/2/tracks">/artist/:id/tracks {html | xml | json}</a></li>
+	<li><a href ="/v1/artist/2/tracks">/artist/:id/tracks {html | json}</a></li>
 
 	
 	<br />
@@ -37,7 +37,7 @@ The pav:api exposes playlist data and is currently under development.
 	
 	
 	<br />		
-	<li><a href ="/v1/plays?channel=4&from=2011-04-20 16:00:00">/plays { html | xml | json}</a></li>
+	<li><a href ="/v1/plays.json?channel=4&from=2011-05-01 16:00:00">/plays { html | xml | json}</a></li>
 		
 	<li><a href ="/v1/play/2.json">/play/:id {json}</a></li>
 	
@@ -53,9 +53,9 @@ The pav:api exposes playlist data and is currently under development.
 	
 	
 	<br />
-	<li><a href ="/v1/chart/track.xml">/chart/track {html | xml | json}</a></li>
+	<li class="missing"><a href ="/v1/chart/track.xml">/chart/track {html | xml | json}</a></li>
 
-	<li><a href ="/v1/chart/artist.xml?from=2011-04-20&to=2011-04-27">/chart/artist?from=yyyy-mm-dd&to=yyyy-mm-dd {xml | json}</a></li>
+	<li class="missing"><a href ="/v1/chart/artist.xml?from=2011-04-20&to=2011-04-27">/chart/artist?from=yyyy-mm-dd&to=yyyy-mm-dd {xml | json}</a></li>
 	
 	<li class="missing"><a href ="/v1/chart/album.xml">/chart/album {xml | json}</a></li>
 	
@@ -73,16 +73,17 @@ The pav:api exposes playlist data and is currently under development.
 	<h2>query parameters</h2>
 	<span>Some paths accepts the following query parameters:
 	<ul> 
-		<li>channel, default is all channels</li>
-		<li>limit, default is 10</li>
+		<li>channel, default is all channels, available on paths that return a list</li>
+		<li>limit, default is 10, available on paths that return a list</li>
 		<li>callback, for cross-domain access jsonp is delivered to requests with 'callback' query parameter and json as return type.</li>
 		<li>format, return type format (html, json, xml)</li>
 		<li>type, to specify lookup type, mbid</li>
+		<li>to (to date) in yyyy-mm-dd format</li>
+		<li>from (from date) in yyyy-mm-dd format</li>
 		<li class="missing">fields, for partial responses</li>
 		<li class="missing">sort, for ordering results</li>
 		<li class="missing">key, is required for all calls to the api</li>
-		<li class="missing">to (to date) in yyyy-mm-dd format</li>
-		<li class="missing">from (from date) in yyyy-mm-dd format</li>
+
 	</ul>
 </p>
 

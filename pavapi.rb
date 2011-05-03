@@ -12,7 +12,6 @@ require 'builder'
 #musicbrainz stuff
 require 'rbrainz'
 include MusicBrainz
-require 'logger'  
 require 'rchardet'
 
 require 'meta-spotify'
@@ -44,7 +43,7 @@ end
     #response['Cache-Control'] = "public, max-age=60" unless development?
 #end
 
-#Error handling
+# Error 404 Page Not Found
 not_found do
   json_status 404, "Not found"
 end
@@ -108,6 +107,7 @@ get '/' do
 end
 
 #show all artists, defaults to 10, ordered by created date
+# @note This method may modify our application state!
 get "/#{@version}/artists" do
   limit = params[:limit]
   limit ||= 10

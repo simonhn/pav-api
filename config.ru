@@ -1,5 +1,7 @@
 require 'rubygems'
-require 'sinatra'
+require 'bundler'
+
+Bundler.require
 require './pavapi'
 
 #use Rack::Cache,

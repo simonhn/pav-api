@@ -16,6 +16,7 @@ gem 'chronic_duration'
 gem 'sinatra-respond_to'
 
 gem 'dm-core'
+gem 'dm-mysql-adapter'
 gem 'dm-serializer'
 gem 'dm-timestamps'
 gem 'dm-aggregates'

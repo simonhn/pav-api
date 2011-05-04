@@ -1,7 +1,8 @@
+source :rubygems
 gem 'sinatra'
 gem 'json' 
 gem 'rack' 
-gem 'rack-rack-contrib'
+gem 'rack-rack-contrib', :require => 'rack/contrib'
 gem 'builder'
 
 gem 'rbrainz'

@@ -13,7 +13,7 @@ require 'builder'
 require 'rbrainz'
 include MusicBrainz
 require 'rchardet'
-
+require 'logger'
 require 'meta-spotify'
 
 require 'chronic_duration'

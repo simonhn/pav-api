@@ -6,7 +6,8 @@ gem 'rack-contrib', :require => 'rack/contrib'
 gem 'builder'
 
 gem 'rbrainz'
-gem 'rchardet'
+gem 'kbaum-rchardet'
+
 
 gem 'meta-spotify'
 

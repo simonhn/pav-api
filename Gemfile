@@ -21,3 +21,5 @@ gem 'dm-serializer'
 gem 'dm-timestamps'
 gem 'dm-aggregates'
 gem 'dm-migrations'
+
+gem 'yajl-ruby', :require=> 'yajl/json_gem'

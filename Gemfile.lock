@@ -47,6 +47,7 @@ GEM
     sinatra-respond_to (0.7.0)
       sinatra (~> 1.2)
     tilt (1.3)
+    yajl-ruby (0.8.2)
 
 PLATFORMS
   ruby
@@ -68,3 +69,4 @@ DEPENDENCIES
   rbrainz
   sinatra
   sinatra-respond_to
+  yajl-ruby

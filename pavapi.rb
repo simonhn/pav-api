@@ -5,7 +5,8 @@ require './models'
 require './store_methods'
 
 #template systems
-require 'json' 
+require 'yajl/json_gem'
+
 require 'rack/contrib/jsonp'
 require 'builder'
 
@@ -14,7 +15,6 @@ require 'rbrainz'
 include MusicBrainz
 require 'rchardet'
 require 'logger'
-require 'meta-spotify'
 
 require 'chronic_duration'
 
@@ -372,16 +372,18 @@ get "/#{@version}/chart/track" do
   limit ||= 10
   to_from = make_to_from(params[:from], params[:to])
   channel = params[:channel]
+  #SELECT tracks.title, artists.artistname, count(*) as cnt FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` INNER JOIN artist_tracks ON tracks.id=artist_tracks.track_id INNER JOIN artists ON artists.id=artist_tracks.artist_id WHERE `plays`.`channel_id` = 1 group by tracks.id   order by cnt DESC limit 10;
+  
   if !channel.nil?
-     @tracks = repository(:default).adapter.select("select *, count(*) as cnt from tracks, plays, artists, artist_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id, plays.playedtime order by cnt DESC limit #{limit}")
+     @tracks = repository(:default).adapter.select("select *, count(distinct plays.id) as cnt from tracks, plays, artists, artist_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id order by cnt DESC limit #{limit}")
   else
-    @tracks = repository(:default).adapter.select("select *, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id, plays.playedtime order by cnt DESC limit #{limit}")
+    @tracks = repository(:default).adapter.select("select *, count(distinct plays.id) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id order by cnt DESC limit #{limit}")
   end
-  hat = @tracks.collect {|o| {:count => o.cnt, :title => o.title, :artistname => o.artistname} }
+  hat = @tracks.collect {|o| {:count => o.cnt, :title => o.title, :artistname => o.artistname,:artistmbid => o.artistmbid, :trackmbid => o.trackmbid} }
   respond_to do |wants|
     wants.html { erb :track_chart }
-     wants.xml { builder :track_chart } 
-     wants.json { hat.to_json }
+    wants.xml { builder :track_chart } 
+    wants.json { hat.to_json }
    end
 end
 
@@ -391,10 +393,18 @@ get "/#{@version}/chart/artist" do
  to_from = make_to_from(params[:from], params[:to])
  limit = params[:limit]
  limit ||= 10
- @artists = repository(:default).adapter.select("select sum(cnt) as count, har.artistname, har.id from (select artists.artistname, artists.id, artist_tracks.artist_id, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id= artists.id #{to_from} group by tracks.id, plays.playedtime) as har group by har.artistname order by count desc limit #{limit}")
+ channel = params[:channel]
+ if !channel.nil?
+   @artists = repository(:default).adapter.select("select artists.artistname, artists.id, artist_tracks.artist_id, artists.artistmbid, count(*) as cnt from tracks, plays, artists, artist_tracks where plays.channel_id=#{channel} AND  tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id=artists.id #{to_from} group by artists.id order by cnt desc limit #{limit}")
+ else
+   @artists = repository(:default).adapter.select("select artists.artistname, artists.id, artist_tracks.artist_id, artists.artistmbid, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id=artists.id #{to_from} group by artists.id order by cnt desc limit #{limit}")
+ end
+ #@artists = repository(:default).adapter.select("select sum(cnt) as count, har.artistname, har.id from (select artists.artistname, artists.id, artist_tracks.artist_id, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id= artists.id #{to_from} group by tracks.id, plays.playedtime) as har group by har.artistname order by count desc limit #{limit}")
+  hat = @artists.collect {|o| {:count => o.cnt, :artistname => o.artistname, :id => o.id, :artistmbid => o.artistmbid} }
  respond_to do |wants|
+    wants.html { erb :artist_chart }
     wants.xml { builder :artist_chart }
-    wants.json {@artists.to_json}
+    wants.json {hat.to_json}
   end
 end
 
@@ -402,10 +412,17 @@ get "/#{@version}/chart/album" do
   to_from = make_to_from(params[:played_from], params[:played_to])
   limit = params[:limit]
   limit ||= 10
-  @albums = repository(:default).adapter.select("select albums.albumname, albums.id as album_id, tracks.id as track_id, count(*) as cnt from tracks, plays, albums, album_tracks where tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id, plays.playedtime order by cnt DESC limit #{limit}")
+  channel = params[:channel]
+  if !channel.nil?
+    @albums = repository(:default).adapter.select("select albums.albumname, albums.albumimage, albums.id as album_id, tracks.id as track_id, albums.albummbid, count(*) as cnt from tracks, plays, albums, album_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
+  else
+    @albums = repository(:default).adapter.select("select albums.albumname, albums.albumimage, albums.id as album_id, tracks.id as track_id, albums.albummbid, count(*) as cnt from tracks, plays, albums, album_tracks where tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
+  end
+  hat = @albums.collect {|o| {:count => o.cnt, :albumname => o.albumname, :album_id => o.album_id, :albummbid => o.albummbid,:albumimage => o.albumimage} }
+  
   respond_to do |wants|
       wants.xml { builder :album_chart }
-      wants.json {@albums.to_json}
+      wants.json {hat.to_json}
   end
 end
 
@@ -429,38 +446,38 @@ end
 #Count all artists
 get "/#{@version}/stats" do
   @artistcount = Artist.count
-  @artistmbid = (Artist.count(:artistmbid).to_f/Artist.count.to_f)*100
+  @artistmbid = (Artist.count(:artistmbid).to_f/@artistcount.to_f)*100
   
   @trackcount = Track.count
-  @trackmbid = (Track.count(:trackmbid).to_f/Track.count.to_f)*100
+  @trackmbid = (Track.count(:trackmbid).to_f/@trackcount.to_f)*100
   
   @playcount = Play.count
   
   @albumcount = Album.count
-  @albummbid = (Album.count(:albummbid).to_f/Album.count.to_f)*100
+  @albummbid = (Album.count(:albummbid).to_f/@albumcount.to_f)*100
   
-  @dig_track = Channel.get(1).plays.tracks.count
-  @dig_artist = Channel.get(1).plays.tracks.artists.count
-  @dig_album = Channel.get(1).plays.tracks.albums.count
-  @dig_play = Channel.get(1).plays.count
-  
-  
-  @jazz_track = Channel.get(2).plays.tracks.count
-  @jazz_artist = Channel.get(2).plays.tracks.artists.count
-  @jazz_album = Channel.get(2).plays.tracks.albums.count
-  @jazz_play = Channel.get(2).plays.count
+  @dig_track = repository(:default).adapter.select("SELECT COUNT(distinct tracks.id) FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 1")
+  @dig_artist = repository(:default).adapter.select("SELECT COUNT(distinct artists.id) FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 1")
+  @dig_album = repository(:default).adapter.select("SELECT COUNT(distinct albums.id) FROM `albums` INNER JOIN `album_tracks` ON `albums`.`id` = `album_tracks`.`album_id` INNER JOIN `tracks` ON `album_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 1")
+  @dig_play = Play.all('channel_id'=>1).count
   
   
-  @country_track = Channel.get(3).plays.tracks.count
-  @country_artist = Channel.get(3).plays.tracks.artists.count
-  @country_album = Channel.get(3).plays.tracks.albums.count
-  @country_play = Channel.get(3).plays.count
+  @jazz_track = repository(:default).adapter.select("SELECT COUNT(distinct tracks.id) FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 2")
+  @jazz_artist = repository(:default).adapter.select("SELECT COUNT(distinct artists.id) FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 2")
+  @jazz_album = repository(:default).adapter.select("SELECT COUNT(distinct albums.id) FROM `albums` INNER JOIN `album_tracks` ON `albums`.`id` = `album_tracks`.`album_id` INNER JOIN `tracks` ON `album_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 2")
+  @jazz_play = Play.all('channel_id'=>2).count
   
   
-  @jjj_track = Channel.get(4).plays.tracks.count
-  @jjj_artist = Channel.get(4).plays.tracks.artists.count
-  @jjj_album = Channel.get(4).plays.tracks.albums.count
-   @jjj_play = Channel.get(4).plays.count
+  @country_track = repository(:default).adapter.select("SELECT COUNT(distinct tracks.id) FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 3")
+  @country_artist = repository(:default).adapter.select("SELECT COUNT(distinct artists.id) FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 3")
+  @country_album = repository(:default).adapter.select("SELECT COUNT(distinct albums.id) FROM `albums` INNER JOIN `album_tracks` ON `albums`.`id` = `album_tracks`.`album_id` INNER JOIN `tracks` ON `album_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 3")
+  @country_play = Play.all('channel_id'=>3).count
+  
+  
+  @jjj_track = repository(:default).adapter.select("SELECT COUNT(distinct tracks.id) FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 4")
+  @jjj_artist = repository(:default).adapter.select("SELECT COUNT(distinct artists.id) FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 4")
+  @jjj_album = repository(:default).adapter.select("SELECT COUNT(distinct albums.id) FROM `albums` INNER JOIN `album_tracks` ON `albums`.`id` = `album_tracks`.`album_id` INNER JOIN `tracks` ON `album_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 4")
+  @jjj_play = Play.all('channel_id'=>4).count
    
   respond_to do |wants|
     wants.html { erb :stats }

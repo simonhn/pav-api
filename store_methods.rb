@@ -42,9 +42,9 @@
        #Track
        #creating and saving track
        if !mbid_hash["trackmbid"].nil?        
-         @tracks = Track.first_or_create({:trackmbid => mbid_hash["trackmbid"]},{:trackmbid => mbid_hash["trackmbid"],:title => item['title'],:show => item['show'],:talent => item['talent'],:aust => item['aust'],:tracklink => item['tracklink'],:tracknote => item['tracknote'],:publisher => item['publisher']})
+         @tracks = Track.first_or_create({:trackmbid => mbid_hash["trackmbid"]},{:trackmbid => mbid_hash["trackmbid"],:title => item['title'],:show => item['show'],:talent => item['talent'],:aust => item['aust'],:tracklink => item['tracklink'],:tracknote => item['tracknote'],:publisher => item['publisher'], :datecopyrighted => item['datecopyrighted'].to_i})
        else
-         @tracks = Track.first_or_create({:title => item['title'],:duration => duration},{:title => item['title'],:show => item['show'],:talent => item['talent'],:aust => item['aust'],:tracklink => item['tracklink'],:tracknote => item['tracknote'],:duration => duration,:publisher => item['publisher']})
+         @tracks = Track.first_or_create({:title => item['title'],:duration => duration},{:title => item['title'],:show => item['show'],:talent => item['talent'],:aust => item['aust'],:tracklink => item['tracklink'],:tracknote => item['tracknote'],:duration => duration,:publisher => item['publisher'],:datecopyrighted => item['datecopyrighted'].to_i})
        end
 
        #add the track to album - if album exists
@@ -71,7 +71,7 @@
  def mbid_lookup(artist, track, album)
  result_hash = {}
 
- #we can only hit mbrainz once a second so we sleep
+ #we can only hit mbrainz once a second so we take a nap
  sleep 1
 
  q = MusicBrainz::Webservice::Query.new

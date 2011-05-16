@@ -1,5 +1,9 @@
-<%= @har %>([
+<h1>TOP artists</h1>
 <% for artist in @artists %>
-{"artistname": "<%= artist.artistname %>"},
+<ul>
+	<li>Play count: <%= artist.cnt %></li>
+	<% if !artist.id.nil? %><li>id: <%= artist.id %></li><% end %>
+	<% if !artist.artistname.empty? %><li>name: <%= artist.artistname %></li><% end %>
+</ul>
 <% end %>
-])
+</ul>

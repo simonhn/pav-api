@@ -3,75 +3,34 @@
 <p>
 The pav:api exposes playlist data and is currently under development.
 </p>
-
-<h2>resources</h2>
-
 <ul>
-	<li><a href ="/v1/artists?limit=15&channel=1">/artists {html | xml | json}</a></li>
-
-	<li><a href ="/v1/artist/2">/artist/:id {html | xml | json}</a></li>
-
-	<li><a href ="/v1/artist/2/tracks">/artist/:id/tracks {html | json}</a></li>
-
-	
-	<br />
-	<li><a href ="/v1/tracks?limit=4">/tracks/ {html | xml | json}</a></li></li>
-	
-	<li><a href ="/v1/track/2">/track/:id {html | xml | json}</a></li>
-	
-	<li>post: /track {json}</li>
-
-	<li><a href ="/v1/track/6/artists">/track/:id/artists {html | xml | json}</a></li>
-
-	<li><a href ="/v1/track/6/albums">/track/:id/albums {html | xml | json}</a></li>
-
-	<li><a href ="/v1/track/6/plays">/track/:id/plays {html | xml | json}</a></li>
-	
-	
-	<br />	
-	<li><a href ="/v1/albums?channel=4">/albums {html | xml | json}</a></li>
-		
-	<li><a href ="/v1/album/2">/album/:id {html | xml | json}</a></li>
-
-	<li><a href ="/v1/album/2/tracks.xml">/album/:id/tracks {html | xml | json}</a></li>
-	
-	
-	<br />		
-	<li><a href ="/v1/plays.json?channel=4&from=2011-05-01 16:00:00">/plays { html | xml | json}</a></li>
-		
-	<li><a href ="/v1/play/2.json">/play/:id {json}</a></li>
-	
-	
-	<br />
-	<li><a href ="/v1/channels.xml">/channels {xml | json}</a></li>
-
-	<li><a href ="/v1/channel/1.xml">/channel/:id {xml | json}</a></li>
-	
-	<li>post: /channel {json}</li>
-
-	<li>put: /channel/:id {json}</li>
-	
-	
-	<br />
-	<li class="missing"><a href ="/v1/chart/track.xml">/chart/track {html | xml | json}</a></li>
-
-	<li class="missing"><a href ="/v1/chart/artist.xml?from=2011-04-20&to=2011-04-27">/chart/artist?from=yyyy-mm-dd&to=yyyy-mm-dd {xml | json}</a></li>
-	
-	<li class="missing"><a href ="/v1/chart/album.xml">/chart/album {xml | json}</a></li>
-	
-	
-	<br />	
-	<li><a href ="/v1/search/bob">/search/query {html | xml | json}</a></li>
-
-	
-	<br />
-	<li><a href ="/v1/stats">/stats</a></li>
-	
+	<li><a href="#general">general information</a></li>
+		<ul>
+			<li><a href="#general-query-parameters">query parameters</a></li>
+			<li><a href="#general-identifiers">identifiers</a></li>
+			<li><a href="#general-authentication">authentication</a></li>
+			<li><a href="#general-versioning">versioning</a></li>
+			<li><a href="#general-return-types">return types</a></li>
+			<li><a href="#general-response-codes">reponse codes</a></li>
+			<li><a href="#general-terms">terms</a></li>
+		</ul>
+	<li><a href="#resources">resources</a></li>
+		<ul>
+			<li><a href="#resources-artists">artists</a></li>
+			<li><a href="#resources-tracks">tracks</a></li>
+			<li><a href="#resources-albums">albums</a></li>
+			<li><a href="#resources-channels">channels</a></li>
+			<li><a href="#resources-plays">plays</a></li>
+			<li><a href="#resources-chart">charts</a></li>
+			<li><a href="#resources-search">search</a></li>
+			<li><a href="#resources-stats">stats</a></li>
+		</ul>
 </ul>
-
 <p>
-	<h2>query parameters</h2>
-	<span>Some paths accepts the following query parameters:
+	<h2 id="general">general information</h2>
+	
+	<h3 id="general-query-parameters">query parameters</h3>
+	<span>Some paths accepts the following query parameters. See each <a href="#resources">resource</a> type for more specifics.
 	<ul> 
 		<li>channel, default is all channels, available on paths that return a list</li>
 		<li>limit, default is 10, available on paths that return a list</li>
@@ -88,29 +47,29 @@ The pav:api exposes playlist data and is currently under development.
 </p>
 
 <p>
-	<h2>identifiers</h2>
+	<h3 id="general-identifiers">identifiers</h3>
 	To lookup a specific artist/track/album you can use pav IDs or Musicbrainz IDs where available.
 </p>
 
 <p>
-	<h2>authentication</h2>
+	<h3 id="general-authentication">authentication</h3>
 	All put and post requests require authentication
 </p>
 
 <p>
-	<h2>versioning</h2>
+	<h3 id="general-versioning">versioning</h3>
 	The version of the api you wish to use is specified at the root path of resources. The current version is v1.
 </p>
 
 <p>
-	<h2>return types</h2>
+	<h3 id="general-return-types">return types</h3>
 	Return type can selected by appending the desired content type to the url (.html, .xml, .json) or by adding ?format=(html, xml, json) to the query parameter. Use only one of these methods when doing a request.
 <br />
  Default return type is currently html but will change to json when the API is put in production.
 </p>
 
 <p>
-	<h2>return codes</h2>
+	<h3 id="general-response-codes">response codes</h3>
 	The API attempts to return appropriate HTTP status codes for every request.
 	<ul>
 		<li>200 OK: Request succeeded</li>
@@ -123,8 +82,364 @@ The pav:api exposes playlist data and is currently under development.
 </p>
 
 <p>
-	<h2>usage</h2>
+	<h3 id="general-terms">terms</h3>
 	Please be nice when using the api. If you plan to make massive amounts of calls please advise us.
 </p>
 
+<h2 id="resources">resources</h2>
+The resources that can be accessed through the api follows the model below:
+<img id="resources-model" width="400px" src="images/models.png"/>
+<br />
+Some useful observation about the model:
+<ul>
+	<li>An artist can have multiple tracks</li>
+	<li>A track can have multiple artists</li>
+	<li>A track can have multiple albums (a track appearing on different albums)</li>
+	<li>An album can have multiple tracks</li>
+	<li>A track can have multiple plays</li>
+	<li>A play belongs to one track</li>
+	<li>A play belongs to one channel</li>
+	<li>A channel can have multiple plays</li>
+</ul>
+
+<h3 id="resources-artists">artists</h3>
+
+<h4>/artists</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a list of artists</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: channel, limit.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><div class="inner-code"><a href="http://api.simonium.com/v1/artists.json?channel=4">http://api.simonium.com/v1/artists.json?channel=4</a></div></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/967986.js"></script>
 </div>
+
+<h4>/artist/:id</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a single artist</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: type.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/artist/1234.json">http://api.simonium.com/v1/artist/1234.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/967997.js"></script>
+</div>
+
+<h4>/artist/:id/tracks</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns the tracks related to a single artist</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: type</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/artist/1234/tracks.json">http://api.simonium.com/v1/artist/1234/tracks.json</a></div></code>
+
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968001.js"></script>
+</div>
+
+
+<h3 id="resources-tracks">tracks</h3>
+<h4>/tracks</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a list of tracks</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: channel, limit.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/tracks.json?channel=4&limit=3">http://api.simonium.com/v1/tracks.json?channel=4&limit=3</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968008.js"></script>
+</div>
+
+<h4>/track/:id</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a single track specified by an id.</p>
+
+	<h5>Parameters</h5>
+	Supports the following parameters: type.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/track/324.json">http://api.simonium.com/v1/track/324.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968013.js?file=gistfile1.json"></script>
+</div>
+
+<h4>post /track</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Post a track to pav. Requires authentication.</p>
+
+	<h5>Parameters</h5>
+	<p>A json payload
+	<script src="https://gist.github.com/968015.js?file=gistfile1.json"></script>
+
+	<h5>Example response</h5>
+	<p>200</p>
+</div>
+
+<h4>/track/:id/artists</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns the artists related to a single track</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: type.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/track/324/artists.json">http://api.simonium.com/v1/track/324/artists.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968022.js?file=gistfile1.json"></script>
+</div>
+
+<h4>/track/:id/albums</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns the albums related to a single track</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: type.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/track/324/albums.json">http://api.simonium.com/v1/track/324/albums.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968023.js?file=gistfile1.json"></script>
+</div>
+
+<h4>/track/:id/plays</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns the plays related to a single track.</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: type.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/track/324/plays.json">http://api.simonium.com/v1/track/324/plays.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968025.js?file=gistfile1.json"></script>
+</div>
+
+
+<h3 id="resources-albums">albums</h3>
+<h4>/albums</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a list of albums.</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: channel, limit.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/albums.json">http://api.simonium.com/v1/albums.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968027.js?file=gistfile1.json"></script>
+</div>
+
+<h4>/album/:id</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a single album.</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: type.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/album/15.json">http://api.simonium.com/v1/album/15.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968029.js?file=gistfile1.json"></script>
+</div>
+
+<h4>/album/:id/tracks</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns the tracks related to a single album.</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: type.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/album/15/tracks.json">http://api.simonium.com/v1/album/15/tracks.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968035.js?file=gistfile1.json"></script>
+</div>
+
+
+<h3 id="resources-channels">channels</h3>
+<h4>/channels</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a list of channels.</p>
+
+	<h5>Parameters</h5>
+	Supports the following parameters: limit.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/channels.json">http://api.simonium.com/v1/channels.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968054.js?file=gistfile1.json"></script>
+</div>
+
+<h4>/channel/:id</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a single channel.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/channel/1.json">http://api.simonium.com/v1/channel/1.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968058.js?file=gistfile1.json"></script>
+</div>
+
+<h4>post channel</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Create a new channel.</p>
+
+	<h5>Parameters</h5>
+	<script src="https://gist.github.com/968061.js?file=gistfile1.json"></script>
+</div>
+
+<h4>put channel/:id</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Update a channel.</p>
+
+	<h5>Parameters</h5>
+	<script src="https://gist.github.com/968061.js?file=gistfile1.json"></script>
+</div>
+
+<h3 id="resources-plays">plays</h3>
+<h4>/plays</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a playlist.</p>
+
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: to, from, limit, channel.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/plays.json?channel=1&limit=3">http://api.simonium.com/v1/plays.json?channel=1&limit=3</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/956363.js"> </script>
+</div>
+
+<h4>/play/:id</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Returns a single play.</p>
+
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/play/4356.json">http://api.simonium.com/v1/play/4356.json</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/968064.js?file=gistfile1.json"></script>
+</div>
+
+<h3 id="resources-chart">charts</h3>
+<h4>/chart/artist</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>A chart of most played artists for a given period.</p>
+	
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: channel, limit, to, from. If no to/from parameter is provided we return a chart from the last 7 days.</p>
+	
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/chart/artist.json?channel=1">http://api.simonium.com/v1/chart/artist.json?channel=1</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/973721.js?file=gistfile1.json"></script>
+</div>
+
+<h4>/chart/track</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	A chart of most played tracks for a given period.</p>
+	
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: channel, limit, to, from. If no to/from parameter is provided we return a chart from the last 7 days.</p>
+	
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/chart/track.json?from=2011-04-20">http://api.simonium.com/v1/chart/track.json?from=2011-04-20</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/973726.js?file=gistfile1.json"></script>
+</div>
+
+<h4>/chart/album</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>A chart of most played albums for a given period.</p>
+	
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: channel, limit, to, from. If no to/from parameter is provided we return a chart from the last 7 days.</p>
+	
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/chart/album.json?limit=5&channel=4">http://api.simonium.com/v1/chart/album.json?limit=5&channel=4</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/973730.js?file=gistfile1.json"></script>
+</div>
+
+
+<h3 id="resources-search">search</h3>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Search for artists (tracks and albums to come).</p>
+	
+	<h5>Parameters</h5>
+	<p>Supports the following parameters: limit.</p>
+	
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/search/dylan.json?limit=5">http://api.simonium.com/v1/search/dylan.json?limit=5</a></div></code>
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/973733.js?file=gistfile1.json"></script>
+</div>
+
+<h3 id="resources-stats">stats</h3>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Statistics for the pav datastore.</p>
+	
+	<h5>Example query</h5>
+	<code><div class="inner-code"><a href="http://api.simonium.com/v1/stats">http://api.simonium.com/v1/stats</a></div></code>
+</div>
+</div>
+<style type="text/css" media="screen">
+.gist-syntax .s2 {
+color: black;
+}
+.gist .gist-file .gist-data{
+  font-size:75%;
+}
+.gist .gist-file .gist-meta{
+	display:none;
+}
+</style>

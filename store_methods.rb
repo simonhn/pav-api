@@ -74,7 +74,11 @@
  #we can only hit mbrainz once a second so we take a nap
  sleep 1
 
- q = MusicBrainz::Webservice::Query.new
+ service = MusicBrainz::Webservice::Webservice.new(
+   :user_agent => 'api.simonium.com'
+ )
+ q = MusicBrainz::Webservice::Query.new(service)
+
  t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :release=>album, :limit => 5)
  t_results = q.get_tracks(t_filter)
 

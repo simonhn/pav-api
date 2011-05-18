@@ -86,7 +86,11 @@
  if t_results.count == 0
 
    #ARTIST
-   q = MusicBrainz::Webservice::Query.new
+   service = MusicBrainz::Webservice::Webservice.new(
+     :user_agent => 'api.simonium.com'
+   )
+   q = MusicBrainz::Webservice::Query.new(service)
+
    t_filter = MusicBrainz::Webservice::ArtistFilter.new(:name=>artist)
    t_results = q.get_artists(t_filter)
    if t_results.count > 0
@@ -98,7 +102,11 @@
    end
 
    #ALBUM
-   q = MusicBrainz::Webservice::Query.new
+   service = MusicBrainz::Webservice::Webservice.new(
+     :user_agent => 'api.simonium.com'
+   )
+   q = MusicBrainz::Webservice::Query.new(service)
+
    t_filter = MusicBrainz::Webservice::ReleaseFilter.new(:artist=>artist, :title=>album)
    t_results = q.get_releases(t_filter)
    #puts "album results count "+t_results.count.to_s

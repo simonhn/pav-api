@@ -5,12 +5,12 @@
      #there can be multiple artist seperated by '+' so we split them
      artist_array = item['artist']['artistname'].split("+")
      artist_array.each{ |artist_item|
+       puts artist_item
      begin
        #for each item, lookup in musicbrainz. Returns hash with mbids for track, album and artist if found
        mbid_hash = mbid_lookup(artist_item.strip, item['title'], item['album']['albumname'])
       rescue => e
          $LOG.info("Issue while processing #{artist_item.strip} - #{item['title']} - #{item['album']['albumname']}")  
-         raise StandardError, "A musicbrainz error has occurred - #{e}", e.backtrace
       end
      #ARTIST
      if !mbid_hash["artistmbid"].nil?

@@ -1,16 +1,17 @@
  #Method that stores each playitem to database. Index is the id of the channel to associate the play with
  def store_hash(item, index)
+    mbid_hash = nil
     duration = ChronicDuration::parse(item["duration"].to_s)     
 
      #there can be multiple artist seperated by '+' so we split them
      artist_array = item['artist']['artistname'].split("+")
      artist_array.each{ |artist_item|
-       puts artist_item
      begin
        #for each item, lookup in musicbrainz. Returns hash with mbids for track, album and artist if found
        mbid_hash = mbid_lookup(artist_item.strip, item['title'], item['album']['albumname'])
-      rescue => e
-         $LOG.info("Issue while processing #{artist_item.strip} - #{item['title']} - #{item['album']['albumname']}")  
+       
+      rescue StandardError => e
+         $LOG.info("Issue while processing #{artist_item.strip} - #{item['title']} - #{item['album']['albumname']} - #{e.backtrace}")  
       end
      #ARTIST
      if !mbid_hash["artistmbid"].nil?
@@ -75,21 +76,20 @@
  sleep 1
 
  service = MusicBrainz::Webservice::Webservice.new(
-   :user_agent => 'api.simonium.com'
+   :user_agent => 'pavapi/1.0'
  )
  q = MusicBrainz::Webservice::Query.new(service)
 
- t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :release=>album, :limit => 5)
+ #t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :release=>album, :limit => 5)
+ 
+ t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :limit => 5)
  t_results = q.get_tracks(t_filter)
 
  #No results from the 'advanced' query, so trying artist and album individualy
  if t_results.count == 0
 
    #ARTIST
-   service = MusicBrainz::Webservice::Webservice.new(
-     :user_agent => 'api.simonium.com'
-   )
-   q = MusicBrainz::Webservice::Query.new(service)
+
 
    t_filter = MusicBrainz::Webservice::ArtistFilter.new(:name=>artist)
    t_results = q.get_artists(t_filter)
@@ -102,11 +102,6 @@
    end
 
    #ALBUM
-   service = MusicBrainz::Webservice::Webservice.new(
-     :user_agent => 'api.simonium.com'
-   )
-   q = MusicBrainz::Webservice::Query.new(service)
-
    t_filter = MusicBrainz::Webservice::ReleaseFilter.new(:artist=>artist, :title=>album)
    t_results = q.get_releases(t_filter)
    #puts "album results count "+t_results.count.to_s

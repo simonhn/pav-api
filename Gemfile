@@ -23,3 +23,4 @@ gem 'dm-aggregates'
 gem 'dm-migrations'
 
 gem 'yajl-ruby', :require=> 'yajl/json_gem'
+gem 'newrelic_rpm'

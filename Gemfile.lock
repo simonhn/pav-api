@@ -36,6 +36,7 @@ GEM
     meta-spotify (0.1.5)
       crack (>= 0.1.4)
       httparty (>= 0.4.5)
+    newrelic_rpm (3.0.0)
     numerizer (0.1.1)
     rack (1.2.2)
     rack-contrib (1.1.0)
@@ -64,6 +65,7 @@ DEPENDENCIES
   json
   kbaum-rchardet
   meta-spotify
+  newrelic_rpm
   rack
   rack-contrib
   rbrainz

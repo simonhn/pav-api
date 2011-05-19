@@ -18,6 +18,9 @@ require 'logger'
 
 require 'chronic_duration'
 
+require 'newrelic_rpm'
+
+
 require 'sinatra/respond_to'
 Sinatra::Application.register Sinatra::RespondTo
 @version = "v1"
@@ -107,7 +110,6 @@ get '/' do
 end
 
 #show all artists, defaults to 10, ordered by created date
-# @note This method may modify our application state!
 get "/#{@version}/artists" do
   limit = params[:limit]
   limit ||= 10
@@ -172,10 +174,16 @@ end
 
 #add new track item (an item in the playout xml)
 post "/#{@version}/track" do
-   protected!  
+   protected!
+   begin
+   
    data = JSON.parse params[:payload].to_json
    if !data['item']['artist']['artistname'].nil? && Play.count(:playedtime => data['item']['playedtime'], :channel_id => data['channel'])==0
       store_hash(data['item'], data['channel'])
+   end
+   
+   rescue StandardError => e 
+      $LOG.info("Post method end: Issue while processing #{data['item']['artist']['artistname']} - #{data['channel']},  #{e.backtrace}")
    end
 end
 

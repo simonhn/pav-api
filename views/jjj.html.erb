@@ -1,0 +1,29 @@
+<div id="wrapper">
+
+<h1>TOP artists</h1>
+<% @hat.each do |k,v| %>
+	<% artistname = k %>
+	<% v.each do |ke,va| %>
+		<% va.each do |key,val| %>
+		<%if key=='mbid'%>
+				<p><h2><a href='http://musicbrainz.org/artist/<%=val%>'><%=artistname%></a></h2></p>
+		<%elsif key == 'count' %>
+				<p><h4><%=val%> plays</h4></p>
+		<%elsif key == 'audio' %>
+				<p>
+					<audio src="<%=val%>" controls>
+				 		audio not supported
+					</audio>
+				</p>	
+		<%elsif key == 'video' %>
+				<p><h4>Video url: <%=val%></h4></p>
+		<%else%>
+				<p><img src="<%=val%>"><p>
+				<h4><%=key%></h4>
+		<%end%>
+			
+		<%end%>
+	<%end%>
+
+<%end%>
+</div>

@@ -3,13 +3,10 @@
 <h1>TOP artists</h1>
 <% @hat.each do |k,v| %>
 	<% artistname = k %>
+	<p><h2><%=artistname%></h2></p>
 	<% v.each do |ke,va| %>
 		<% va.each do |key,val| %>
-		<%if key=='mbid'%>
-				<p><h2><a href='http://musicbrainz.org/artist/<%=val%>'><%=artistname%></a></h2></p>
-		<%elsif key == 'count' %>
-				<p><h4><%=val%> plays</h4></p>
-		<%elsif key == 'audio' %>
+		<%if key == 'audio' %>
 				<p>
 					<audio src="<%=val%>" controls>
 				 		audio not supported

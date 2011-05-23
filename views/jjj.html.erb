@@ -1,12 +1,21 @@
 <div id="wrapper">
 
-<h1>TOP artists</h1>
+<h2 style="	font-family: 'Helvetica Neue', Helvetica, sans-serif;
+	text-shadow: 0 1px 0 white;
+	color: black;
+	font-size: 30px;
+	line-height: 1.0em;
+	letter-spacing: -1px;
+	margin-bottom: 10px;
+	font-weight: bold;">TOP artists</h2>
 <% @hat.each do |k,v| %>
 	<% artistname = k %>
-	<p><h2><%=artistname%></h2></p>
+	<p><h3 style="color:#A30000"><%=artistname%></h3></p>
 	<% v.each do |ke,va| %>
 		<% va.each do |key,val| %>
-		<%if key == 'audio' %>
+		<%if key=='mbid'%>
+		<%elsif key == 'count' %>
+		<%elsif key == 'audio' %>
 				<p>
 					<audio src="<%=val%>" controls>
 				 		audio not supported

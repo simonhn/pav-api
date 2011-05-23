@@ -8,6 +8,8 @@ gem 'builder'
 gem 'rbrainz'
 gem 'kbaum-rchardet'
 
+gem 'rest-client', :require=>'rest_client'
+gem 'crack'
 
 gem 'meta-spotify'
 

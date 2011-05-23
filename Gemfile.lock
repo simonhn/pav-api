@@ -36,12 +36,15 @@ GEM
     meta-spotify (0.1.5)
       crack (>= 0.1.4)
       httparty (>= 0.4.5)
+    mime-types (1.16)
     newrelic_rpm (3.0.0)
     numerizer (0.1.1)
     rack (1.2.2)
     rack-contrib (1.1.0)
       rack (>= 0.9.1)
     rbrainz (0.5.2)
+    rest-client (1.6.1)
+      mime-types (>= 1.16)
     sinatra (1.2.6)
       rack (~> 1.1)
       tilt (>= 1.2.2, < 2.0)
@@ -56,6 +59,7 @@ PLATFORMS
 DEPENDENCIES
   builder
   chronic_duration
+  crack
   dm-aggregates
   dm-core
   dm-migrations
@@ -69,6 +73,7 @@ DEPENDENCIES
   rack
   rack-contrib
   rbrainz
+  rest-client
   sinatra
   sinatra-respond_to
   yajl-ruby

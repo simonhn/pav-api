@@ -554,7 +554,7 @@ all = Hash.new
        end
     end
     }
-    @hat =all.sort
+    @hat = all
     respond_to do |wants|
       wants.html { erb :jjj }  
       wants.json { all.to_json }  

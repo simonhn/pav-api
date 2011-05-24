@@ -65,59 +65,53 @@
    }
  end
 
- def mbid_lookup(artist, track, album)
- result_hash = {}
+def mbid_lookup(artist, track, album)
+  result_hash = {}
+  
+  #we can only hit mbrainz once a second so we take a nap
+  sleep 1
+  service = MusicBrainz::Webservice::Webservice.new(:user_agent => 'pavapi/1.0')
+  q = MusicBrainz::Webservice::Query.new(service)
 
- #we can only hit mbrainz once a second so we take a nap
- sleep 1
+  #TRACK
+  t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :release=>album, :limit => 5)
+  #t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :limit => 5)
+  t_results = q.get_tracks(t_filter)
 
- service = MusicBrainz::Webservice::Webservice.new(
-   :user_agent => 'pavapi/1.0'
- )
- q = MusicBrainz::Webservice::Query.new(service)
+  #No results from the 'advanced' query, so trying artist and album individualy
+  if t_results.count == 0
+    #ARTIST
+    t_filter = MusicBrainz::Webservice::ArtistFilter.new(:name=>artist)
+    t_results = q.get_artists(t_filter)
+    if t_results.count > 0
+      x = t_results.first
+      if x.score == 100 && is_ascii(String(x.entity.name)) && String(x.entity.name).casecmp(artist)==0
+        #puts 'ARTIST score: ' + String(x.score) + '- artist: ' + String(x.entity.name) + ' - artist mbid '+ String(x.entity.id.uuid)
+        result_hash["artistmbid"] = String(x.entity.id.uuid)
+      end
+    end
 
- #t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :release=>album, :limit => 5)
- 
- t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :limit => 5)
- t_results = q.get_tracks(t_filter)
+    #ALBUM
+    t_filter = MusicBrainz::Webservice::ReleaseFilter.new(:artist=>artist, :title=>album)
+    t_results = q.get_releases(t_filter)
+    #puts "album results count "+t_results.count.to_s
+    if t_results.count==1    
+      x = t_results.first
+      #puts 'ALBUM score: ' + String(x.score) + '- artist: ' + String(x.entity.artist) + ' - artist mbid '+ String(x.entity.id.uuid) +' - release title '+ String(x.entity.title) + ' - orginal album title: '+album
+      if x.score == 100 && is_ascii(String(x.entity.title)) #&& String(x.entity.title).casecmp(album)==0
+        result_hash["albummbid"] = String(x.entity.id.uuid)
+      end
+    end
 
- #No results from the 'advanced' query, so trying artist and album individualy
- if t_results.count == 0
-
-   #ARTIST
-
-
-   t_filter = MusicBrainz::Webservice::ArtistFilter.new(:name=>artist)
-   t_results = q.get_artists(t_filter)
-   if t_results.count > 0
-     x = t_results.first
-     if x.score == 100 && is_ascii(String(x.entity.name)) && String(x.entity.name).casecmp(artist)==0
-       #puts 'ARTIST score: ' + String(x.score) + '- artist: ' + String(x.entity.name) + ' - artist mbid '+ String(x.entity.id.uuid)
-       result_hash["artistmbid"] = String(x.entity.id.uuid)
-     end
-   end
-
-   #ALBUM
-   t_filter = MusicBrainz::Webservice::ReleaseFilter.new(:artist=>artist, :title=>album)
-   t_results = q.get_releases(t_filter)
-   #puts "album results count "+t_results.count.to_s
-   if t_results.count > 0    
-     x = t_results.first
-     #puts 'ALBUM score: ' + String(x.score) + '- artist: ' + String(x.entity.artist) + ' - artist mbid '+ String(x.entity.id.uuid) +' - release title '+ String(x.entity.title) + ' - orginal album title: '+album
-     if x.score == 100 && is_ascii(String(x.entity.title)) #&& String(x.entity.title).casecmp(album)==0
-       result_hash["albummbid"] = String(x.entity.id.uuid)
-     end
-   end
-
- elsif t_results.count > 0
-   t_results.each{ |x|
-     #puts 'score: ' + String(x.score) + '- artist: ' + String(x.entity.artist) + ' - artist mbid '+ String(x.entity.artist.id.uuid) + ' - track mbid: ' + String(x.entity.id.uuid) + ' - track: ' + String(x.entity.title)  +' - album: ' + String(x.entity.releases[0]) +' - album mbid: '+ String(x.entity.releases[0].id.uuid)
-     if  x.score == 100 && is_ascii(String(x.entity.artist))
-       result_hash["trackmbid"] = String(x.entity.id.uuid)
-       result_hash["artistmbid"] = String(x.entity.artist.id.uuid)
-       result_hash["albummbid"] = String(x.entity.releases[0].id.uuid)
-     end
-   }
+  elsif t_results.count > 0
+    t_results.each{ |x|
+    #puts 'score: ' + String(x.score) + '- artist: ' + String(x.entity.artist) + ' - artist mbid '+ String(x.entity.artist.id.uuid) + ' - track mbid: ' + String(x.entity.id.uuid) + ' - track: ' + String(x.entity.title)  +' - album: ' + String(x.entity.releases[0]) +' - album mbid: '+ String(x.entity.releases[0].id.uuid)
+      if  x.score == 100 && is_ascii(String(x.entity.artist))
+        result_hash["trackmbid"] = String(x.entity.id.uuid)
+        result_hash["artistmbid"] = String(x.entity.artist.id.uuid)
+        result_hash["albummbid"] = String(x.entity.releases[0].id.uuid)
+      end
+    }
  end
  return result_hash
 end

@@ -1,7 +1,7 @@
  #Method that stores each playitem to database. Index is the id of the channel to associate the play with
  def store_hash(item, index)
     mbid_hash = nil
-    duration = ChronicDuration::parse(item["duration"].to_s)     
+    duration = ChronicDuration.parse(item["duration"].to_s)     
 
      #there can be multiple artist seperated by '+' so we split them
      artist_array = item['artist']['artistname'].split("+")

@@ -13,7 +13,7 @@ gem 'crack'
 
 gem 'meta-spotify'
 
-gem 'chronic_duration'
+gem 'chronic'
 
 gem 'sinatra-respond_to'
 

@@ -3,8 +3,7 @@ GEM
   specs:
     addressable (2.2.5)
     builder (3.0.0)
-    chronic_duration (0.9.4)
-      numerizer (~> 0.1.1)
+    chronic (0.3.0)
     crack (0.1.8)
     data_objects (0.10.5)
       addressable (~> 2.1)
@@ -38,7 +37,6 @@ GEM
       httparty (>= 0.4.5)
     mime-types (1.16)
     newrelic_rpm (3.0.0)
-    numerizer (0.1.1)
     rack (1.2.2)
     rack-contrib (1.1.0)
       rack (>= 0.9.1)
@@ -58,7 +56,7 @@ PLATFORMS
 
 DEPENDENCIES
   builder
-  chronic_duration
+  chronic
   crack
   dm-aggregates
   dm-core

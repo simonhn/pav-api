@@ -24,21 +24,17 @@
       @artist_channels = @artist.channels << Channel.get(index)
       @artist_channels.save
 
-       #ALBUM
-       #creating and saving album if not exists
-       #there can be more than one album
-       item['album'].values.each{|val| 
-         if !val.nil?
-           if !mbid_hash["albummbid"].nil?
-             #puts "album mbid found for: " + mbid_hash["albummbid"]
-             @albums = Album.first_or_create({:albummbid => mbid_hash["albummbid"]},{:albummbid => mbid_hash["albummbid"], :albumname => item['album']['albumname'], :albumimage=>item['album']['albumimage']})
-             break
-           else
-             @albums = Album.first_or_create({:albumname => item['album']['albumname']},{:albumname => item['album']['albumname'], :albumimage=>item['album']['albumimage']})
-             break
-           end
-         end 
-       }
+      #ALBUM
+      #creating and saving album if not exists
+      if !item['album']['albumname'].empty?
+        if !mbid_hash["albummbid"].nil?
+          #puts "album mbid found for: " + mbid_hash["albummbid"]
+          @albums = Album.first_or_create({:albummbid => mbid_hash["albummbid"]},{:albummbid => mbid_hash["albummbid"], :albumname => item['album']['albumname'], :albumimage=>item['album']['albumimage']})
+        else
+          @albums = Album.first_or_create({:albumname => item['album']['albumname']},{:albumname => item['album']['albumname'], :albumimage=>item['album']['albumimage']})
+        end
+      end
+
 
        #Track
        #creating and saving track

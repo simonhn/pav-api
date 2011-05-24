@@ -20,7 +20,8 @@ include MusicBrainz
 require 'rchardet'
 require 'logger'
 
-require 'chronic_duration'
+#require 'chronic_duration'
+require 'chronic'
 
 require 'newrelic_rpm'
 
@@ -86,10 +87,13 @@ helpers do
     
     def make_to_from(played_from, played_to)
       #both to and from parameters provided
+      played_from = Chronic.parse(played_from)
+      played_to = Chronic.parse(played_to)
+
       if (!played_from.nil? && !played_to.nil?)
-       return "AND playedtime < '#{played_to}' AND playedtime > '#{played_from}'"
+       return "AND playedtime < '#{played_to.strftime("%Y-%m-%d %H:%M:%S")}' AND playedtime > '#{played_from.strftime("%Y-%m-%d %H:%M:%S")}'"
       end
-      #no parameter, sets from a week ago
+      #no parameters, sets from a week ago
       if (played_from.nil? && played_to.nil?)
         now_date = DateTime.now - 7
         return "AND playedtime > '#{now_date.strftime("%Y-%m-%d %H:%M:%S")}'"
@@ -97,13 +101,36 @@ helpers do
       #only to parameter, setting from a week before that
       if (played_from.nil? && !played_to.nil?)
         from_date = DateTime.parse(played_to) - 7
-        return "AND playedtime < '#{played_to}' AND playedtime > '#{from_date.strftime("%Y-%m-%d %H:%M:%S")}'"
+        puts played_from.strftime("%Y-%m-%d %H:%M:%S")
+
+        return "AND playedtime < '#{played_to.strftime("%Y-%m-%d %H:%M:%S")}' AND playedtime > '#{from_date.strftime("%Y-%m-%d %H:%M:%S")}'"
       end
       #only from parameter
       if (!played_from.nil? && played_to.nil?)
-       return "AND playedtime > '#{played_from}'"
+       puts played_from.strftime("%Y-%m-%d %H:%M:%S")
+       return "AND playedtime > '#{played_from.strftime("%Y-%m-%d %H:%M:%S")}'"
       end
     end  
+    
+    def isNumeric(s)
+        Float(s) != nil rescue false
+    end
+    
+    def get_limit(lim)
+      if isNumeric(lim)
+        limit = lim
+      end
+      limit ||= 10
+    end
+    
+    def get_channel(cha)
+      if isNumeric(cha)
+        channel = cha
+      elsif cha.nil?
+        channel = false
+      end
+    end
+
 end
 
 #ROUTES
@@ -115,10 +142,9 @@ end
 
 #show all artists, defaults to 10, ordered by created date
 get "/#{@version}/artists" do
-  limit = params[:limit]
-  limit ||= 10
-  channel = params[:channel]
-  if !channel.nil?
+  limit = get_limit(params[:limit])
+  channel = get_channel(params[:channel])
+  if channel
     @artists = Artist.all('tracks.plays.channel_id' => channel, :limit=>limit.to_i, :order => [:created_at.desc ])
   else
     @artists =  Artist.all(:limit => limit.to_i, :order => [:created_at.desc ])
@@ -193,10 +219,9 @@ end
 
 #show tracks
 get "/#{@version}/tracks" do
-  limit = params[:limit]
-  limit ||= 10
+  limit = get_limit(params[:limit])
   channel = params[:channel]
-  if !channel.nil?
+  if channel
     @tracks = Track.all(Track.plays.channel_id => channel, :limit=>limit.to_i, :order => [:created_at.desc])
   else
     @tracks = Track.all(:limit => limit.to_i, :order => [:created_at.desc ])
@@ -271,10 +296,9 @@ end
 
 #show all albums
 get "/#{@version}/albums" do
-  limit = params[:limit]
-  limit ||= 10
+  limit = get_limit(params[:limit])
   channel = params[:channel]
-  if !channel.nil?
+  if channel
     @albums = Album.all('tracks.plays.channel_id' => channel, :limit=>limit.to_i, :order => [:created_at.desc ])
   else
     @albums =  Album.all(:limit => limit.to_i, :order => [:created_at.desc ])
@@ -318,11 +342,10 @@ end
 #PLAY
 get "/#{@version}/plays" do
   #DATE_FORMAT(playedtime, '%d %m %Y %H %i %S')
-  limit = params[:limit]
-  limit ||= 10
+  limit = get_limit(params[:limit])
   to_from = make_to_from(params[:from], params[:to])
   channel = params[:channel]
-  if !channel.nil?
+  if channel
      @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
   else
     @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
@@ -380,13 +403,12 @@ end
 
 # chart of top tracks
 get "/#{@version}/chart/track" do
-  limit = params[:limit]
-  limit ||= 10
+  limit = get_limit(params[:limit])
   to_from = make_to_from(params[:from], params[:to])
   channel = params[:channel]
   #SELECT tracks.title, artists.artistname, count(*) as cnt FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` INNER JOIN artist_tracks ON tracks.id=artist_tracks.track_id INNER JOIN artists ON artists.id=artist_tracks.artist_id WHERE `plays`.`channel_id` = 1 group by tracks.id   order by cnt DESC limit 10;
   
-  if !channel.nil?
+  if channel
      @tracks = repository(:default).adapter.select("select *, count(distinct plays.id) as cnt from tracks, plays, artists, artist_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id order by cnt DESC limit #{limit}")
   else
     @tracks = repository(:default).adapter.select("select *, count(distinct plays.id) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id order by cnt DESC limit #{limit}")
@@ -403,10 +425,9 @@ end
 # chart of top artist by name
 get "/#{@version}/chart/artist" do
  to_from = make_to_from(params[:from], params[:to])
- limit = params[:limit]
- limit ||= 10
+ limit = get_limit(params[:limit])
  channel = params[:channel]
- if !channel.nil?
+ if channel
    @artists = repository(:default).adapter.select("select artists.artistname, artists.id, artist_tracks.artist_id, artists.artistmbid, count(*) as cnt from tracks, plays, artists, artist_tracks where plays.channel_id=#{channel} AND  tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id=artists.id #{to_from} group by artists.id order by cnt desc limit #{limit}")
  else
    @artists = repository(:default).adapter.select("select artists.artistname, artists.id, artist_tracks.artist_id, artists.artistmbid, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id=artists.id #{to_from} group by artists.id order by cnt desc limit #{limit}")
@@ -422,10 +443,9 @@ end
 
 get "/#{@version}/chart/album" do
   to_from = make_to_from(params[:played_from], params[:played_to])
-  limit = params[:limit]
-  limit ||= 10
+  limit = get_limit(params[:limit])
   channel = params[:channel]
-  if !channel.nil?
+  if channel
     @albums = repository(:default).adapter.select("select albums.albumname, albums.albumimage, albums.id as album_id, tracks.id as track_id, albums.albummbid, count(*) as cnt from tracks, plays, albums, album_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
   else
     @albums = repository(:default).adapter.select("select albums.albumname, albums.albumimage, albums.id as album_id, tracks.id as track_id, albums.albummbid, count(*) as cnt from tracks, plays, albums, album_tracks where tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
@@ -440,8 +460,7 @@ end
 
 # search artist by name
 get "/#{@version}/search/:q" do
-  limit = params[:limit]
-  limit ||= 10
+  limit = get_limit(params[:limit])
   @artists = Artist.all(:artistname.like =>'%'+params[:q]+'%', :limit => limit.to_i)
   respond_to do |wants|
     wants.html { erb :artists }
@@ -533,7 +552,6 @@ all = Hash.new
                  end
                  if ha["media:content"].kind_of?(Array)
                    all[o.artistname].fetch("media").store(ha["media:content"].first["medium"],ha["media:content"].first["url"]) 
-                   puts 
                  else
                    all[o.artistname].fetch("media").store(ha["media:content"]["medium"],ha["media:content"]["url"]) 
                    

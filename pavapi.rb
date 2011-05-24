@@ -20,7 +20,7 @@ include MusicBrainz
 require 'rchardet'
 require 'logger'
 
-#require 'chronic_duration'
+#equire 'chronic_duration'
 require 'chronic'
 
 require 'newrelic_rpm'

@@ -32,7 +32,7 @@ end
 #throttling
 require 'rack/throttle'
 require 'memcached'
-require 'throttler'
+require './throttler'
 
 #for serving different content types
 require 'sinatra/respond_to'

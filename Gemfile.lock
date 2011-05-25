@@ -1,13 +1,13 @@
 GEM
   remote: http://rubygems.org/
   specs:
-    addressable (2.2.5)
+    addressable (2.2.6)
     builder (3.0.0)
     chronic (0.3.0)
     chronic_duration (0.9.5)
       numerizer (~> 0.1.1)
     crack (0.1.8)
-    data_objects (0.10.5)
+    data_objects (0.10.6)
       addressable (~> 2.1)
     dm-aggregates (1.1.0)
       dm-core (~> 1.1.0)
@@ -27,31 +27,34 @@ GEM
       json (~> 1.4.6)
     dm-timestamps (1.1.0)
       dm-core (~> 1.1.0)
-    do_mysql (0.10.5)
-      data_objects (= 0.10.5)
+    do_mysql (0.10.6)
+      data_objects (= 0.10.6)
     fastercsv (1.5.4)
     httparty (0.7.7)
       crack (= 0.1.8)
     json (1.4.6)
     kbaum-rchardet (1.3)
+    memcached (1.2.7)
     meta-spotify (0.1.5)
       crack (>= 0.1.4)
       httparty (>= 0.4.5)
     mime-types (1.16)
-    newrelic_rpm (3.0.0)
+    newrelic_rpm (3.0.1)
     numerizer (0.1.1)
-    rack (1.2.2)
+    rack (1.3.0)
     rack-contrib (1.1.0)
       rack (>= 0.9.1)
+    rack-throttle (0.3.0)
+      rack (>= 1.0.0)
     rbrainz (0.5.2)
     rest-client (1.6.1)
       mime-types (>= 1.16)
     sinatra (1.2.6)
       rack (~> 1.1)
-      tilt (>= 1.2.2, < 2.0)
+      tilt (< 2.0, >= 1.2.2)
     sinatra-respond_to (0.7.0)
       sinatra (~> 1.2)
-    tilt (1.3)
+    tilt (1.3.1)
     yajl-ruby (0.8.2)
 
 PLATFORMS
@@ -70,10 +73,12 @@ DEPENDENCIES
   dm-timestamps
   json
   kbaum-rchardet
+  memcached
   meta-spotify
   newrelic_rpm
   rack
   rack-contrib
+  rack-throttle
   rbrainz
   rest-client
   sinatra

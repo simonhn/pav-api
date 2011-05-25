@@ -24,6 +24,7 @@ gem 'dm-serializer'
 gem 'dm-timestamps'
 gem 'dm-aggregates'
 gem 'dm-migrations'
-
+gem 'rack-throttle', :require => 'rack/throttle'
+gem 'memcached'
 gem 'yajl-ruby', :require=> 'yajl/json_gem'
 gem 'newrelic_rpm'

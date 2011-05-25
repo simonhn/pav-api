@@ -1,18 +1,18 @@
 #core stuff
-require 'rubygems'
+#require 'rubygems'
 require 'sinatra'
 require './models'
 require './store_methods'
 
 #template systems
 require 'yajl/json_gem'
+require 'rack/contrib/jsonp'
+require 'builder'
+use Rack::JSONP
 
 #for xml fetch and parse
 require 'rest_client'
 require 'crack'
-
-require 'rack/contrib/jsonp'
-require 'builder'
 
 #musicbrainz stuff
 require 'rbrainz'
@@ -20,22 +20,37 @@ include MusicBrainz
 require 'rchardet'
 require 'logger'
 
+#time parsing
 require 'chronic_duration'
 require 'chronic'
 
-require 'newrelic_rpm'
+# Enable New Relic    
+configure :production do
+  require 'newrelic_rpm'
+end
 
+#throttling
+require 'rack/throttle'
+require 'memcached'
+require 'throttler'
 
+#for serving different content types
 require 'sinatra/respond_to'
 Sinatra::Application.register Sinatra::RespondTo
+
+#versioning
 @version = "v1"
 
-# MySQL connection:
 configure do
+  #use Throttler, :min => 300.0, :cache => Memcached.new, :key_prefix => :throttle
+  use Rack::Throttle::Throttler, :min => 1.0, :cache => Memcached.new, :key_prefix => :throttle
+  
+  #logging
   DataMapper::Logger.new('log/datamapper.log', :warn)
   DataMapper::Model.raise_on_save_failure = true
   $LOG = Logger.new('log/pavstore.log', 'monthly')
   
+  # MySQL connection:
   @config = YAML::load( File.open( 'config/settings.yml' ) )
   @connection = "#{@config['adapter']}://#{@config['username']}:#{@config['password']}@#{@config['host']}/#{@config['database']}";
   DataMapper.setup(:default, @connection)  
@@ -47,9 +62,9 @@ configure do
 end
 
 #Caching 1 minute - must adjust
-#before do
-    #response['Cache-Control'] = "public, max-age=60" unless development?
-#end
+before do
+  cache_control :public, :must_revalidate, :max_age => 60 unless development?
+end
 
 # Error 404 Page Not Found
 not_found do

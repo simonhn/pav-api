@@ -1,8 +1,14 @@
 #core stuff
-#require 'rubygems'
+require 'rubygems'
 require 'sinatra'
 require './models'
 require './store_methods'
+
+#Queueing with delayed job
+#require 'delayed_job'
+#require 'delayed_job_data_mapper'
+#require './storetrackjob'
+require 'stalker'
 
 #template systems
 require 'yajl/json_gem'
@@ -115,14 +121,12 @@ helpers do
       end
       #only to parameter, setting from a week before that
       if (played_from.nil? && !played_to.nil?)
-        from_date = DateTime.parse(played_to) - 7
-        puts played_from.strftime("%Y-%m-%d %H:%M:%S")
+        from_date = played_to - 7
 
         return "AND playedtime < '#{played_to.strftime("%Y-%m-%d %H:%M:%S")}' AND playedtime > '#{from_date.strftime("%Y-%m-%d %H:%M:%S")}'"
       end
       #only from parameter
       if (!played_from.nil? && played_to.nil?)
-       puts played_from.strftime("%Y-%m-%d %H:%M:%S")
        return "AND playedtime > '#{played_from.strftime("%Y-%m-%d %H:%M:%S")}'"
       end
     end  
@@ -132,10 +136,17 @@ helpers do
     end
     
     def get_limit(lim)
+      #if no limit is set, we default to 10
+      #a max at 5000 on limit to protect the server
       if isNumeric(lim)
-        limit = lim
+        if lim.to_i < 5000
+          return lim
+        else
+          return 5000
+        end
+      else
+        return 10
       end
-      limit ||= 10
     end
     
     def get_channel(cha)
@@ -224,7 +235,10 @@ post "/#{@version}/track" do
    
    data = JSON.parse params[:payload].to_json
    if !data['item']['artist']['artistname'].nil? && Play.count(:playedtime => data['item']['playedtime'], :channel_id => data['channel'])==0
-      store_hash(data['item'], data['channel'])
+      Stalker.enqueue('track.store', :item => data['item'],:channel => data['channel'])
+      
+      #Delayed::Job.enqueue StoreTrackJob.new(data['item'], data['channel'])    
+      #store_hash(data['item'], data['channel'])
    end
    
    rescue StandardError => e 
@@ -361,9 +375,11 @@ get "/#{@version}/plays" do
   to_from = make_to_from(params[:from], params[:to])
   channel = params[:channel]
   if channel
-     @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
+     #@plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
+     @plays = repository(:default).adapter.select("select * from tracks Left Outer Join album_tracks ON album_tracks.track_id = tracks.id Left Outer Join albums ON album_tracks.album_id = albums.id Inner Join artist_tracks ON artist_tracks.track_id = tracks.id Inner Join artists ON artists.id = artist_tracks.artist_id Inner Join plays ON tracks.id = plays.track_id WHERE `plays`.`channel_id` = #{channel} #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
   else
-    @plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
+    #@plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
+    @plays = repository(:default).adapter.select("select * from tracks Left Outer Join album_tracks ON album_tracks.track_id = tracks.id Left Outer Join albums ON album_tracks.album_id = albums.id Inner Join artist_tracks ON artist_tracks.track_id = tracks.id Inner Join artists ON artists.id = artist_tracks.artist_id Inner Join plays ON tracks.id = plays.track_id WHERE tracks.id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
   end
   hat = @plays.collect {|o| {:title => o.title, :artistname => o.artistname, :playedtime => o.playedtime, :albumname => o.albumname, :albumimage => o.albumimage} }
   

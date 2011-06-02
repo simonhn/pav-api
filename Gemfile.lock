@@ -45,6 +45,7 @@ GEM
     fastercsv (1.5.4)
     httparty (0.7.7)
       crack (= 0.1.8)
+    i18n (0.6.0)
     json (1.4.6)
     json_pure (1.5.1)
     kbaum-rchardet (1.3)
@@ -90,6 +91,7 @@ DEPENDENCIES
   dm-mysql-adapter
   dm-serializer
   dm-timestamps
+  i18n
   json
   kbaum-rchardet
   memcached

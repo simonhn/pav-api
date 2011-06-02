@@ -116,7 +116,7 @@ $LOG = Logger.new('log/queue.log', 'monthly')
        begin
          #for each item, lookup in musicbrainz. Returns hash with mbids for track, album and artist if found
          mbid_hash = mbid_lookup(artist_item.strip, item['title'], item['album']['albumname'])
-
+puts mbid_hash.inspect
         rescue StandardError => e
            $LOG.info("Issue while processing #{artist_item.strip} - #{item['title']} - #{e.backtrace}")  
         end

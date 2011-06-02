@@ -95,11 +95,12 @@ require 'logger'
 #time parsing
 require 'chronic_duration'
 require 'chronic'
+pwd  = File.dirname(File.expand_path(__FILE__))
 
-$LOG = Logger.new('log/queue.log', 'monthly')
+$LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
 
   #setup MySQL connection:  
-  @config = YAML::load( File.open( 'config/settings.yml' ) )
+  @config = YAML::load( File.open(pwd +'/config/settings.yml' ) )
   @connection = "#{@config['adapter']}://#{@config['username']}:#{@config['password']}@#{@config['host']}/#{@config['database']}";
   DataMapper.setup(:default, @connection)  
   DataMapper.finalize

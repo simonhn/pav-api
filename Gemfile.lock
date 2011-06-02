@@ -1,14 +1,25 @@
 GEM
   remote: http://rubygems.org/
   specs:
+    activesupport (3.0.7)
     addressable (2.2.6)
+    beanstalk-client (1.1.0)
     builder (3.0.0)
     chronic (0.3.0)
     chronic_duration (0.9.5)
       numerizer (~> 0.1.1)
     crack (0.1.8)
+    daemons (1.1.3)
     data_objects (0.10.6)
       addressable (~> 2.1)
+    delayed_job (2.1.4)
+      activesupport (~> 3.0)
+      daemons
+    delayed_job_data_mapper (1.0.0.rc)
+      delayed_job (~> 2.1)
+      dm-aggregates
+      dm-core
+      dm-observer
     dm-aggregates (1.1.0)
       dm-core (~> 1.1.0)
     dm-core (1.1.0)
@@ -21,6 +32,8 @@ GEM
     dm-mysql-adapter (1.1.0)
       dm-do-adapter (~> 1.1.0)
       do_mysql (~> 0.10.2)
+    dm-observer (1.1.0)
+      dm-core (~> 1.1.0)
     dm-serializer (1.1.0)
       dm-core (~> 1.1.0)
       fastercsv (~> 1.5.4)
@@ -33,6 +46,7 @@ GEM
     httparty (0.7.7)
       crack (= 0.1.8)
     json (1.4.6)
+    json_pure (1.5.1)
     kbaum-rchardet (1.3)
     memcached (1.2.7)
     meta-spotify (0.1.5)
@@ -54,6 +68,9 @@ GEM
       tilt (< 2.0, >= 1.2.2)
     sinatra-respond_to (0.7.0)
       sinatra (~> 1.2)
+    stalker (0.9.0)
+      beanstalk-client
+      json_pure
     tilt (1.3.1)
     yajl-ruby (0.8.2)
 
@@ -65,6 +82,8 @@ DEPENDENCIES
   chronic
   chronic_duration
   crack
+  delayed_job
+  delayed_job_data_mapper
   dm-aggregates
   dm-core
   dm-migrations
@@ -83,4 +102,5 @@ DEPENDENCIES
   rest-client
   sinatra
   sinatra-respond_to
+  stalker
   yajl-ruby

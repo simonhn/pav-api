@@ -28,3 +28,7 @@ gem 'rack-throttle', :require => 'rack/throttle'
 gem 'memcached'
 gem 'yajl-ruby', :require=> 'yajl/json_gem'
 gem 'newrelic_rpm'
+
+gem 'delayed_job'
+gem 'delayed_job_data_mapper'
+gem 'stalker'

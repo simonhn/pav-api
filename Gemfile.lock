@@ -48,7 +48,6 @@ GEM
     i18n (0.6.0)
     json (1.4.6)
     json_pure (1.5.1)
-    kbaum-rchardet (1.3)
     memcached (1.2.7)
     meta-spotify (0.1.5)
       crack (>= 0.1.4)
@@ -62,6 +61,7 @@ GEM
     rack-throttle (0.3.0)
       rack (>= 1.0.0)
     rbrainz (0.5.2)
+    rchardet19 (1.3.5)
     rest-client (1.6.1)
       mime-types (>= 1.16)
     sinatra (1.2.6)
@@ -93,7 +93,6 @@ DEPENDENCIES
   dm-timestamps
   i18n
   json
-  kbaum-rchardet
   memcached
   meta-spotify
   newrelic_rpm
@@ -101,6 +100,7 @@ DEPENDENCIES
   rack-contrib
   rack-throttle
   rbrainz
+  rchardet19
   rest-client
   sinatra
   sinatra-respond_to

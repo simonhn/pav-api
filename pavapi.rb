@@ -23,7 +23,7 @@ require 'crack'
 #musicbrainz stuff
 require 'rbrainz'
 include MusicBrainz
-require 'rchardet'
+require 'rchardet19'
 require 'logger'
 
 #time parsing

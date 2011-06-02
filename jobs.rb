@@ -89,7 +89,7 @@ require 'crack'
 #musicbrainz stuff
 require 'rbrainz'
 include MusicBrainz
-require 'rchardet'
+require 'rchardet19'
 require 'logger'
 
 #time parsing
@@ -116,7 +116,6 @@ $LOG = Logger.new('log/queue.log', 'monthly')
        begin
          #for each item, lookup in musicbrainz. Returns hash with mbids for track, album and artist if found
          mbid_hash = mbid_lookup(artist_item.strip, item['title'], item['album']['albumname'])
-puts mbid_hash.inspect
         rescue StandardError => e
            $LOG.info("Issue while processing #{artist_item.strip} - #{item['title']} - #{e.backtrace}")  
         end
@@ -179,7 +178,6 @@ puts mbid_hash.inspect
     sleep 1
     service = MusicBrainz::Webservice::Webservice.new(:user_agent => 'pavapi/1.0')
     q = MusicBrainz::Webservice::Query.new(service)
-puts 'before'
     #TRACK
     if !album.empty?
       t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :release=>album, :limit => 5)
@@ -187,7 +185,7 @@ puts 'before'
       t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :limit => 5)
     end
     t_results = q.get_tracks(t_filter)
-puts 'after'
+
     #No results from the 'advanced' query, so trying artist and album individualy
     if t_results.count == 0
       #ARTIST
@@ -206,7 +204,7 @@ puts 'after'
         t_filter = MusicBrainz::Webservice::ReleaseFilter.new(:artist=>artist, :title=>album)
         t_results = q.get_releases(t_filter)
         #puts "album results count "+t_results.count.to_s
-        if t_results.count==1    
+        if t_results.count>1    
           x = t_results.first
           #puts 'ALBUM score: ' + String(x.score) + '- artist: ' + String(x.entity.artist) + ' - artist mbid '+ String(x.entity.id.uuid) +' - release title '+ String(x.entity.title) + ' - orginal album title: '+album
           if x.score == 100 && is_ascii(String(x.entity.title)) #&& String(x.entity.title).casecmp(album)==0

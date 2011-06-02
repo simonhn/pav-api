@@ -6,7 +6,7 @@ gem 'rack-contrib', :require => 'rack/contrib'
 gem 'builder'
 
 gem 'rbrainz'
-gem 'kbaum-rchardet'
+gem 'rchardet19'
 
 gem 'rest-client', :require=>'rest_client'
 gem 'crack'

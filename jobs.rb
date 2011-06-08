@@ -236,8 +236,8 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
 job 'track.store' do |args|
   store_hash(args['item'], args['channel'].to_i)
   error do |e, job, args|
-    puts "error e #{e}"
-    puts "error jon #{job.inspect}"
-    puts "error args #{args.inspect}"
+    $LOG.info("error e #{e}")
+    $LOG.info("error job #{job.inspect}")
+    $LOG.info("error args #{args.inspect}")
   end
 end

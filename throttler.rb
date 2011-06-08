@@ -1,5 +1,5 @@
 #MAX_REQUESTS_PER_HOUR = 10
-ABC_IP = '127.0.0.1'
+ABC_IP = '174.143.182.132'
 module Rack; 
   module Throttle
     class Throttler < Rack::Throttle::Interval

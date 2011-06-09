@@ -31,14 +31,14 @@ require 'chronic_duration'
 require 'chronic'
 
 # Enable New Relic    
-configure :production do
-  require 'newrelic_rpm'
-end
+#configure :production do
+  #require 'newrelic_rpm'
+#end
 
 #throttling
-require 'rack/throttle'
-require 'memcached'
-require './throttler'
+#require 'rack/throttle'
+#require 'memcached'
+#require './throttler'
 
 #for serving different content types
 require 'sinatra/respond_to'
@@ -49,7 +49,7 @@ Sinatra::Application.register Sinatra::RespondTo
 
 configure do
   #use Throttler, :min => 300.0, :cache => Memcached.new, :key_prefix => :throttle
-  use Rack::Throttle::Throttler, :min => 1.0, :cache => Memcached.new, :key_prefix => :throttle
+  #use Rack::Throttle::Throttler, :min => 1.0, :cache => Memcached.new, :key_prefix => :throttle
   
   #logging
   DataMapper::Logger.new('log/datamapper.log', :warn)

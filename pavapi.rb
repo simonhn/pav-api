@@ -477,11 +477,11 @@ get "/#{@version}/chart/album" do
   limit = get_limit(params[:limit])
   channel = params[:channel]
   if channel
-    @albums = repository(:default).adapter.select("select albums.albumname, albums.albumimage, albums.id as album_id, tracks.id as track_id, albums.albummbid, count(*) as cnt from tracks, plays, albums, album_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
+    @albums = repository(:default).adapter.select("select artists.artistname, albums.albumname, albums.albumimage, albums.id as album_id,  albums.albummbid, count(distinct plays.id) as cnt from tracks, artists, plays, albums, album_tracks, artist_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id AND tracks.id=artist_tracks.track_id AND artists.id=artist_tracks.artist_id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
   else
-    @albums = repository(:default).adapter.select("select albums.albumname, albums.albumimage, albums.id as album_id, tracks.id as track_id, albums.albummbid, count(*) as cnt from tracks, plays, albums, album_tracks where tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
+    @albums = repository(:default).adapter.select("select artists.artistname, albums.albumname, albums.albumimage, albums.id as album_id,  albums.albummbid, count(distinct plays.id) as cnt from tracks, artists, plays, albums, album_tracks, artist_tracks where AND tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id AND tracks.id=artist_tracks.track_id AND artists.id=artist_tracks.artist_id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
   end
-  hat = @albums.collect {|o| {:count => o.cnt, :albumname => o.albumname, :album_id => o.album_id, :albummbid => o.albummbid,:albumimage => o.albumimage} }
+  hat = @albums.collect {|o| {:count => o.cnt, :artistname => o.artistname, :albumname => o.albumname, :album_id => o.album_id, :albummbid => o.albummbid,:albumimage => o.albumimage} }
   
   respond_to do |wants|
       wants.xml { builder :album_chart }

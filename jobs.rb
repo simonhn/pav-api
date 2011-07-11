@@ -190,6 +190,7 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
     #No results from the 'advanced' query, so trying artist and album individualy
     if t_results.count == 0
       #ARTIST
+      sleep 1
       t_filter = MusicBrainz::Webservice::ArtistFilter.new(:name=>artist)
       t_results = q.get_artists(t_filter)
       if t_results.count > 0
@@ -202,13 +203,16 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
 
       #ALBUM
       if !album.empty?
-        t_filter = MusicBrainz::Webservice::ReleaseFilter.new(:artist=>artist, :title=>album)
-        t_results = q.get_releases(t_filter)
+        sleep 1
+        
+        t_filter = MusicBrainz::Webservice::ReleaseGroupFilter.new(:artist=>artist, :title=>album)
+        t_results = q.get_release_groups(t_filter)
         #puts "album results count "+t_results.count.to_s
         if t_results.count>1    
           x = t_results.first
           #puts 'ALBUM score: ' + String(x.score) + '- artist: ' + String(x.entity.artist) + ' - artist mbid '+ String(x.entity.id.uuid) +' - release title '+ String(x.entity.title) + ' - orginal album title: '+album
           if x.score == 100 && is_ascii(String(x.entity.title)) #&& String(x.entity.title).casecmp(album)==0
+            #puts 'abekat'+x.entity.id.uuid.inspect
             result_hash["albummbid"] = String(x.entity.id.uuid)
           end
         end
@@ -218,9 +222,12 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
       t_results.each{ |x|
       #puts 'score: ' + String(x.score) + '- artist: ' + String(x.entity.artist) + ' - artist mbid '+ String(x.entity.artist.id.uuid) + ' - track mbid: ' + String(x.entity.id.uuid) + ' - track: ' + String(x.entity.title)  +' - album: ' + String(x.entity.releases[0]) +' - album mbid: '+ String(x.entity.releases[0].id.uuid)
         if  x.score == 100 && is_ascii(String(x.entity.artist))
+          sleep 1
+          t_include = MusicBrainz::Webservice::ReleaseIncludes.new(:release_groups=>true)
+          release = q.get_release_by_id(x.entity.releases[0].id.uuid, t_include)
           result_hash["trackmbid"] = String(x.entity.id.uuid)
           result_hash["artistmbid"] = String(x.entity.artist.id.uuid)
-          result_hash["albummbid"] = String(x.entity.releases[0].id.uuid)
+          result_hash["albummbid"] = String(release.release_group.id.uuid)
         end
       }
    end

@@ -208,7 +208,7 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
         t_filter = MusicBrainz::Webservice::ReleaseGroupFilter.new(:artist=>artist, :title=>album)
         t_results = q.get_release_groups(t_filter)
         #puts "album results count "+t_results.count.to_s
-        if t_results.count>1    
+        if t_results.count>0  
           x = t_results.first
           #puts 'ALBUM score: ' + String(x.score) + '- artist: ' + String(x.entity.artist) + ' - artist mbid '+ String(x.entity.id.uuid) +' - release title '+ String(x.entity.title) + ' - orginal album title: '+album
           if x.score == 100 && is_ascii(String(x.entity.title)) #&& String(x.entity.title).casecmp(album)==0

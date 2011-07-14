@@ -479,7 +479,7 @@ get "/#{@version}/chart/album" do
   if channel
     @albums = repository(:default).adapter.select("select artists.artistname, albums.albumname, albums.albumimage, albums.id as album_id,  albums.albummbid, count(distinct plays.id) as cnt from tracks, artists, plays, albums, album_tracks, artist_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id AND tracks.id=artist_tracks.track_id AND artists.id=artist_tracks.artist_id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
   else
-    @albums = repository(:default).adapter.select("select artists.artistname, albums.albumname, albums.albumimage, albums.id as album_id,  albums.albummbid, count(distinct plays.id) as cnt from tracks, artists, plays, albums, album_tracks, artist_tracks where AND tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id AND tracks.id=artist_tracks.track_id AND artists.id=artist_tracks.artist_id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
+    @albums = repository(:default).adapter.select("select artists.artistname, albums.albumname, albums.albumimage, albums.id as album_id,  albums.albummbid, count(distinct plays.id) as cnt from tracks, artists, plays, albums, album_tracks, artist_tracks where tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id AND tracks.id=artist_tracks.track_id AND artists.id=artist_tracks.artist_id #{to_from} group by albums.id order by cnt DESC limit #{limit}")
   end
   hat = @albums.collect {|o| {:count => o.cnt, :artistname => o.artistname, :albumname => o.albumname, :album_id => o.album_id, :albummbid => o.albummbid,:albumimage => o.albumimage} }
   
@@ -545,6 +545,18 @@ get "/#{@version}/stats" do
     wants.html { erb :stats }
   end
 
+end
+
+get '/demo/album-charts' do
+  from_date = DateTime.now - 7
+  @from_date_string = from_date.strftime("%b %e")
+  
+  to_date = DateTime.now
+  @to_date_string = to_date.strftime("%b %e")
+  
+  respond_to do |wants|
+    wants.html{erb :album_chart_all}
+  end
 end
 
 get '/jjj' do

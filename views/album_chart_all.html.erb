@@ -72,8 +72,9 @@ $().ready(function() {
 			.attr('src', "/images/ajax_loader.gif")
 			.appendTo(".kwicks-jjj");
 	 		$.ajax({
-				url: "/v1/chart/album",
-				jsonpCallback:"pavCallBack",
+				url: "http://96.126.96.51/v1/chart/album",
+				cache:true,
+				jsonpCallback:'c1',
 	      dataType: "jsonp",
 	          data: {
 	              format:"json",
@@ -99,9 +100,11 @@ $().ready(function() {
 		.attr('src', "/images/ajax_loader.gif")
 			.appendTo(".kwicks-dig");
 	 		$.ajax({
-				url: "/v1/chart/album",
+				url: "http://96.126.96.51/v1/chart/album",
 				timeout : 40000,
-				jsonpCallback:"pavCallBack",
+				cache:true,
+				jsonpCallback:'c2',
+
 	      dataType: "jsonp",
 	          data: {
 	              format:"json",
@@ -128,9 +131,11 @@ $().ready(function() {
 			.attr('src', "/images/ajax_loader.gif")
 				.appendTo(".kwicks-jazz");
 		 		$.ajax({
-					url: "/v1/chart/album",
+					url: "http://96.126.96.51/v1/chart/album",
 					timeout : 40000,
-					jsonpCallback:"pavCallBack",
+					jsonpCallback:'c3',
+					
+					cache:true,
 		      dataType: "jsonp",
 		          data: {
 		              format:"json",
@@ -157,9 +162,11 @@ $().ready(function() {
 				.attr('src', "/images/ajax_loader.gif")
 					.appendTo(".kwicks-country");
 			 		$.ajax({
-						url: "/v1/chart/album",
+						url: "http://96.126.96.51/v1/chart/album",
 						timeout : 40000,
-						jsonpCallback:"pavCallBack",
+						cache:true,
+						jsonpCallback:'c4',
+						
 			      dataType: "jsonp",
 			          data: {
 			              format:"json",
@@ -186,9 +193,11 @@ $().ready(function() {
 					.attr('src', "/images/ajax_loader.gif")
 						.appendTo(".kwicks-combined");
 				 		$.ajax({
-							url: "/v1/chart/album",
+							url: "http://96.126.96.51/v1/chart/album",
 							timeout : 40000,
-							jsonpCallback:"pavCallBack",
+							cache:true,
+							jsonpCallback:'c5',
+							
 				      dataType: "jsonp",
 				          data: {
 				              format:"json"

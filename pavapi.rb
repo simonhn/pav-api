@@ -68,8 +68,14 @@ configure do
 end
 
 #Caching 1 minute - must adjust
-before do
-  cache_control :public, :must_revalidate, :max_age => 60 unless development?
+
+
+before '/demo/*' do
+  cache_control :public, :must_revalidate, :max_age => 3600 unless development?
+end
+
+before '*/chart/*' do
+  cache_control :public, :must_revalidate, :max_age => 3600 unless development?
 end
 
 # Error 404 Page Not Found

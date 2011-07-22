@@ -518,7 +518,7 @@ get "/#{@version}/chart/artist" do
 end
 
 get "/#{@version}/chart/album" do
-  to_from = make_to_from(params[:played_from], params[:played_to])
+  to_from = make_to_from(params[:from], params[:to])
   limit = get_limit(params[:limit])
   channel = params[:channel]
   if channel

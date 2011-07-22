@@ -34,15 +34,16 @@ The pav:api exposes playlist data and is currently under development.
 	<ul> 
 		<li>channel, default is all channels, available on paths that return a list</li>
 		<li>limit, default is 10, available on paths that return a list</li>
-		<li>callback, for cross-domain access jsonp is delivered to requests with 'callback' query parameter and json as return type.</li>
+		<li>callback, for cross-domain access jsonp is delivered to requests with 'callback' query parameter and json as return type</li>
 		<li>format, return type format (html, json, xml)</li>
 		<li>type, to specify lookup type, mbid</li>
 		<li>to (to date) in yyyy-mm-dd format</li>
 		<li>from (from date) in yyyy-mm-dd format</li>
-		<li class="missing">fields, for partial responses</li>
-		<li class="missing">sort, for ordering results</li>
-		<li class="missing">key, is required for all calls to the api</li>
-
+		<li>order_by, for ordering results. Default is playedtime. Allowed values are artist and track</li>
+		<li>q, a query for searching for track title, album name and artist name</li>
+		<li>artist_query, searching for an artist name</li>
+		<li>track_query, searching for a track title</li>
+		<li>album_query, searching for an album name</li>
 	</ul>
 </p>
 
@@ -340,8 +341,7 @@ Some useful observation about the model:
 	<p>Returns a playlist.</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: to, from, limit, channel.</p>
-
+	<p>Supports the following parameters: to, from, limit, channel, artist_query, track_query, album_query, q (query artist, channel and track name), order_by.</p>
 	<h5>Example query</h5>
 	<code><div class="inner-code"><a href="/v1/plays.json?channel=1&limit=3">/v1/plays.json?channel=1&limit=3</a></div></code>
 	

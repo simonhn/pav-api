@@ -1,0 +1,9 @@
+
+
+
+<h1>Albums</h1>
+<% for album in @albums %>
+    <p><%= album.albumname %> - <%=album.cnt.to_i%></p>
+		<% if !album.albumimage.nil? %><img src="<%= album.albumimage %>" /><% end %>
+
+<% end %>

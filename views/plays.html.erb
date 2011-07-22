@@ -268,7 +268,7 @@ body{font-size: 0.75em;}
 					</tr>
 					<tr>
 						<td class="label">Album</td>
-						<td class="info"><% if !track.albummbid.nil? %><a href="http://musicbrainz.org/album/<%= track.albummbid %>.html"><%= track.albumname %></a><% else %> <%= track.albumname %><% end %></td>
+						<td class="info"><% if !track.albummbid.nil? %><a href="http://musicbrainz.org/release-group/<%= track.albummbid %>.html"><%= track.albumname %></a><% else %> <%= track.albumname %><% end %></td>
 					</tr>
 					<tr>
 						<td class="label">Label</td>

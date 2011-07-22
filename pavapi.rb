@@ -529,6 +529,7 @@ get "/#{@version}/chart/album" do
   hat = @albums.collect {|o| {:count => o.cnt, :artistname => o.artistname, :albumname => o.albumname, :album_id => o.album_id, :albummbid => o.albummbid,:albumimage => o.albumimage} }
   
   respond_to do |wants|
+      wants.html { erb :album_chart }
       wants.xml { builder :album_chart }
       wants.json {hat.to_json}
   end

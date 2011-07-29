@@ -52,7 +52,7 @@ configure do
   #use Rack::Throttle::Throttler, :min => 1.0, :cache => Memcached.new, :key_prefix => :throttle
   
   #logging
-  DataMapper::Logger.new('log/datamapper.log', :warn)
+  DataMapper::Logger.new('log/datamapper.log', :debug)
   DataMapper::Model.raise_on_save_failure = true
   $LOG = Logger.new('log/pavstore.log', 'monthly')
   
@@ -202,6 +202,47 @@ helpers do
       if(!channel.nil?)
         return "plays.channel_id=#{channel} AND"
       end
+    end
+    
+    def merge_tracks(old_id, new_id)
+       old_track = Track.get(old_id)
+       new_track = Track.get(new_id)
+puts old_track.title
+puts new_track.title
+       if(old_track&&new_track)
+
+         #album
+         #move tracks from old album to new album
+         link = AlbumTrack.all(:track_id => old_track.id)
+         link.each{ |link_item|
+           @album_load = Album.get(link_item.album_id)
+           @moved = @album_load.tracks << new_track
+           @moved.save
+         }
+          #delete old album_track relations
+         link.destroy!
+
+         #artist
+         #move tracks from old artist to new artist
+         link = ArtistTrack.all(:track_id => old_track.id)
+         link.each{ |link_item|
+           @artist_load = Artist.get(link_item.artist_id)
+           @moved = @artist_load.tracks << new_track
+           @moved.save
+         }  
+         #delete old artist_track relations
+         link.destroy!
+
+         #plays
+         plays = Play.all(:track_id => old_track.id)
+         plays.each{ |link_item|
+           link_item.update(:track_id => new_id)
+         }  
+
+       end
+
+       #delete old track
+       old_track.destroy!
     end
 end
 
@@ -622,24 +663,18 @@ end
 
 post "/#{@version}/admin/merge/album" do
    protected!
+   
    old_album = Album.get(params[:id_old])
+   old_album_tracks = old_album.tracks
+   
    new_album = Album.get(params[:id_new])
+   new_album_tracks = new_album.tracks
    
-   if(old_album&&new_album)
-     #move tracks from old album to new album
-     link = AlbumTrack.all(:album_id => old_album.id)
-     link.each{ |link_item|
-       @track_load = Track.get(link_item.track_id)
-       @moved = new_album.tracks << @track_load
-       @moved.save
-     }
-  
-     #delete old album_track relations
-     link.destroy!
+   old_album_tracks.each{ |old_track|
+     new_track = new_album_tracks.find {|e| e.title==old_track.title&&e.id!=old_track.id }
+     merge_tracks(old_track.id, new_track.id) 
+   } 
    
-     #delete old album
-     old_album.destroy!
-   end
 end
 
 get "/#{@version}/admin/duplicate/track" do

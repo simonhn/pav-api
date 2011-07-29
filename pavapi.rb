@@ -582,14 +582,15 @@ get "/#{@version}/stats" do
 
 end
 
-get "/#{@version}/admin/merge-artists" do
+get "/#{@version}/admin/duplicate/artist" do
   protected!
+  @list = repository(:default).adapter.select("SELECT distinct d2.id, d2.artistname, d2.artistmbid FROM artists d1 JOIN artists d2 ON d2.artistname = d1.artistname AND d2.id <> d1.id order by artistname, id")
   respond_to do |wants|
-    wants.html { erb :merge_artists }
+    wants.html { erb :duplicate_artists }
   end
 end
 
-post "/#{@version}/admin/merge-artists" do
+post "/#{@version}/admin/merge/artist" do
    protected!
    old_artist = Artist.get(params[:id_old])
    new_artist = Artist.get(params[:id_new])
@@ -610,6 +611,87 @@ post "/#{@version}/admin/merge-artists" do
      old_artist.destroy!
    end
 end
+
+get "/#{@version}/admin/duplicate/album" do
+  protected!
+  @list = repository(:default).adapter.select("SELECT distinct d2.id, d2.albumname, d2.albummbid FROM albums d1 JOIN albums d2 ON d2.albumname = d1.albumname AND d2.id <> d1.id order by albumname, id")
+  respond_to do |wants|
+    wants.html { erb :duplicate_albums }
+  end
+end
+
+post "/#{@version}/admin/merge/album" do
+   protected!
+   old_album = Album.get(params[:id_old])
+   new_album = Album.get(params[:id_new])
+   
+   if(old_album&&new_album)
+     #move tracks from old album to new album
+     link = AlbumTrack.all(:album_id => old_album.id)
+     link.each{ |link_item|
+       @track_load = Track.get(link_item.track_id)
+       @moved = new_album.tracks << @track_load
+       @moved.save
+     }
+  
+     #delete old album_track relations
+     link.destroy!
+   
+     #delete old album
+     old_album.destroy!
+   end
+end
+
+get "/#{@version}/admin/duplicate/track" do
+  protected!
+  @list = repository(:default).adapter.select("SELECT distinct d2.id, d2.title, d2.trackmbid FROM tracks d1 JOIN tracks d2 ON d2.title = d1.title AND d2.id <> d1.id order by title, id")
+  respond_to do |wants|
+    wants.html { erb :duplicate_tracks }
+  end
+end
+
+post "/#{@version}/admin/merge/track" do
+   protected!
+   old_track = Track.get(params[:id_old])
+   new_track = Track.get(params[:id_new])
+   
+   if(old_track&&new_track)
+
+     #album
+     #move tracks from old album to new album
+     link = AlbumTrack.all(:track_id => old_track.id)
+     link.each{ |link_item|
+       @album_load = Album.get(link_item.album_id)
+       @moved = @album_load.tracks << new_track
+       @moved.save
+     }
+      #delete old album_track relations
+     link.destroy!
+   
+     #artist
+     #move tracks from old artist to new artist
+     link = ArtistTrack.all(:track_id => old_track.id)
+     link.each{ |link_item|
+       @artist_load = Artist.get(link_item.artist_id)
+       @moved = @artist_load.tracks << new_track
+       @moved.save
+     }  
+     #delete old artist_track relations
+     link.destroy!
+   
+     #plays
+     plays = Play.all(:track_id => old_track.id)
+     plays.each{ |link_item|
+       link_item.update(:track_id => params[:id_new])
+     }  
+
+   end
+   
+   #delete old album
+   old_track.destroy!
+end
+
+
 
 
 get '/demo/album-charts' do

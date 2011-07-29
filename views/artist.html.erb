@@ -1,2 +1,8 @@
 <h1>Artist</h1>
 <p><%= @artist.artistname %></p>
+<p><% if !@artist.id.nil? %><%=@artist.id %><% end %></p>
+<p><% if !@artist.artistmbid.nil? %><%=@artist.artistmbid %><% end %></p>
+<p><% if !@artist.artistlink.nil? %><%=@artist.artistlink %><% end %></p>
+<p><% if !@artist.artistnote.nil? %><%=@artist.artistnote %><% end %></p>
+
+

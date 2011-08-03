@@ -1,5 +1,8 @@
 <h1>Album</h1>
-<%= @album.id %>
-<%= @album.albumname %>
-<%= @album.albumimage %>
-<%= @album.created_at %>
+<ul>
+	<% if !@album.id.nil? %><li>id: <%= @album.id %></li><% end %>
+	<% if !@album.albummbid.nil? %><li>mbid: <%= @album.albummbid %></li><% end %>
+	<% if !@album.albumname.nil? %><li>albumname: <%= @album.albumname %></li><% end %>
+	<% if !@album.albumimage.nil? %><li>albumimage: <%= @album.albumimage %></li><% end %>
+	<% if !@album.created_at.nil? %><li>created_at: <%= @album.created_at %></li><% end %>
+</ul>

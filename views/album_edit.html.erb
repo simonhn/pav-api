@@ -1,0 +1,25 @@
+<style type="text/css" media="screen">
+	input,textarea{width:100%;}
+</style>
+<h1>album</h1>
+<p><%= @album.albumname %> - <%= @album.id %></p>
+
+<form action='/v1/album/<%= @album.id %>/edit' method="POST">	
+	
+	<label for="albumname">title</label>
+	<input type="text" name="albumname" value="<%= @album.albumname %>"/>
+	<br>
+	<label for="albummbid">MBID</label>
+	<input type="text" name="albummbid" value="<%= @album.albummbid %>"/>
+	<br>
+	
+	<label for="albumimage">image</label>
+	<input type="text" name="albumimage" value="<%= @album.albumimage %>"/>
+	<br>
+		
+	<label for="created_at">created date</label>
+	<input type="text" name="created_at" value="<%= @album.created_at %>"/>
+	<br>
+	
+	<input type="submit" value="Save" />
+</form>

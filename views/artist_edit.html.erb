@@ -1,0 +1,25 @@
+<style type="text/css" media="screen">
+	input,textarea{width:100%;}
+</style>
+<h1>Artist</h1>
+<p><%= @artist.artistname %> - <%= @artist.id %></p>
+
+<form action='/v1/artist/<%= @artist.id %>/edit' method="POST">	
+	
+	<label for="artistmbid">Artist name</label>
+	<input type="text" name="artistname" value="<%= @artist.artistname %>"/>
+<br>
+	<label for="artistmbid">Artist MBID</label>
+	<input type="text" name="artistmbid" value="<%= @artist.artistmbid %>"/>
+	<br>
+	
+	<label for="artistlink">Artist link</label>
+	<input type="text" name="artistlink" value="<%= @artist.artistlink %>"/>
+	<br>
+	
+	<label for="artistnote">Artist Note</label>
+	<textarea name="artistnote"><%= @artist.artistnote %></textarea>
+	<br>
+	
+	<input type="submit" value="Save" />
+</form>

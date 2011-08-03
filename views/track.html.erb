@@ -4,10 +4,11 @@
 <% if !@track.title.nil? %><li>title: <%= @track.title %></li><% end %>
 <% if !@track.tracknote.nil? %><li>tracknote: <%= @track.tracknote %></li><% end %>
 <% if !@track.tracklink.nil? %><li>tracklink: <%= @track.tracklink %></li><% end %>
+<% if !@track.aust.nil? %><li>aust: <%= @track.aust %></li><% end %>
 <% if !@track.show.nil? %><li>show: <%= @track.show %></li><% end %>
 <% if !@track.talent.nil? %><li>talent: <%= @track.talent %></li><% end %>
 <% if !@track.duration.nil? %><li>duration: <%= @track.duration %></li><% end %>
 <% if !@track.publisher.nil? %><li>publisher: <%= @track.publisher %></li><% end %>
 <% if !@track.datecopyrighted.nil? %><li>datecopyrighted: <%= @track.datecopyrighted %></li><% end %>
-<li>date: <%= @track.date %></li>
+<% if !@track.created_at %><li>date: <%= @track.created_at %></li><% end %>
 </ul>

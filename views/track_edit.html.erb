@@ -1,0 +1,46 @@
+<style type="text/css" media="screen">
+	input,textarea{width:100%;}
+</style>
+<h1>track</h1>
+<p><%= @track.title %> - <%= @track.id %></p>
+
+<form action='/v1/track/<%= @track.id %>/edit' method="POST">	
+	
+	<label for="title">title</label>
+	<input type="text" name="title" value="<%= @track.title %>"/>
+<br>
+	<label for="trackmbid">MBID</label>
+	<input type="text" name="trackmbid" value="<%= @track.trackmbid %>"/>
+	<br>
+	
+	<label for="tracklink">link</label>
+	<input type="text" name="tracklink" value="<%= @track.tracklink %>"/>
+	<br>
+	
+	<label for="tracknote">note</label>
+	<textarea name="tracknote"><%= @track.tracknote %></textarea>
+	<br>
+	
+	<label for="show">show</label>
+	<input type="text" name="show" value="<%= @track.show %>"/>
+	<br>
+	
+	<label for="aust">aust</label>
+	<input type="text" name="aust" value="<%= @track.aust %>"/>
+	<br>
+	
+	<label for="talent">talent</label>
+	<input type="text" name="talent" value="<%= @track.talent %>"/>
+	<br>
+
+	
+	<label for="publisher">publisher</label>
+	<input type="text" name="publisher" value="<%= @track.publisher %>"/>
+	<br>
+	
+	<label for="datecopyrighted">datecopyrighted</label>
+	<input type="text" name="datecopyrighted" value="<%= @track.datecopyrighted %>"/>
+	<br>
+	
+	<input type="submit" value="Save" />
+</form>

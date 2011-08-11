@@ -44,6 +44,7 @@ The pav:api exposes playlist data and is currently under development.
 		<li>artist_query, searching for an artist name</li>
 		<li>track_query, searching for a track title</li>
 		<li>album_query, searching for an album name</li>
+		<li>program, the program_id to limit result to a certain show</li>
 	</ul>
 </p>
 
@@ -383,7 +384,7 @@ Some useful observation about the model:
 	A chart of most played tracks for a given period.</p>
 	
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: channel, limit, to, from. If no to/from parameter is provided we return a chart from the last 7 days.</p>
+	<p>Supports the following parameters: channel, limit, to, from, program. If no to/from parameter is provided we return a chart from the last 7 days.</p>
 	
 	<h5>Example query</h5>
 	<code><div class="inner-code"><a href="/v1/chart/track.json?from=2011-04-20">/v1/chart/track.json?from=2011-04-20</a></div></code>

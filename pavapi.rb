@@ -61,9 +61,9 @@ configure do
   @config = YAML::load( File.open( 'config/settings.yml' ) )
   @connection = "#{@config['adapter']}://#{@config['username']}:#{@config['password']}@#{@config['host']}/#{@config['database']}";
   DataMapper.setup(:default, @connection)  
-  #DataMapper.finalize
+  DataMapper.finalize
   
-  DataMapper.auto_upgrade!
+  #DataMapper.auto_upgrade!
   #DataMapper::auto_migrate!
   set :default_content, :html
 end
@@ -158,15 +158,7 @@ helpers do
         return 10
       end
     end
-    
-    def get_channel(cha)
-      if isNumeric(cha)
-        channel = cha
-      elsif cha.nil?
-        channel = false
-      end
-    end
-    
+      
     def get_artist_query(q)
       if (!q.nil?)
         return "AND artists.artistname LIKE '%#{q}%' "
@@ -202,6 +194,12 @@ helpers do
     def get_channel(channel)
       if(!channel.nil?)
         return "plays.channel_id=#{channel} AND"
+      end
+    end
+    
+    def get_program(program)
+      if(!program.nil?)
+        return "AND plays.program_id='#{program}'"
       end
     end
     

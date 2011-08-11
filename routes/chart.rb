@@ -1,10 +1,11 @@
 # chart of top tracks
 get "/#{@version}/chart/track" do
+  program = get_program(params[:program])
   limit = get_limit(params[:limit])
   to_from = make_to_from(params[:from], params[:to])
   channel = get_channel(params[:channel])
   #SELECT tracks.title, artists.artistname, count(*) as cnt FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` INNER JOIN artist_tracks ON tracks.id=artist_tracks.track_id INNER JOIN artists ON artists.id=artist_tracks.artist_id WHERE `plays`.`channel_id` = 1 group by tracks.id   order by cnt DESC limit 10;
-  @tracks = repository(:default).adapter.select("select *, count(distinct plays.id) as cnt from tracks, plays, artists, artist_tracks where #{channel} tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} group by tracks.id order by cnt DESC limit #{limit}")
+  @tracks = repository(:default).adapter.select("select *, count(distinct plays.id) as cnt from tracks, plays, artists, artist_tracks where #{channel} tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id #{to_from} #{program} group by tracks.id order by cnt DESC limit #{limit}")
   hat = @tracks.collect {|o| {:count => o.cnt, :title => o.title, :artistname => o.artistname,:artistmbid => o.artistmbid, :trackmbid => o.trackmbid} }
   respond_to do |wants|
     wants.html { erb :track_chart }

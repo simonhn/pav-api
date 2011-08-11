@@ -45,7 +45,7 @@ require 'chronic'
 #for serving different content types
 require 'sinatra/respond_to'
 Sinatra::Application.register Sinatra::RespondTo
-
+require 'bigdecimal'
 
 
 configure do
@@ -61,9 +61,9 @@ configure do
   @config = YAML::load( File.open( 'config/settings.yml' ) )
   @connection = "#{@config['adapter']}://#{@config['username']}:#{@config['password']}@#{@config['host']}/#{@config['database']}";
   DataMapper.setup(:default, @connection)  
-  DataMapper.finalize
+  #DataMapper.finalize
   
-  #DataMapper.auto_upgrade!
+  DataMapper.auto_upgrade!
   #DataMapper::auto_migrate!
   set :default_content, :html
 end
@@ -265,6 +265,8 @@ require './routes/channel'
 require './routes/play'
 
 require './routes/chart'
+
+require './routes/demo'
 
 
 # search artist by name

@@ -58,6 +58,7 @@ class Play
     include DataMapper::Resource
     property :id, Serial
     property :playedtime, DateTime
+    property :program_id, String, :length => 512
     belongs_to :track
     belongs_to :channel
     def date
@@ -74,6 +75,7 @@ class Channel
     property :channelxml, String, :length => 512
     property :logo, String, :length => 512
     property :channellink, String, :length => 512
+    property :programxml, String, :length => 512
     has n, :plays
     has n, :artists, :through => Resource
 end
@@ -164,7 +166,7 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
          #adding play: only add if playedtime does not exsist in the database already
          play_items = Play.count(:playedtime=>item['playedtime'], :channel_id=>index)
          if play_items < 1
-           @play = Play.create(:track_id =>@tracks.id, :channel_id => index, :playedtime=>item['playedtime'])
+           @play = Play.create(:track_id =>@tracks.id, :channel_id => index, :playedtime=>item['playedtime'], :program_id => item['program_id'])
               @plays = @tracks.plays << @play
               @plays.save
          end

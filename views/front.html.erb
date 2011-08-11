@@ -342,7 +342,7 @@ Some useful observation about the model:
 	<p>Returns a playlist.</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: to, from, limit, channel, artist_query, track_query, album_query, q (query artist, channel and track name), order_by.</p>
+	<p>Supports the following parameters: to, from, limit, channel, program, artist_query, track_query, album_query, q (query artist, channel and track name), order_by.</p>
 	<h5>Example query</h5>
 	<code><div class="inner-code"><a href="/v1/plays.json?channel=1&limit=3">/v1/plays.json?channel=1&limit=3</a></div></code>
 	
@@ -369,7 +369,7 @@ Some useful observation about the model:
 	<p>A chart of most played artists for a given period.</p>
 	
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: channel, limit, to, from. If no to/from parameter is provided we return a chart from the last 7 days.</p>
+	<p>Supports the following parameters: channel, limit, to, from, program. If no to/from parameter is provided we return a chart from the last 7 days.</p>
 	
 	<h5>Example query</h5>
 	<code><div class="inner-code"><a href="/v1/chart/artist.json?channel=1">/v1/chart/artist.json?channel=1</a></div></code>
@@ -399,7 +399,7 @@ Some useful observation about the model:
 	<p>A chart of most played albums for a given period.</p>
 	
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: channel, limit, to, from. If no to/from parameter is provided we return a chart from the last 7 days.</p>
+	<p>Supports the following parameters: channel, limit, to, from, program. If no to/from parameter is provided we return a chart from the last 7 days.</p>
 	
 	<h5>Example query</h5>
 	<code><div class="inner-code"><a href="/v1/chart/album.json?limit=5&channel=4">/v1/chart/album.json?limit=5&channel=4</a></div></code>

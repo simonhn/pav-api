@@ -8,15 +8,27 @@ end
 
 #Count all artists
 get "/admin/stats" do
+  json_outout = {}
+  
+  @dig_duration_avg = repository(:default).adapter.select("SELECT ROUND(AVG(duration),0) FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE tracks.duration < 500 AND`plays`.`channel_id` = 1")
+  json_outout['dig_duration_avg'] = @dig_duration_avg.first.to_i.to_s
+  
+  @all_duration_avg = Track.avg(:duration, :duration.lt => 500) 
+  json_outout['all_duration_avg'] = @all_duration_avg.to_i.to_s
+  
   @artistcount = Artist.count
+  json_outout['all_artistcount'] = @artistcount
   @artistmbid = (Artist.count(:artistmbid).to_f/@artistcount.to_f)*100
   
   @trackcount = Track.count
+  json_outout['all_trackcount'] = @trackcount
   @trackmbid = (Track.count(:trackmbid).to_f/@trackcount.to_f)*100
   
   @playcount = Play.count
+  json_outout['all_playcount'] = @playcount
   
   @albumcount = Album.count
+  json_outout['all_albumcount'] = @albumcount
   @albummbid = (Album.count(:albummbid).to_f/@albumcount.to_f)*100
   
   @dig_track = repository(:default).adapter.select("SELECT COUNT(distinct tracks.id) FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 1")
@@ -42,8 +54,10 @@ get "/admin/stats" do
   @jjj_album = repository(:default).adapter.select("SELECT COUNT(distinct albums.id) FROM `albums` INNER JOIN `album_tracks` ON `albums`.`id` = `album_tracks`.`album_id` INNER JOIN `tracks` ON `album_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `plays`.`channel_id` = 4")
   @jjj_play = Play.all('channel_id'=>4).count
    
+   
   respond_to do |wants|
     wants.html { erb :stats }
+    wants.json {json_outout.to_json}
   end
 
 end

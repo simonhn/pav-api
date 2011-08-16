@@ -120,7 +120,7 @@ helpers do
       #both to and from parameters provided
       played_from = Chronic.parse(played_from)
       played_to = Chronic.parse(played_to)
-
+      
       if (!played_from.nil? && !played_to.nil?)
        return "AND playedtime < '#{played_to.strftime("%Y-%m-%d %H:%M:%S")}' AND playedtime > '#{played_from.strftime("%Y-%m-%d %H:%M:%S")}'"
       end
@@ -131,8 +131,8 @@ helpers do
       end
       #only to parameter, setting from a week before that
       if (played_from.nil? && !played_to.nil?)
-        from_date = played_to - 7
-
+        #one week = 60*60*24*7
+        from_date = played_to - 604800
         return "AND playedtime < '#{played_to.strftime("%Y-%m-%d %H:%M:%S")}' AND playedtime > '#{from_date.strftime("%Y-%m-%d %H:%M:%S")}'"
       end
       #only from parameter
@@ -193,7 +193,7 @@ helpers do
     
     def get_channel(channel)
       if(!channel.nil?)
-        return "plays.channel_id=#{channel} AND"
+        return "AND plays.channel_id=#{channel}"
       end
     end
     

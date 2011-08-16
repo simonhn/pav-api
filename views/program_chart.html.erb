@@ -44,11 +44,10 @@ prevWeek();
 function makeChart() {
 		//make sure that both jsonp calls have finished before making the chart
     if ( this_week && prev_week ){
-			console.log(this_week);
-			console.log(prev_week);
+			console.log('this week',this_week);
+			console.log('prev week',prev_week);
 			$.each( this_week, function(i,item) {
-				var this_week_id = item.id;
-				
+				var this_week_id = item.track_id;
 				//default to 'new' status
 				item["status"] = "new";
 				
@@ -61,8 +60,7 @@ function makeChart() {
 				//for each of this weeks items, run through prev weeks items
 				$.each( prev_week, function(is,item2) {
 					//check if track was played last week
-					if(this_week_id==item2.id){
-						
+					if(this_week_id==item2.track_id){
 						//UP
 						if(i<is){
 							item["status"] = "up";

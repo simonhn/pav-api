@@ -1,3 +1,9 @@
+get '/demo' do
+  respond_to do |wants|
+    wants.html{erb :demo}
+  end
+end
+
 get '/demo/album-charts' do
   from_date = DateTime.now - 7
   @from_date_string = from_date.strftime("%b %e")
@@ -7,6 +13,13 @@ get '/demo/album-charts' do
   
   respond_to do |wants|
     wants.html{erb :album_chart_all}
+  end
+end
+
+get '/demo/program-chart' do
+  @program = params[:program]
+  respond_to do |wants|
+    wants.html{erb :program_chart}
   end
 end
 

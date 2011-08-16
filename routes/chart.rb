@@ -5,7 +5,7 @@ get "/#{@version}/chart/track" do
   to_from = make_to_from(params[:from], params[:to])
   channel = get_channel(params[:channel])
   @tracks = repository(:default).adapter.select("select *, count(distinct plays.id) as cnt from tracks Left Outer Join album_tracks ON album_tracks.track_id = tracks.id Left Outer Join albums ON album_tracks.album_id = albums.id Inner Join artist_tracks ON artist_tracks.track_id = tracks.id Inner Join artists ON artists.id = artist_tracks.artist_id Inner Join plays ON tracks.id = plays.track_id where tracks.id #{channel} #{to_from} #{program} group by tracks.id order by cnt DESC limit #{limit}")
-  hat = @tracks.collect {|o| {:count => o.cnt, :title => o.title, :artistname => o.artistname,:artistmbid => o.artistmbid, :trackmbid => o.trackmbid, :albumname => o.albumname, :albummbid => o.albummbid, :albumimage => o.albumimage} }
+  hat = @tracks.collect {|o| {:count => o.cnt, :title => o.title, :track_id => o.id, :artistname => o.artistname,:artistmbid => o.artistmbid, :trackmbid => o.trackmbid, :albumname => o.albumname, :albummbid => o.albummbid, :albumimage => o.albumimage} }
   respond_to do |wants|
     wants.html { erb :track_chart }
     wants.xml { builder :track_chart } 

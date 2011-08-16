@@ -36,49 +36,46 @@
 
 <script>
 var this_week, prev_week = null;
-var new_chart = new Array();
+var new_chart = [];
 var program_id = '<%=@program%>';
-thisWeek();
-prevWeek();
-
 function makeChart() {
 		//make sure that both jsonp calls have finished before making the chart
-    if ( this_week && prev_week ){
-			console.log('this week',this_week);
-			console.log('prev week',prev_week);
-			$.each( this_week, function(i,item) {
+    if (this_week && prev_week) {
+			//console.log('this week', this_week);
+			//console.log('prev week', prev_week);
+			$.each( this_week, function (i, item) {
 				var this_week_id = item.track_id;
 				//default to 'new' status
-				item["status"] = "new";
+				item.status = "new";
 				
 				//default to empty diff
-				item["diff"] = '';
+				item.diff = '';
 
-				item["prev_count"] = '';
+				item.prev_count = '';
 
 				
 				//for each of this weeks items, run through prev weeks items
-				$.each( prev_week, function(is,item2) {
+				$.each(prev_week, function (is, item2) {
 					//check if track was played last week
-					if(this_week_id==item2.track_id){
+					if(this_week_id === item2.track_id) {
 						//UP
-						if(i<is){
-							item["status"] = "up";
-							item["diff"] = is-i;
-							item["prev_count"] = item2.count;
+						if( i< is) {
+							item.status = "up";
+							item.diff = is - i;
+							item.prev_count = item2.count;
 						}
 						
 						//DOWN
-						else if(i>is){
-							item["status"] = "down";
-							item["diff"] = i-is;
-							item["prev_count"] = item2.count;
+						else if(i > is) {
+							item.status = "down";
+							item.diff = i-is;
+							item.prev_count = item2.count;
 						}
 						
 						//SAME
-						else if(i===is){
-							item["status"] = "same";
-							item["diff"] = 0;
+						else if(i === is) {
+							item.status = "same";
+							item.diff = 0;
 						}
 					}//end if
 					
@@ -89,72 +86,74 @@ function makeChart() {
 			});//end outer for each
 			
 			//display new chart
-			$.each( new_chart, function(i,item) {
+			$.each(new_chart, function (i, item) {
 				var number = i +1;
-					content = '<tr><td class="number">'+ number+ '</td><td class="status"><span class='+item.status+'>&nbsp;</span></td><td class="title">'+ item.title + '</td><td class="name">'+ item.artistname +'</td><td class="plays">'+item.count+'</td><td class="diff">'+item.diff+'</td><td class="prev=cnt">'+item.prev_count+'</td><td class="album-image"><img src="'+item.albumimage+'"/></td></tr>';
-					$(content).appendTo("#artists");
+				var content = '<tr><td class="number">' + number + '</td><td class="status"><span class=' + item.status + '>&nbsp;</span></td><td class="title">' + item.title + '</td><td class="name">' + item.artistname + '</td><td class="plays">' + item.count + '</td><td class="diff">' + item.diff + '</td><td class="prev=cnt">' + item.prev_count + '</td><td class="album-image"><img src="' + item.albumimage + '"/></td></tr>';
+				$(content).appendTo("#artists");
 			});
 		}//end if
 }
 
-function thisWeek(){
-	from = new Date();	
+function formatDate(then) {
+	var month = then.getMonth() + 1;
+	if (month < 10) {
+		month = "0" + month;
+	}
+	var day = then.getDate();
+	if (day < 10) {
+		day = "0" + day;
+	}
+	var year = then.getFullYear();
+	var last_week = year + "-" + month + "-" + day;
+	return last_week;
+}
+
+function thisWeek() {
+	var from = new Date();	
 	from.setDate(from.getDate() - 3);
-	from_date = formatDate(from);
+	var from_date = formatDate(from);
 	
 	$.ajax({
 	  url: "http://96.126.96.51/v1/chart/track",
 	  dataType: "jsonp",
           data: {
 							program: program_id,
-							from:from_date,
-              format:"json"
+							from: from_date,
+              format: "json"
 							},
-		success: function(result){ 
+		success: function(result) { 
 	    this_week = result;
 			makeChart();
     }
 	});
 }
 
-function prevWeek(){
-	from = new Date();	
+function prevWeek() {
+	var from = new Date();	
 	from.setDate(from.getDate() - 6);
-	from_date = formatDate(from);
+	var from_date = formatDate(from);
 
-	to = new Date();	
+	var to = new Date();	
 	to.setDate(to.getDate() - 3);
-	to_date = formatDate(to);
+	var to_date = formatDate(to);
 
    $.ajax({
 	  url: "http://96.126.96.51/v1/chart/track",
 	  dataType: "jsonp",
           data: {
 							program: program_id,
-							to:to_date,
-							from:from_date,
-              format:"json"
+							to: to_date,
+							from: from_date,
+              format: "json"
 							},
-		success: function(result){ 
+		success: function(result) { 
 	    prev_week = result;
 			makeChart();
- 		}
-	});
+			}
+		});
 }
-
-function formatDate(then){
-	var month = then.getMonth()+1;
-	if (month < 10)
-  	month = "0" + month
-	
-	var day = then.getDate();
-	if (day < 10)
-  	day = "0" + day
-	
-	var year = then.getFullYear();
-	last_week = year + "-" + month + "-" + day;
-	return last_week;
-}
+thisWeek();
+prevWeek();
 
 </script>
 

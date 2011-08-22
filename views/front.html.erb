@@ -1,9 +1,6 @@
-<div>
-
-<p>
-The pav:api exposes playlist data and is currently under development.
-</p>
-<ul>
+<section id="intro">
+<p>The pav:api exposes playlist data and is currently under development.</p>
+<ul class="unstyled">
 	<li><a href="#general">general information</a></li>
 		<ul>
 			<li><a href="#general-query-parameters">query parameters</a></li>
@@ -26,27 +23,26 @@ The pav:api exposes playlist data and is currently under development.
 			<li><a href="#resources-stats">stats</a></li>
 		</ul>
 </ul>
-<p>
+</section>
+<section id="general">
 	<h2 id="general">general information</h2>
-	
 	<h3 id="general-query-parameters">query parameters</h3>
-	<span>Some paths accepts the following query parameters. See each <a href="#resources">resource</a> type for more specifics.
+	<div>Some paths accepts the following query parameters. See each <a href="#resources">resource</a> type for more specifics.</div>
 	<ul> 
-		<li>channel, default is all channels, available on paths that return a list</li>
-		<li>limit, default is 10, available on paths that return a list</li>
-		<li>callback, for cross-domain access jsonp is delivered to requests with 'callback' query parameter and json as return type</li>
-		<li>format, return type format (html, json, xml)</li>
-		<li>type, to specify lookup type, mbid</li>
-		<li>to (to date) in yyyy-mm-dd format</li>
-		<li>from (from date) in yyyy-mm-dd format</li>
-		<li>order_by, for ordering results. Default is playedtime. Allowed values are artist and track</li>
-		<li>q, a query for searching for track title, album name and artist name</li>
-		<li>artist_query, searching for an artist name</li>
-		<li>track_query, searching for a track title</li>
-		<li>album_query, searching for an album name</li>
-		<li>program, the program_id to limit result to a certain show</li>
+		<li><code>channel</code>, default is all channels, available on paths that return a list</li>
+		<li><code>limit</code>, default is 10, available on paths that return a list</li>
+		<li><code>callback</code>, for cross-domain access jsonp is delivered to requests with 'callback' query parameter and json as return type</li>
+		<li><code>format</code>, return type format (html, json, xml)</li>
+		<li><code>type</code>, to specify lookup type, mbid</li>
+		<li><code>to</code> (to date) in yyyy-mm-dd format</li>
+		<li><code>from</code> (from date) in yyyy-mm-dd format</li>
+		<li><code>order_by</code>, for ordering results. Default is playedtime. Allowed values are artist and track</li>
+		<li><code>q</code>, a query for searching for track title, album name and artist name</li>
+		<li><code>artist_query</code>, searching for an artist name</li>
+		<li><code>track_query</code>, searching for a track title</li>
+		<li><code>album_query</code>, searching for an album name</li>
+		<li><code>program</code>, the program_id to limit result to a certain show</li>
 	</ul>
-</p>
 
 <p>
 	<h3 id="general-identifiers">identifiers</h3>
@@ -87,11 +83,13 @@ The pav:api exposes playlist data and is currently under development.
 	<h3 id="general-terms">terms</h3>
 	Please be nice when using the api. If you plan to make massive amounts of calls please advise us.
 </p>
-
+</section>
+<section id="resources">
 <h2 id="resources">resources</h2>
 The resources that can be accessed through the api follows the model below:
-<img id="resources-model" width="400px" src="images/models.png"/>
-<br />
+<div id="model-img">
+	<img id="resources-model" width="400px" src="images/models.png"/>
+</div>
 Some useful observation about the model:
 <ul>
 	<li>An artist can have multiple tracks</li>
@@ -112,10 +110,10 @@ Some useful observation about the model:
 	<p>Returns a list of artists</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: channel, limit.</p>
+	<p>Supports the following parameters: <code>channel</code>, <code>limit</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><div class="inner-code"><a href="/v1/artists.json?channel=4">/v1/artists.json?channel=4</a></div></div></code>
+	<code><a href="/v1/artists.json?channel=4">/v1/artists.json?channel=4</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/967986.js"></script>
@@ -127,10 +125,10 @@ Some useful observation about the model:
 	<p>Returns a single artist</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: type.</p>
+	<p>Supports the following parameter: <code>type</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/artist/1234.json">/v1/artist/1234.json</a></div></code>
+	<code><a href="/v1/artist/1234.json">/v1/artist/1234.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/967997.js"></script>
@@ -142,10 +140,10 @@ Some useful observation about the model:
 	<p>Returns the tracks related to a single artist</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: type</p>
+	<p>Supports the following parameter: <code>type</code></p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/artist/1234/tracks.json">/v1/artist/1234/tracks.json</a></div></code>
+	<code><a href="/v1/artist/1234/tracks.json">/v1/artist/1234/tracks.json</a></code>
 
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968001.js"></script>
@@ -159,10 +157,10 @@ Some useful observation about the model:
 	<p>Returns a list of tracks</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: channel, limit.</p>
+	<p>Supports the following parameters: <code>channel</code>, <code>limit</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/tracks.json?channel=4&limit=3">/v1/tracks.json?channel=4&limit=3</a></div></code>
+	<code><a href="/v1/tracks.json?channel=4&limit=3">/v1/tracks.json?channel=4&limit=3</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968008.js"></script>
@@ -174,10 +172,10 @@ Some useful observation about the model:
 	<p>Returns a single track specified by an id.</p>
 
 	<h5>Parameters</h5>
-	Supports the following parameters: type.</p>
+	<p>Supports the following parameter: <code>type</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/track/324.json">/v1/track/324.json</a></div></code>
+	<code><a href="/v1/track/324.json">/v1/track/324.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968013.js?file=gistfile1.json"></script>
@@ -189,11 +187,11 @@ Some useful observation about the model:
 	<p>Post a track to pav. Requires authentication.</p>
 
 	<h5>Parameters</h5>
-	<p>A json payload
+	<p>A json payload</p>
 	<script src="https://gist.github.com/968015.js?file=gistfile1.json"></script>
 
 	<h5>Example response</h5>
-	<p>200</p>
+	<p><code>200</code></p>
 </div>
 
 <h4>/track/:id/artists</h4>
@@ -202,10 +200,10 @@ Some useful observation about the model:
 	<p>Returns the artists related to a single track</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: type.</p>
+	<p>Supports the following parameter: <code>type</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/track/324/artists.json">/v1/track/324/artists.json</a></div></code>
+	<code><a href="/v1/track/324/artists.json">/v1/track/324/artists.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968022.js?file=gistfile1.json"></script>
@@ -217,10 +215,10 @@ Some useful observation about the model:
 	<p>Returns the albums related to a single track</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: type.</p>
+	<p>Supports the following parameter: <code>type</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/track/324/albums.json">/v1/track/324/albums.json</a></div></code>
+	<code><a href="/v1/track/324/albums.json">/v1/track/324/albums.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968023.js?file=gistfile1.json"></script>
@@ -232,10 +230,10 @@ Some useful observation about the model:
 	<p>Returns the plays related to a single track.</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: type.</p>
+	<p>Supports the following parameter: <code>type</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/track/324/plays.json">/v1/track/324/plays.json</a></div></code>
+	<code><a href="/v1/track/324/plays.json">/v1/track/324/plays.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968025.js?file=gistfile1.json"></script>
@@ -249,10 +247,10 @@ Some useful observation about the model:
 	<p>Returns a list of albums.</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: channel, limit.</p>
+	<p>Supports the following parameters: <code>channel</code>, <code>limit</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/albums.json">/v1/albums.json</a></div></code>
+	<code><a href="/v1/albums.json">/v1/albums.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968027.js?file=gistfile1.json"></script>
@@ -264,10 +262,10 @@ Some useful observation about the model:
 	<p>Returns a single album.</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: type.</p>
+	<p>Supports the following parameter: <code>type</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/album/15.json">/v1/album/15.json</a></div></code>
+	<code><a href="/v1/album/15.json">/v1/album/15.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968029.js?file=gistfile1.json"></script>
@@ -279,10 +277,10 @@ Some useful observation about the model:
 	<p>Returns the tracks related to a single album.</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: type.</p>
+	<p>Supports the following parameter: <code>type</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/album/15/tracks.json">/v1/album/15/tracks.json</a></div></code>
+	<code><a href="/v1/album/15/tracks.json">/v1/album/15/tracks.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968035.js?file=gistfile1.json"></script>
@@ -296,10 +294,10 @@ Some useful observation about the model:
 	<p>Returns a list of channels.</p>
 
 	<h5>Parameters</h5>
-	Supports the following parameters: limit.</p>
+	<p>Supports the following parameter: <code>limit</code>.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/channels.json">/v1/channels.json</a></div></code>
+	<code><a href="/v1/channels.json">/v1/channels.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968054.js?file=gistfile1.json"></script>
@@ -311,7 +309,7 @@ Some useful observation about the model:
 	<p>Returns a single channel.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/channel/1.json">/v1/channel/1.json</a></div></code>
+	<code><a href="/v1/channel/1.json">/v1/channel/1.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968058.js?file=gistfile1.json"></script>
@@ -342,9 +340,9 @@ Some useful observation about the model:
 	<p>Returns a playlist.</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: to, from, limit, channel, program, artist_query, track_query, album_query, q (query artist, channel and track name), order_by.</p>
+	<p>Supports the following parameters: <code>to</code>, <code>from</code>, <code>limit</code>, <code>channel</code>, <code>program</code>, <code>artist_query</code>, <code>track_query</code>, <code>album_query</code>, <code>q</code> (query artist, channel and track name), <code>order_by</code>.</p>
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/plays.json?channel=1&limit=3">/v1/plays.json?channel=1&limit=3</a></div></code>
+	<code><a href="/v1/plays.json?channel=1&limit=3">/v1/plays.json?channel=1&limit=3</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/956363.js"> </script>
@@ -356,7 +354,7 @@ Some useful observation about the model:
 	<p>Returns a single play.</p>
 
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/play/4356.json">/v1/play/4356.json</a></div></code>
+	<code><a href="/v1/play/4356.json">/v1/play/4356.json</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/968064.js?file=gistfile1.json"></script>
@@ -369,10 +367,10 @@ Some useful observation about the model:
 	<p>A chart of most played artists for a given period.</p>
 	
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: channel, limit, to, from, program. If no to/from parameter is provided we return a chart from the last 7 days.</p>
+	<p>Supports the following parameters: <code>channel</code>, <code>limit</code>, <code>to</code>, <code>from</code>, <code>program</code>. If no to/from parameter is provided we return a chart from the last 7 days.</p>
 	
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/chart/artist.json?channel=1">/v1/chart/artist.json?channel=1</a></div></code>
+	<code><a href="/v1/chart/artist.json?channel=1">/v1/chart/artist.json?channel=1</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/973721.js?file=gistfile1.json"></script>
@@ -381,13 +379,13 @@ Some useful observation about the model:
 <h4>/chart/track</h4>
 <div class='resource'>
 	<h5>Description</h5>
-	A chart of most played tracks for a given period.</p>
+	<p>A chart of most played tracks for a given period.</p>
 	
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: channel, limit, to, from, program. If no to/from parameter is provided we return a chart from the last 7 days.</p>
+	<p>Supports the following parameters: <code>channel</code>, <code>limit</code>, <code>to</code>, <code>from</code>, <code>program</code>. If no to/from parameter is provided we return a chart from the last 7 days.</p>
 	
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/chart/track.json?from=2011-04-20">/v1/chart/track.json?from=2011-04-20</a></div></code>
+	<code><a href="/v1/chart/track.json?from=2011-04-20">/v1/chart/track.json?from=2011-04-20</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/973726.js?file=gistfile1.json"></script>
@@ -399,10 +397,10 @@ Some useful observation about the model:
 	<p>A chart of most played albums for a given period.</p>
 	
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: channel, limit, to, from, program. If no to/from parameter is provided we return a chart from the last 7 days.</p>
+	<p>Supports the following parameters: <code>channel</code>, <code>limit</code>, <code>to</code>, <code>from</code>, <code>program</code>. If no to/from parameter is provided we return a chart from the last 7 days.</p>
 	
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/chart/album.json?limit=5&channel=4">/v1/chart/album.json?limit=5&channel=4</a></div></code>
+	<code><a href="/v1/chart/album.json?limit=5&channel=4">/v1/chart/album.json?limit=5&channel=4</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/973730.js?file=gistfile1.json"></script>
@@ -415,10 +413,10 @@ Some useful observation about the model:
 	<p>Search for artists (tracks and albums to come).</p>
 	
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: limit.</p>
+	<p>Supports the following parameter: <code>limit</code>.</p>
 	
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/search/dylan.json?limit=5">/v1/search/dylan.json?limit=5</a></div></code>
+	<code><a href="/v1/search/dylan.json?limit=5">/v1/search/dylan.json?limit=5</a></code>
 	
 	<h5>Example response</h5>
 	<script src="https://gist.github.com/973733.js?file=gistfile1.json"></script>
@@ -430,9 +428,10 @@ Some useful observation about the model:
 	<p>Statistics for the pav datastore.</p>
 	
 	<h5>Example query</h5>
-	<code><div class="inner-code"><a href="/v1/stats">/v1/stats</a></div></code>
+	<code><a href="/v1/stats">/v1/stats</a></code>
 </div>
-</div>
+
+</section>
 <style type="text/css" media="screen">
 .gist-syntax .s2 {
 color: black;

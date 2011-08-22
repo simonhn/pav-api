@@ -1,18 +1,24 @@
+<style type="text/css" media="screen">
+	.album-image img{
+		width:60px;
+		height:60px;
+	}
+</style>
 <table>
 	<thead>
    	<tr>
-			<td>played time</td>
-			<td></td>
-			<td>artist</td>
-			<td>track</td>
-			<td>album</td>
+			<th>played time</th>
+			<th></th>
+			<th>artist</th>
+			<th>track</th>
+			<th>album</th>
 		</tr>
   </thead>
 	<tbody>
 		<% @plays.each do |track| %>
 			<tr>
 				<td><%= track.playedtime.strftime "%R %d/%m" %></td>
-				<td>
+				<td class="album-image">
 					<img alt="album cover" src="<%= track.albumimage %>" width="100" height="100">
 				</td>
 				<td>

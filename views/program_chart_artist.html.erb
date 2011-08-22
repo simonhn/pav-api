@@ -181,9 +181,19 @@ prevWeek();
 		<p><h3>Artist Chart for <%=@program%></h3></p>
 		<p>Last <%=@span%> days compared with previous <%=@span%> days</p>
 	  <div id="chart">
-			<table id="artists" border="0">
+			<table id="artists" class="common-table zebra-striped">
+				<thead>
+					<tr>
+						<th class="number">#</th>
+						<th class="status"></th>
+						<th class="name"></th>
+						<th class="plays">cnt</th>
+						<th class="diff">pos diff</th>
+						<th class="prev-cnt">prev cnt</th>
+					</tr>
+			  </thead>
 				<tbody>
-					<tr><td class="number"></td><td class="status"><span class='+item.status+'></span></td><td class="name"></td><td class="plays">cnt</td><td class="diff">pos diff</td><td class="prev-cnt">prev cnt</td></tr>
+
   			</tbody>
 			</table>
 	  </div>

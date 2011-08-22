@@ -17,9 +17,36 @@ get '/demo/album-charts' do
 end
 
 get '/demo/program-chart' do
+  redirect '/demo/program-chart/track'
+end
+
+get '/demo/program-chart/track' do
   @program = params[:program]
+  @program ||= 'super_request'
+  @span = params[:span]
+  @span ||= 7
   respond_to do |wants|
-    wants.html{erb :program_chart}
+    wants.html{erb :program_chart_track}
+  end
+end
+
+get '/demo/program-chart/artist' do
+  @program = params[:program]
+  @program ||= 'super_request'
+  @span = params[:span]
+  @span ||= 7
+  respond_to do |wants|
+    wants.html{erb :program_chart_artist}
+  end
+end
+
+get '/demo/program-chart/album' do
+  @program = params[:program]
+  @program ||= 'super_request'
+  @span = params[:span]
+  @span ||= 7
+  respond_to do |wants|
+    wants.html{erb :program_chart_album}
   end
 end
 

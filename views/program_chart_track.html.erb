@@ -38,11 +38,13 @@
 var this_week, prev_week = null;
 var new_chart = [];
 var program_id = '<%=@program%>';
+var span = '<%=@span.to_i%>';
+
 function makeChart() {
 		//make sure that both jsonp calls have finished before making the chart
     if (this_week && prev_week) {
-			//console.log('this week', this_week);
-			//console.log('prev week', prev_week);
+			console.log('this week', this_week);
+			console.log('prev week', prev_week);
 			$.each( this_week, function (i, item) {
 				var this_week_id = item.track_id;
 				//default to 'new' status
@@ -50,40 +52,48 @@ function makeChart() {
 				
 				//default to empty diff
 				item.diff = '';
-
+				
+				//default to empty prev count
 				item.prev_count = '';
-
 				
-				//for each of this weeks items, run through prev weeks items
-				$.each(prev_week, function (is, item2) {
-					//check if track was played last week
-					if(this_week_id === item2.track_id) {
-						//UP
-						if( i< is) {
-							item.status = "up";
-							item.diff = is - i;
-							item.prev_count = item2.count;
-						}
+				//check that prev_week contains any items
+				if (prev_week.length > 0) { 
+				
+					//for each of this weeks items, run through prev weeks items
+					$.each(prev_week, function (is, item2) {
+						//check if track was played last week
+						if(this_week_id === item2.track_id) {
+							//UP
+							if( i< is) {
+								item.status = "up";
+								item.diff = is - i;
+								item.prev_count = item2.count;
+							}
 						
-						//DOWN
-						else if(i > is) {
-							item.status = "down";
-							item.diff = i-is;
-							item.prev_count = item2.count;
-						}
+							//DOWN
+							else if(i > is) {
+								item.status = "down";
+								item.diff = i-is;
+								item.prev_count = item2.count;
+							}
 						
-						//SAME
-						else if(i === is) {
-							item.status = "same";
-							item.diff = 0;
-						}
-					}//end if
+							//SAME
+							else if(i === is) {
+								item.status = "same";
+								item.diff = 0;
+							}
+						}//end if
 					
-					//add item to new chart
-					new_chart[i] = item;
-				});//end for each
+						//add item to new chart
+						new_chart[i] = item;
+					});//end for each. prev_week
 				
-			});//end outer for each
+				}//end if: no previous week items to compare with
+				else {
+					new_chart[i] = item;
+				}
+			
+			});//end outer (this_week) for each
 			
 			//display new chart
 			$.each(new_chart, function (i, item) {
@@ -110,12 +120,15 @@ function formatDate(then) {
 
 function thisWeek() {
 	var from = new Date();	
-	from.setDate(from.getDate() - 3);
+	from.setDate(from.getDate() - span);
 	var from_date = formatDate(from);
 	
 	$.ajax({
 	  url: "http://96.126.96.51/v1/chart/track",
 	  dataType: "jsonp",
+		timeout : 40000,
+		cache:true,
+		jsonpCallback:'this_week_callback',
           data: {
 							program: program_id,
 							from: from_date,
@@ -130,16 +143,19 @@ function thisWeek() {
 
 function prevWeek() {
 	var from = new Date();	
-	from.setDate(from.getDate() - 6);
+	from.setDate(from.getDate() - (span*2));
 	var from_date = formatDate(from);
 
 	var to = new Date();	
-	to.setDate(to.getDate() - 3);
+	to.setDate(to.getDate() - span);
 	var to_date = formatDate(to);
 
    $.ajax({
 	  url: "http://96.126.96.51/v1/chart/track",
 	  dataType: "jsonp",
+		timeout : 40000,
+		cache:true,
+		jsonpCallback:'prev_week_callback',
           data: {
 							program: program_id,
 							to: to_date,
@@ -159,12 +175,12 @@ prevWeek();
 
 <div id="wrapper">
 	<div class="demo">
-		<p><h1>Track Chart for a program</h1></p>
-		<p>Last 3 days compared with previous 3 days</p>
+		<p><h3>Track Chart for <%=@program%></h3></p>
+		<p>Last <%=@span%> days compared with previous <%=@span%> days</p>
 	  <div id="chart">
 			<table id="artists" border="0">
 				<tbody>
-					<tr><td class="number"></td><td class="status"><span class='+item.status+'></span></td><td class="title"></td><td class="name"></td><td class="plays">cnt</td><td class="diff">pos diff</td><td class="prev-cnt">prev cnt</td><td class="album-image"></td></tr>
+					<tr><td class="number"></td><td class="status"><span class='+item.status+'></span></td><td class="title"></td><td class="name"></td><td class="plays">count</td><td class="diff">pos diff</td><td class="prev-cnt">prev count</td><td class="album-image"></td></tr>
   			</tbody>
 			</table>
 	  </div>

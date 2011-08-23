@@ -1,8 +1,8 @@
 <h2>Album</h2>
 <ul>
 	<% if !@album.id.nil? %><li>id: <%= @album.id %></li><% end %>
-	<% if !@album.albummbid.nil? %><li>mbid: <%= @album.albummbid %></li><% end %>
+	<% if !@album.albummbid.nil? %><li>mbid: <a href="http://musicbrainz.org/release-group/<%= @album.albummbid %>"><%= @album.albummbid %></a></li><% end %>
 	<% if !@album.albumname.nil? %><li>albumname: <%= @album.albumname %></li><% end %>
-	<% if !@album.albumimage.nil? %><li>albumimage: <%= @album.albumimage %></li><% end %>
 	<% if !@album.created_at.nil? %><li>created_at: <%= @album.created_at %></li><% end %>
+	<% if !@album.albumimage.nil? %><li>albumimage: <img src="<%= @album.albumimage %>"/></li><% end %>
 </ul>

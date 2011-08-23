@@ -1,9 +1,8 @@
-<h1>TOP artists</h1>
+<h2>Top Artists</h2>
 <% for artist in @artists %>
 <ul>
 	<li>Play count: <%= artist.cnt %></li>
-	<% if !artist.id.nil? %><li>id: <%= artist.id %></li><% end %>
-	<% if !artist.artistname.empty? %><li>name: <%= artist.artistname %></li><% end %>
+	<% if !artist.id.nil? %><li>Id: <%= artist.id %></li><% end %>
+	<% if !artist.artistname.empty? %><li><%= artist.artistname %></li><% end %>
 </ul>
 <% end %>
-</ul>

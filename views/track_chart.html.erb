@@ -1,5 +1,4 @@
-
-<h1>TOP Tracks</h1>
+<h2>Top Tracks</h2>
 <% for track in @tracks %>
 <ul>
 	<li>Play count: <%= track.cnt %></li>
@@ -16,4 +15,3 @@
 	<li>date: <%= track.created_at.strftime "%Y-%m-%d %H:%M:%S" %></li>
 </ul>
 <% end %>
-</ul>

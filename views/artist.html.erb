@@ -1,8 +1,8 @@
-<h1>Artist</h1>
+<h2>Artist</h2>
 <p><%= @artist.artistname %></p>
-<p><% if !@artist.id.nil? %><%=@artist.id %><% end %></p>
-<p><% if !@artist.artistmbid.nil? %><%=@artist.artistmbid %><% end %></p>
-<p><% if !@artist.artistlink.nil? %><%=@artist.artistlink %><% end %></p>
-<p><% if !@artist.artistnote.nil? %><%=@artist.artistnote %><% end %></p>
+<p><% if !@artist.id.nil? %>id: <%=@artist.id %><% end %></p>
+<p><% if !@artist.artistmbid.nil? %>mbid: <a href="http://musicbrainz.org/artist/<%= @artist.artistmbid %>"><%= @artist.artistmbid %></a><% end %></p>
+<p><% if !@artist.artistlink.nil? %>link: <%=@artist.artistlink %><% end %></p>
+<p><% if !@artist.artistnote.nil? %>note: <%=@artist.artistnote %><% end %></p>
 
 

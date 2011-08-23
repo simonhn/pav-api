@@ -1,287 +1,31 @@
-
-<style type="text/css">
-
-body{font-size: 0.75em;}
-#just_played #song_list {
-    float: left;
-    margin: 2px 0 10px;
-  }    
-     
-     #just_played .sort_order {
-       text-align: center;
-       color: #808080;
-       padding: 8px 0;
-     }
-     
-       #just_played .sort_order .title {
-         font-weight: 700;
-         margin-right: 4px;
-         color: #000000;
-       }
-       
-        #just_played .sort_order a {
-         text-decoration: underline;
-         margin: 0 4px;
-       }
-       
-         #just_played .sort_order a.current {
-           text-decoration: none;
-           color: #000000;
-         }
-
-     #just_played .pagination,
- 		 #song_list .search-criteria {
-       text-align: center;
-       margin: 4px 0;
-       float: left;
-       padding: 8px 0;
-     }
-
-		 #just_played #song_list .pagination {
-			 border-bottom-width: 1px;
-			 border-bottom-style: dotted;
-		 }
-
-		 #song_list .search-criteria {
-			 border-bottom-width: 4px;
-			 border-bottom-style: solid;
-		 }
-     
-       #just_played .pagination .title {
-         font-weight: 700;
-         margin-right: 8px;
-       }
-       
-       #just_played .pagination .pages {
-         word-spacing: 0.5em;
-         margin-right: 8px;
-         color: #808080;
-       }
-     
-       #just_played .pagination a {
-         color: #204ba1;
-         text-decoration: underline;
-       }
-       
-         #just_played .pagination .pages a.current {
-           color: #000000;
-           text-decoration: none;
-         }
-       
-       #just_played .pagination a.next {
-         color: #204ba1;
-         text-decoration: none;
-         font-weight: 700;
-       }
-
-     #clear-search {
-	     display: inline-block;
-	     font-size: 0.8em;
-	     margin-left: 10px;
-     }
-         
-     #just_played .list_quantity {
-       color: #204ba1;
-     }
-     
-       #just_played .list_quantity img {
-         margin-right: 4px;
-       }
-     
-     #just_played .song {
-       float: left;
-       border-top: 1px dashed #C9C9C9;
-       padding-top: 4px;
-     }
-
-       #just_played .song .date {
-         font-size: 1.0em;
-         padding: 3px 8px;
-         margin: -4px 0 5px 60px;
-         color: #fff;
-         background-color: #1F2933;
-         float: left;
-       }
-     
-       #just_played .song .time {
-           font-size: 0.8em;
-           color: #999999;
-           margin-bottom: 2px;
-         }
-     
-       #just_played .song .album_image_container {
-         float: left;
-         width: 110px;
-		 height: 100px;
-		 background-image: url('http://abcdigmusic.net.au/sites/all/themes/dig2/images/background/no-cover.png');
-		 background-repeat: no-repeat;
-       }
-       
-         #just_played .song .album_image_container img {
-           border: 1px solid #FFFFFF;  
-         }
-       
-         #just_played .song .album_image_container img:hover {
-           border: 1px solid #CAD4DD;
-         }
-       
-	   #just_played .song .australian_artist_container {
-         z-index:2;
-         position:absolute;
-		 left:75px;
-       }
-	   
-       #just_played .song .details {
-         float: left;
-         margin-left: 10px;
-		 width: 200px;
-       }
-         
-         #just_played .song .details td {
-           padding-bottom: 9px;
-         }
-         
-           #just_played .song .details td.label {
-             width: 80px;
-             font-size: 0.9em;
-             color: #4d4d4d;
-           }
-           
-           #just_played .song .details td.info {
-             width: 145px;
-             font-size: 0.9em;
-             font-weight: bold;
-           }
-           
-           #just_played .song .details td a{
-             color: #204ba1;
-           }
-             
-         #just_played .song .social_data {
-           float: left;
-           margin: 0;
-           color: #4d4d4d;
-           font-size: 0.9em;
-           padding-left: 10px;
-         }
-         
-           #just_played .song .feature_album {
-             position: relative;
-             top: -4px;
-             border: 0;
-           }
-           
-             #just_played .song .social_data a {
-               color: #2f57a7;
-             }
-           
-           #just_played .song .social_data .community {
-             float: left;
-             border-bottom: 1px dotted #CAD4DD;
-             margin-bottom: 2px;
-             padding: 2px 1px;
-           }
-           
-           #just_played .song .social_data .user {
-             float: left;
-             width: 110px;
-             border-bottom: 1px dotted #CAD4DD;
-             margin-bottom: 2px;
-             padding: 2px 1px;
-             margin-left: 15px;
-           }
-           
-             #just_played .song .social_data .last {
-               border-bottom: 0;
-             }
-             
-             #just_played .song .social_data .icon {
-               float: left;
-               margin-right: 2px;
-             }
-             
-             #just_played .song .social_data .community .text {
-               float: left;
-               line-height: 1.2em;
-             }
-             
-             #just_played .song .social_data .user .text {
-               float: left;
-               width: 84px;
-               line-height: 1.2em;
-             }
-             
-           #just_played .song .social_data .note {
-             float: left;
-             clear: both;
-             width: 310px;
-             border-top: 1px dotted #CAD4DD;
-             padding-top: 4px;
-             padding-left: 21px;
-           }
-           
-             #just_played .song .social_data .note .text {
-               float: left;
-               width: 320px;
-             }
-             
-             #just_played .song .social_data .note .text p {
-               color: #4d4d4d;
-             }
-			 
-			 #just_played .song .social_data .note a {
-			 	background-image: url(../images/icon_external.png);
-				padding-right: 19px;
-				background-repeat: no-repeat;
-				background-position: right;
-			 }
-
-	#just_played .disclaimer {
-		text-align: right;
-		padding-top: 8px;
-		float: left;
-	}
-.clear { clear: right;  }
-
-</style>
 <p>
-
-<form action='/admin/merge/artist' method="POST">
-        Artist to delete<input type="text" name="id_old" />
-
-Artist to keep        
-<input type="text" name="id_new" />
-
-        <input type="submit" value="Merge!" />
-</form>
+	<form action='/admin/merge/artist' method="POST" class="form-stacked">
+			<label for="id_old">Artist to delete</label>
+			<input type="text" name="id_old" />
+			<label for="id_new">Artist to keep</label>
+			<input type="text" name="id_new" />
+		<input type="submit" value="Merge!" />
+	</form>
 </p>
-
 <p>
-	<div id="just_played">
+	<table>
+		<thead>
+	   	<tr>
+				<th>id</th>
+				<th>name</th>
+			</tr>
+	  </thead>
+		<tbody>
 	<% @list.each do |track| %>
-		<div class="song">
-			<br style="clear: both">
-			
-			<div class="details">
-				<table><tbody>					
-
-					<tr>
-						<td class="label">Artist</td>
-						<td class="label"><a href="/v1/artist/<%= track.id %>"><%= track.id %></td>
-						
-						<td class="info">
-
-							<span><% if !track.artistmbid.nil? %><a href="http://musicbrainz.org/artist/<%= track.artistmbid %>.html"><%= track.artistname %></a>
-								<% else %> <%= track.artistname %><% end %></span>
-						</td>
-					</tr>
-					
-					</tbody></table>
-			</div>
-
-		</div>
+		<tr>
+			<td><a href="/v1/artist/<%= track.id %>"><%= track.id %></td>
+			<td>
+					<span><% if !track.artistmbid.nil? %><a href="http://musicbrainz.org/artist/<%= track.artistmbid %>.html"><%= track.artistname %></a>
+						<% else %> <%= track.artistname %><% end %></span>
+				</span>
+			</td>		
+		</tr>
 	<% end %>
-	</div>
+	 	</tbody>
+	</table>
 </p>
-
-

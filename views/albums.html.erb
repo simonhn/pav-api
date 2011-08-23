@@ -1,4 +1,4 @@
-<h1>Albums</h1>
+<h2>Albums</h2>
 <% for album in @albums %>
     <p><%= album.albumname %></p>
 		<% if !album.albumimage.nil? %><img src="<%= album.albumimage %>" /><% end %>

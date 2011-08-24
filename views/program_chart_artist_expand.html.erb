@@ -1,4 +1,6 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js" type="text/javascript"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js" type="text/javascript"></script>
+
 <style>
 
 .same{
@@ -31,6 +33,33 @@
 	width:60px;
 	height:60px;
 }
+#head{
+padding: 10px 10px 9px;
+line-height: 13.5px;
+text-align: left;
+vertical-align: middle;
+border-top: 1px solid #DDD;
+}
+#number,#status{
+  float: left;
+  width: 70px;
+}
+
+.hidden{
+	margin-top:10px;
+	margin-left:150px;
+}
+.hidden div{
+	margin-top:5px;
+}
+
+#album li{
+	display: inline;
+	list-style-type: none;
+	padding-right: 20px;
+	margin:0px;
+}
+#album{margin:0px;}
 
 </style>
 
@@ -98,12 +127,61 @@ function makeChart() {
 			//display new chart
 			$.each(new_chart, function (i, item) {
 				var number = i +1;
-				var content = '<tr><td class="number">' + number + '</td><td class="status"><span class=' + item.status + '>&nbsp;</span></td><td class="name">' + item.artistname + '</td><td class="plays">' + item.count + '</td><td class="diff">' + item.diff + '</td><td class="prev-cnt">' + item.prev_count + '</td></tr>';
-				$(content).appendTo("#artists");
+				var content = '<li id="head"><span id="number">' + number + '</span><span id="status" class=' + item.status + '>&nbsp;</span><a class="header" id="' + item.id + '" href="javascript: void(0)">' + item.artistname + '</a><div class="hidden" id="' + item.id + '">Loading...</div></li>';
+				$(content).appendTo("#files-accordion");
 			});
+			$('#accordion > ul').accordion({ active: false, header:'.header',collapsible: true,clearStyle: true }).bind("accordionchange", function(event, ui) {
+			  //console.dir(ui); // jQuery, activated header
+			if(ui.newHeader[0]){
+				doSomething(ui.newHeader[0].id);
+			}
+			})
 		}//end if
 }
 
+function roundNumber(num, dec) {
+	var result = Math.round(num*Math.pow(10,dec))/Math.pow(10,dec);
+	return result;
+}
+
+var doSomething = function(paneId) {
+	$.ajax({
+	  url: "http://96.126.96.51/v1/artist/"+paneId+"/details",
+	  dataType: "jsonp",
+		timeout : 40000,
+		cache:true,
+		jsonpCallback:'details_callback',
+         data: {
+             format: "json",
+							channel: 4
+							},
+		success: function(result) { 
+			//console.log(result);
+			
+			var first = '<div>First played on '+result.first_play+'</div>';
+			var last = '<div>Last played on '+result.last_play+'</div>';
+			var avg_play_week = '<div>Played on average '+roundNumber(result.avg_play_week,1)+' times a week</div>';
+			var chart_pos = '<div>Number '+result.chart_pos+' on overall chart</div>';
+			var play_count = '<div>Played a total of '+result.play_count+' times</div>';
+			var avg_duration = '<div>Track are on average '+roundNumber(result.avg_duration,1)+' seconds long</div>';
+			var tracks = '<div>Tracks</div><ul>';
+			$.each(result.tracks, function(i,item){
+				tracks = tracks + '<li>'+item.title+'</li>';
+			});
+			tracks = tracks +'</ul>';
+			
+			var albums = '<ul id="album">';
+			$.each(result.albums, function(i,item){
+				albums = albums + '<li><img src="'+item.albumimage+'" alt="'+item.albumname+'"/></li>';
+			});
+			albums = albums +'</ul>';
+			// australian: ""
+			// channels: Object
+			// time_sliced: Array[11]
+	    $('#' + paneId).next().html(albums+first+last+avg_play_week+chart_pos+play_count+avg_duration+tracks);		  
+			}
+		});
+};
 
 function formatDate(then) {
 	var month = then.getMonth() + 1;
@@ -177,17 +255,7 @@ prevWeek();
 
 <h3>Artist Chart for <%=@program%></h3>
 <p>Last <%=@span%> days compared with previous <%=@span%> days</p>
-<table id="artists" class="common-table">
-	<thead>
-		<tr>
-			<th class="number">#</th>
-			<th class="status"></th>
-			<th class="name"></th>
-			<th class="plays">count</th>
-			<th class="diff">position diff</th>
-			<th class="prev-cnt">previous count</th>
-		</tr>
-  </thead>
-	<tbody>
-		</tbody>
-</table>
+<div id="accordion">	
+<ul class="unstyled" id="files-accordion">
+</ul>
+</div>

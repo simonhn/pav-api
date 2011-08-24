@@ -40,7 +40,7 @@ header,section,footer,article,aside{display:block;}
 .row .offset11{margin-left:680px !important;}.row .offset11:first-child{margin-left:660px !important;}
 .row .offset12{margin-left:740px !important;}.row .offset12:first-child{margin-left:720px !important;}
 html,body{background-color:#fff;}
-body{margin:0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:13px;font-weight:normal;line-height:18px;color:#808080;text-rendering:optimizeLegibility;}
+body{margin:60px 0 0;font-family:"Helvetica Neue",Helvetica,Arial,sans-serif;font-size:13px;font-weight:normal;line-height:18px;color:#808080;text-rendering:optimizeLegibility;}
 div.container{width:940px;margin:0 auto;}
 div.container-fluid{padding:0 20px;zoom:1;}div.container-fluid:before,div.container-fluid:after{display:table;content:"";}
 div.container-fluid:after{clear:both;}

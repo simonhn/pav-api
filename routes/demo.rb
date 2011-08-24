@@ -40,6 +40,16 @@ get '/demo/program-chart/artist' do
   end
 end
 
+get '/demo/program-chart/artist-expand' do
+  @program = params[:program]
+  @program ||= 'super_request'
+  @span = params[:span]
+  @span ||= 7
+  respond_to do |wants|
+    wants.html{erb :program_chart_artist_expand}
+  end
+end
+
 get '/demo/program-chart/album' do
   @program = params[:program]
   @program ||= 'super_request'

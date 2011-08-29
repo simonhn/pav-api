@@ -1,4 +1,4 @@
-get '/demo' do
+get '/demo/?' do
   respond_to do |wants|
     wants.html{erb :demo}
   end

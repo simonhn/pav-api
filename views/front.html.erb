@@ -31,13 +31,13 @@
 	<h3 id="general-query-parameters">query parameters</h3>
 	<div>Some paths accepts the following query parameters. See each <a href="#resources">resource</a> type for more specifics.</div>
 	<ul> 
-		<li><code>channel</code>, default is all channels, available on paths that return a list</li>
-		<li><code>limit</code>, default is 10, available on paths that return a list</li>
+		<li><code>channel</code>, default is all channels, available on paths that returns a list of results</li>
+		<li><code>limit</code>, default is 10, available on paths that returns a list results</li>
 		<li><code>callback</code>, for cross-domain access jsonp is delivered to requests with 'callback' query parameter and json as return type</li>
 		<li><code>format</code>, return type format (html, json, xml)</li>
 		<li><code>type</code>, to specify lookup type, mbid</li>
-		<li><code>to</code> (to date) in yyyy-mm-dd format</li>
-		<li><code>from</code> (from date) in yyyy-mm-dd format</li>
+		<li><code>to</code> (to date) in yyyy-mm-dd hh:mm:ss format. The hh:mm:ss part is optional, assumes 12:00:00 if absent</li>
+		<li><code>from</code> (from date) in yyyy-mm-dd hh:mm:ss format. The hh:mm:ss part is optional, assumes 12:00:00 if absent</li>
 		<li><code>order_by</code>, for ordering results. Default is playedtime. Allowed values are artist and track</li>
 		<li><code>q</code>, a query for searching for track title, album name and artist name</li>
 		<li><code>artist_query</code>, searching for an artist name</li>

@@ -17,7 +17,7 @@ get "/#{@version}/plays" do
     #@plays = repository(:default).adapter.select("select * from tracks, plays, artists, artist_tracks, albums, album_tracks  where tracks.id=plays.track_id AND artists.id=artist_tracks.artist_id AND artist_tracks.track_id=tracks.id AND albums.id = album_tracks.album_id AND tracks.id = album_tracks.track_id #{to_from} group by tracks.id, plays.playedtime order by plays.playedtime DESC limit #{limit}")
     @plays = repository(:default).adapter.select("select * from tracks Left Outer Join album_tracks ON album_tracks.track_id = tracks.id Left Outer Join albums ON album_tracks.album_id = albums.id Inner Join artist_tracks ON artist_tracks.track_id = tracks.id Inner Join artists ON artists.id = artist_tracks.artist_id Inner Join plays ON tracks.id = plays.track_id WHERE tracks.id #{to_from} #{artist_query} #{album_query} #{track_query} #{query_all} #{program} group by tracks.id, plays.playedtime order by #{order_by} limit #{limit}")
   end
-  hat = @plays.collect {|o| {:title => o.title, :artistname => o.artistname, :playedtime => o.playedtime, :albumname => o.albumname, :albumimage => o.albumimage} }
+  hat = @plays.collect {|o| {:title => o.title, :track_id => o.track_id, :trackmbid => o.trackmbid, :artistname => o.artistname, :artist_id => o.artist_id, :artistmbid => o.artistmbid, :playedtime => o.playedtime, :albumname => o.albumname, :albumimage => o.albumimage, :album_id => o.album_id, :albummbid => o.albummbid, :program_id => o.program_id, :channel_id => o.channel_id} }
   
   respond_to do |wants|
     wants.html { erb :plays }

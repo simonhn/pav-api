@@ -104,6 +104,7 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
   #setup MySQL connection:  
   @config = YAML::load( File.open(pwd +'/config/settings.yml' ) )
   @connection = "#{@config['adapter']}://#{@config['username']}:#{@config['password']}@#{@config['host']}/#{@config['database']}";
+  
   DataMapper.setup(:default, @connection)  
   DataMapper.finalize
   #Method that stores each playitem to database. Index is the id of the channel to associate the play with
@@ -165,6 +166,10 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
 
          #adding play: only add if playedtime does not exsist in the database already
          play_items = Play.count(:playedtime=>item['playedtime'], :channel_id=>index)
+         #if no program, dont insert anything
+         if item['program_id'] == ''
+           item['program_id'] = nil
+         end
          if play_items < 1
            @play = Play.create(:track_id =>@tracks.id, :channel_id => index, :playedtime=>item['playedtime'], :program_id => item['program_id'])
               @plays = @tracks.plays << @play

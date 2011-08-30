@@ -30,14 +30,22 @@ get "/#{@version}/artist/:id" do
 end
 
 get "/#{@version}/artist/:id/details" do
-  channel = params[:channel]
+  result = Hash.new
+  
+  #if no channel parameter provided, we assume all channels
+  channel = get_channel(params[:channel])
   if params[:type] == 'mbid' || params[:id].length == 36
      @artist = Artist.first(:artistmbid => params[:id])
   else
      @artist = Artist.get(params[:id])
   end
-  result = Hash.new
-  @play_count = repository(:default).adapter.select("SELECT plays.playedtime, tracks.title FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} AND plays.channel_id=#{channel} order by playedtime")
+  
+  artist_result = Hash.new
+  artist_result['artist_id'] = @artist.id
+  artist_result['artistname'] = @artist.artistname
+  result["artist"] = artist_result
+    
+  @play_count = repository(:default).adapter.select("SELECT plays.playedtime, tracks.title FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} #{channel} order by playedtime")
   
   if !@play_count.empty?
     @tracks = repository(:default).adapter.select("SELECT count(plays.id) as play_count, tracks.title, tracks.id FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} group by tracks.id order by playedtime")
@@ -64,7 +72,7 @@ get "/#{@version}/artist/:id/details" do
     #puts 'australian? '+australian.inspect
     result["australian"] = australian
 
-    @artist_chart = repository(:default).adapter.select("select artists.artistname, artists.id, artist_tracks.artist_id, artists.artistmbid, count(*) as cnt from tracks, plays, artists, artist_tracks where plays.channel_id=#{channel} AND tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id=artists.id group by artists.id order by cnt desc")
+    @artist_chart = repository(:default).adapter.select("select artists.artistname, artists.id, artist_tracks.artist_id, artists.artistmbid, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id=artists.id #{channel} group by artists.id order by cnt desc")
     index_number = @artist_chart.index{|x|x[:id]==@artist.id}
     real_index = 1+index_number.to_i
     #puts 'Position on all time chart '+real_index.to_s
@@ -74,15 +82,15 @@ get "/#{@version}/artist/:id/details" do
     @time_range = (Time.parse(last_play.playedtime.to_s) - Time.parse(first_play.playedtime.to_s))
     @slice = @time_range / 10
     hat = Time.parse(first_play.playedtime.to_s)
-    i = 1
+    i = 0
     result_array = []
 
-    while i < 11 do
+    while i < 10 do
        from = hat
        hat = hat + @slice
        to = hat
        to_from = "AND playedtime <= '#{to.strftime("%Y-%m-%d %H:%M:%S")}' AND playedtime >= '#{from.strftime("%Y-%m-%d %H:%M:%S")}'"
-       @play_counter = repository(:default).adapter.select("SELECT plays.playedtime, tracks.title FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} AND plays.channel_id=#{channel} #{to_from} order by playedtime")
+       @play_counter = repository(:default).adapter.select("SELECT plays.playedtime, tracks.title FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} #{channel} #{to_from} order by playedtime")
        item = Hash.new
        item["from"] = from.to_s
        item["to"] = to.to_s
@@ -112,10 +120,7 @@ get "/#{@version}/artist/:id/details" do
     end
     result["channels"] = channel_result
   end
-    
   respond_to do |wants|
-    wants.html { erb :artist }
-    wants.xml { builder :artist }
     wants.json { result.to_json }
   end
 end

@@ -119,6 +119,7 @@ get "/#{@version}/artist/:id/details" do
       end
     end
     result["channels"] = channel_result
+    @res = result
   end
   respond_to do |wants|
     wants.json { result.to_json }
@@ -180,8 +181,8 @@ get "/#{@version}/artist/:id/albums" do
   @albums = @artist.tracks.albums
   
   respond_to do |wants|
-    wants.html { erb :artist_plays }
-    wants.xml { builder :artist_plays }
+    wants.html { erb :artist_albums }
+    wants.xml { builder :artist_albums }
     wants.json { @albums.to_json }
   end
 end
@@ -193,10 +194,18 @@ get "/#{@version}/artist/:id/plays" do
   else
     @artist = Artist.get(params[:id])
   end
-  @plays = @artist.tracks.plays
+  channel = params[:channel]
+  limit = get_limit(params[:limit])
+    if channel
+
+     @plays = repository(:default).adapter.select("select * from tracks Left Outer Join album_tracks ON album_tracks.track_id = tracks.id Left Outer Join albums ON album_tracks.album_id = albums.id Inner Join artist_tracks ON artist_tracks.track_id = tracks.id Inner Join artists ON artists.id = artist_tracks.artist_id Inner Join plays ON tracks.id = plays.track_id WHERE `plays`.`channel_id` = #{channel} AND artists.id=#{@artist.id} group by tracks.id, plays.playedtime order by plays.playedtime limit #{limit}")
+  else
+    @plays = repository(:default).adapter.select("select * from tracks Left Outer Join album_tracks ON album_tracks.track_id = tracks.id Left Outer Join albums ON album_tracks.album_id = albums.id Inner Join artist_tracks ON artist_tracks.track_id = tracks.id Inner Join artists ON artists.id = artist_tracks.artist_id Inner Join plays ON tracks.id = plays.track_id WHERE tracks.id AND artists.id=#{@artist.id} group by tracks.id, plays.playedtime order by plays.playedtime limit #{limit}")
+  end
+  hat = @plays.collect {|o| {:title => o.title, :track_id => o.track_id, :trackmbid => o.trackmbid, :artistname => o.artistname, :artist_id => o.artist_id, :artistmbid => o.artistmbid, :playedtime => o.playedtime, :albumname => o.albumname, :albumimage => o.albumimage, :album_id => o.album_id, :albummbid => o.albummbid, :program_id => o.program_id, :channel_id => o.channel_id} }
   respond_to do |wants|
     wants.html { erb :artist_plays }
     wants.xml { builder :artist_plays }
-    wants.json { @plays.to_json }
+    wants.json { hat.to_json }
   end
 end

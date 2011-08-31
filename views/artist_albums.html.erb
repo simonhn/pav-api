@@ -1,0 +1,7 @@
+<h2>Albums</h2>
+<% for album in @albums %>
+    <p><%= album.albumname %></p>
+		<% if !album.albumimage.nil? %><img src="<%= album.albumimage %>" /><% end %>
+		<% if !album.albummbid.nil? %><li>mbid: <a href="http://musicbrainz.org/release-group/<%= album.albummbid %>"><%= album.albummbid %></a></li><% end %>
+<% end %>
+

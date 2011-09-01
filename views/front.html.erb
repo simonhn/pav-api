@@ -1,93 +1,144 @@
 <section id="intro">
-<p>The pav:api exposes playlist data and is currently under development.</p>
-<p>Have a look at the <a href='/demo'>app gallery</a> to see what can be built using pav:api.</p>
 
-<ul class="unstyled">
-	<li><a href="#general">general information</a></li>
-		<ul>
-			<li><a href="#general-query-parameters">query parameters</a></li>
-			<li><a href="#general-identifiers">identifiers</a></li>
-			<li><a href="#general-authentication">authentication</a></li>
-			<li><a href="#general-versioning">versioning</a></li>
-			<li><a href="#general-return-types">return types</a></li>
-			<li><a href="#general-response-codes">reponse codes</a></li>
-			<li><a href="#general-terms">terms</a></li>
-		</ul>
-	<li>&nbsp;</li>
-	<li><a href="#resources">resources</a></li>
-		<ul>
-			<li><a href="#resources-artists">artists</a></li>
-			<li><a href="#resources-tracks">tracks</a></li>
-			<li><a href="#resources-albums">albums</a></li>
-			<li><a href="#resources-channels">channels</a></li>
-			<li><a href="#resources-plays">plays</a></li>
-			<li><a href="#resources-chart">charts</a></li>
-			<li><a href="#resources-search">search</a></li>
-		</ul>
-</ul>
+<div class="row">
+    <div class="span10 columns">
+      <p>The pav:api exposes playlist data and is currently under development.</p>
+			<p>Have a look at the <a href='/demo'>app gallery</a> to see what can be built using pav:api.</p>
+			<section id="general">
+				<h2 id="general">General Information</h2>
+				<h3 id="general-query-parameters">Query Parameters</h3>
+				<div>Some paths accepts the following query parameters. See each <a href="#resources">resource</a> type for more specifics.</div>
+				<ul> 
+					<li><code>channel</code>, default is all channels, available on paths that returns a list of results</li>
+					<li><code>limit</code>, default is 10, available on paths that returns a list results</li>
+					<li><code>callback</code>, for cross-domain access jsonp is delivered to requests with 'callback' query parameter and json as return type</li>
+					<li><code>format</code>, return type format (html, json, xml)</li>
+					<li><code>type</code>, to specify lookup type, mbid</li>
+					<li><code>to</code> (to date) in yyyy-mm-dd hh:mm:ss format. The hh:mm:ss part is optional, assumes 12:00:00 if absent</li>
+					<li><code>from</code> (from date) in yyyy-mm-dd hh:mm:ss format. The hh:mm:ss part is optional, assumes 12:00:00 if absent</li>
+					<li><code>order_by</code>, for ordering results. Default is playedtime. Allowed values are artist and track</li>
+					<li><code>q</code>, a query for searching for track title, album name and artist name</li>
+					<li><code>artist_query</code>, searching for an artist name</li>
+					<li><code>track_query</code>, searching for a track title</li>
+					<li><code>album_query</code>, searching for an album name</li>
+					<li><code>program</code>, the program_id to limit result to a certain show</li>
+				</ul>
+
+			<p>
+				<h3 id="general-identifiers">Identifiers</h3>
+				To lookup a specific artist/track/album you can use pav IDs or Musicbrainz IDs where available.
+			</p>
+
+			<p>
+				<h3 id="general-authentication">Authentication</h3>
+				All put and post requests require authentication
+			</p>
+
+			<p>
+				<h3 id="general-versioning">Versioning</h3>
+				The version of the api you wish to use is specified at the root path of resources. The current version is v1.
+			</p>
+
+			<p>
+				<h3 id="general-return-types">Return Types</h3>
+				Return type can selected by appending the desired content type to the url (.html, .xml, .json) or by adding ?format=(html, xml, json) to the query parameter. Use only one of these methods when doing a request.
+			<br />
+			 Default return type is currently html but will change to json when the API is put in production.
+			</p>
+
+			<p>
+				<h3 id="general-response-codes">Response Codes</h3>
+				The API attempts to return appropriate HTTP status codes for every request.
+				<ul>
+					<li>200 OK: Request succeeded</li>
+					<li>400 Bad Request: Your request was invalid and we'll return an error message telling you why</li>
+					<li>401 Not Authorized: You did not provide the right credentials</li>
+					<li>404 Not Found: The URI requested is invalid or the resource requested, such as a user, does not exists</li>
+					<li>500 Internal Server Error: Something is broken.</li>
+					<li>503 Service Unavailable: You cannot make this request at this time. Servers are up, but overloaded with requests</li>
+				</ul>
+			</p>
+
+			<p>
+				<h3 id="general-terms">Terms</h3>
+				Please be nice when using the api. If you plan to make massive amounts of calls please advise us.
+			</p>
+			</section>
+    </div>
+    <div class="span5 columns">
+			<h3>Table of Contents</h3>
+      <ul class="unstyled">
+				<li><a href="#general">General Information</a></li>
+					<ul>
+						<li><a href="#general-query-parameters">Query Parameters</a></li>
+						<li><a href="#general-identifiers">Identifiers</a></li>
+						<li><a href="#general-authentication">Authentication</a></li>
+						<li><a href="#general-versioning">Versioning</a></li>
+						<li><a href="#general-return-types">Return Types</a></li>
+						<li><a href="#general-response-codes">Reponse Codes</a></li>
+						<li><a href="#general-terms">Terms</a></li>
+					</ul>
+				<li>&nbsp;</li>
+				<li><a href="#resources">Resources</a></li>
+					<ul>
+						<li><a href="#resources-artists">Artists</a>
+							<ul>
+								<li><a href="#resources-artists-list">List of new artists</a></li>
+								<li><a href="#resources-artist-single">A single artist</a></li>
+								<li><a href="#resources-artist-albums">Albums from a specific artist</a></li>
+								<li><a href="#resources-artist-tracks">Tracks from a specific artist</a></li>
+								<li><a href="#resources-artist-plays">Plays from a specific artist</a></li>
+							</ul>
+						</li>
+						<li><a href="#resources-tracks">Tracks</a>
+							<ul>
+								<li><a href="#resources-tracks-list">List of new tracks</a></li>
+								<li><a href="#resources-track-single">A single track</a></li>
+								<li><a href="#resources-track-artists">Artists related to a specific track</a></li>
+								<li><a href="#resources-track-albums">Albums related to a specific track</a></li>
+								<li><a href="#resources-track-plays">Plays of a specific track</a></li>
+								<li><a href="#resources-track-new">Create a new play of a track</a></li>					
+							</ul>
+						</li>
+						<li><a href="#resources-albums">Albums</a>
+							<ul>
+								<li><a href="#resources-albums-list">List of new albums</a></li>
+								<li><a href="#resources-album-single">A single album</a></li>
+								<li><a href="#resources-album-tracks">Tracks on a specific album</a></li>
+							</ul>
+						</li>
+						<li><a href="#resources-channels">Channels</a>
+							<ul>
+								<li><a href="#resources-channels-list">All channels</a></li>
+								<li><a href="#resources-channel-single">A single channel</a></li>
+								<li><a href="#resources-channel-new">Create a new channel</a></li>
+								<li><a href="#resources-channel-edit">Edit a channel</a></li>			
+							</ul>
+						</li>
+						<li><a href="#resources-plays">Plays</a>
+							<ul>
+								<li><a href="#resources-plays-list">A playlist</a></li>
+								<li><a href="#resources-play-single">A single play</a></li>		
+							</ul>
+						</li>
+						<li><a href="#resources-chart">Charts</a>
+							<ul>
+								<li><a href="#resources-chart-artist">An artist chart</a></li>
+								<li><a href="#resources-chart-track">A track chart</a></li>		
+								<li><a href="#resources-chart-album">An album chart</a></li>
+							</ul>
+						</li>
+						<li><a href="#resources-search">Search</a></li>
+					</ul>
+			</ul>
+    </div>
+  </div>
+
+
 </section>
-<section id="general">
-	<h2 id="general">general information</h2>
-	<h3 id="general-query-parameters">query parameters</h3>
-	<div>Some paths accepts the following query parameters. See each <a href="#resources">resource</a> type for more specifics.</div>
-	<ul> 
-		<li><code>channel</code>, default is all channels, available on paths that returns a list of results</li>
-		<li><code>limit</code>, default is 10, available on paths that returns a list results</li>
-		<li><code>callback</code>, for cross-domain access jsonp is delivered to requests with 'callback' query parameter and json as return type</li>
-		<li><code>format</code>, return type format (html, json, xml)</li>
-		<li><code>type</code>, to specify lookup type, mbid</li>
-		<li><code>to</code> (to date) in yyyy-mm-dd hh:mm:ss format. The hh:mm:ss part is optional, assumes 12:00:00 if absent</li>
-		<li><code>from</code> (from date) in yyyy-mm-dd hh:mm:ss format. The hh:mm:ss part is optional, assumes 12:00:00 if absent</li>
-		<li><code>order_by</code>, for ordering results. Default is playedtime. Allowed values are artist and track</li>
-		<li><code>q</code>, a query for searching for track title, album name and artist name</li>
-		<li><code>artist_query</code>, searching for an artist name</li>
-		<li><code>track_query</code>, searching for a track title</li>
-		<li><code>album_query</code>, searching for an album name</li>
-		<li><code>program</code>, the program_id to limit result to a certain show</li>
-	</ul>
 
-<p>
-	<h3 id="general-identifiers">identifiers</h3>
-	To lookup a specific artist/track/album you can use pav IDs or Musicbrainz IDs where available.
-</p>
-
-<p>
-	<h3 id="general-authentication">authentication</h3>
-	All put and post requests require authentication
-</p>
-
-<p>
-	<h3 id="general-versioning">versioning</h3>
-	The version of the api you wish to use is specified at the root path of resources. The current version is v1.
-</p>
-
-<p>
-	<h3 id="general-return-types">return types</h3>
-	Return type can selected by appending the desired content type to the url (.html, .xml, .json) or by adding ?format=(html, xml, json) to the query parameter. Use only one of these methods when doing a request.
-<br />
- Default return type is currently html but will change to json when the API is put in production.
-</p>
-
-<p>
-	<h3 id="general-response-codes">response codes</h3>
-	The API attempts to return appropriate HTTP status codes for every request.
-	<ul>
-		<li>200 OK: Request succeeded</li>
-		<li>400 Bad Request: Your request was invalid and we'll return an error message telling you why</li>
-		<li>401 Not Authorized: You did not provide the right credentials</li>
-		<li>404 Not Found: The URI requested is invalid or the resource requested, such as a user, does not exists</li>
-		<li>500 Internal Server Error: Something is broken.</li>
-		<li>503 Service Unavailable: You cannot make this request at this time. Servers are up, but overloaded with requests</li>
-	</ul>
-</p>
-
-<p>
-	<h3 id="general-terms">terms</h3>
-	Please be nice when using the api. If you plan to make massive amounts of calls please advise us.
-</p>
-</section>
 <section id="resources">
-<h2 id="resources">resources</h2>
+<h2 id="resources">Resources</h2>
 The resources that can be accessed through the api follows the model below:
 <div id="model-img">
 	<img id="resources-model" width="400px" src="images/models.png"/>
@@ -103,10 +154,13 @@ Some useful observation about the model:
 	<li>A play belongs to one channel</li>
 	<li>A channel can have multiple plays</li>
 </ul>
+<p>
+	
+</p>
 
-<h3 id="resources-artists">artists</h3>
+<h3 id="resources-artists">Artists</h3>
 
-<h4>/artists</h4>
+<h4 id="resources-artists-list">/artists</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a list of artists</p>
@@ -121,7 +175,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/967986.js"></script>
 </div>
 
-<h4>/artist/:id</h4>
+<h4 id="resources-artist-single">/artist/:id</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a single artist</p>
@@ -136,7 +190,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/967997.js"></script>
 </div>
 
-<h4>/artist/:id/tracks</h4>
+<h4 id="resources-artist-tracks">/artist/:id/tracks</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns the tracks related to a single artist</p>
@@ -151,20 +205,22 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968001.js"></script>
 </div>
 
-<h4>/artist/:id/albums</h4>
+<h4 id="resources-artist-albums">/artist/:id/albums</h4>
 <div class='resource'>
 	<h5>Description</h5>
-	<p>Returns the plays related to a single artist</p>
+	<p>Returns the albums related to a single artist</p>
 
 	<h5>Parameters</h5>
 	<p>Supports the following parameter: <code>type</code></p>
 
 	<h5>Example query</h5>
 	<code><a href="/v1/artist/1234/albums.json">/v1/artist/1234/albums.json</a></code>
-
+	
+	<h5>Example response</h5>
+	<script src="https://gist.github.com/1185129.js"></script>
 </div>
 
-<h4>/artist/:id/plays</h4>
+<h4 id="resources-artist-plays">/artist/:id/plays</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns the plays related to a single artist</p>
@@ -179,8 +235,8 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/956363.js"> </script>
 </div>
 
-<h3 id="resources-tracks">tracks</h3>
-<h4>/tracks</h4>
+<h3 id="resources-tracks">Tracks</h3>
+<h4 id="resources-tracks-list">/tracks</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a list of tracks</p>
@@ -195,7 +251,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968008.js"></script>
 </div>
 
-<h4>/track/:id</h4>
+<h4 id="resources-track-single">/track/:id</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a single track specified by an id.</p>
@@ -210,20 +266,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968013.js?file=gistfile1.json"></script>
 </div>
 
-<h4>post /track</h4>
-<div class='resource'>
-	<h5>Description</h5>
-	<p>Post a track to pav. Requires authentication.</p>
-
-	<h5>Parameters</h5>
-	<p>A json payload</p>
-	<script src="https://gist.github.com/968015.js?file=gistfile1.json"></script>
-
-	<h5>Example response</h5>
-	<p><code>200</code></p>
-</div>
-
-<h4>/track/:id/artists</h4>
+<h4 id="resources-track-artists">/track/:id/artists</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns the artists related to a single track</p>
@@ -238,7 +281,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968022.js?file=gistfile1.json"></script>
 </div>
 
-<h4>/track/:id/albums</h4>
+<h4 id="resources-track-albums">/track/:id/albums</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns the albums related to a single track</p>
@@ -253,7 +296,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968023.js?file=gistfile1.json"></script>
 </div>
 
-<h4>/track/:id/plays</h4>
+<h4 id="resources-track-plays">/track/:id/plays</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns the plays related to a single track.</p>
@@ -268,9 +311,21 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968025.js?file=gistfile1.json"></script>
 </div>
 
+<h4 id="resources-track-new">post /track</h4>
+<div class='resource'>
+	<h5>Description</h5>
+	<p>Post a track to pav. Requires authentication.</p>
 
-<h3 id="resources-albums">albums</h3>
-<h4>/albums</h4>
+	<h5>Parameters</h5>
+	<p>A json payload</p>
+	<script src="https://gist.github.com/968015.js?file=gistfile1.json"></script>
+
+	<h5>Example response</h5>
+	<p><code>200</code></p>
+</div>
+
+<h3 id="resources-albums">Albums</h3>
+<h4 id="resources-albums-list">/albums</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a list of albums.</p>
@@ -285,7 +340,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968027.js?file=gistfile1.json"></script>
 </div>
 
-<h4>/album/:id</h4>
+<h4 id="resources-album-single">/album/:id</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a single album.</p>
@@ -300,7 +355,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968029.js?file=gistfile1.json"></script>
 </div>
 
-<h4>/album/:id/tracks</h4>
+<h4 id="resources-album-tracks">/album/:id/tracks</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns the tracks related to a single album.</p>
@@ -316,8 +371,8 @@ Some useful observation about the model:
 </div>
 
 
-<h3 id="resources-channels">channels</h3>
-<h4>/channels</h4>
+<h3 id="resources-channels">Channels</h3>
+<h4 id="resources-channels-list">/channels</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a list of channels.</p>
@@ -332,7 +387,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968054.js?file=gistfile1.json"></script>
 </div>
 
-<h4>/channel/:id</h4>
+<h4 id="resources-channel-single">/channel/:id</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a single channel.</p>
@@ -344,7 +399,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968058.js?file=gistfile1.json"></script>
 </div>
 
-<h4>post channel</h4>
+<h4 id="resources-channel-new">post channel</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Create a new channel.</p>
@@ -353,7 +408,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968061.js?file=gistfile1.json"></script>
 </div>
 
-<h4>put channel/:id</h4>
+<h4 id="resources-channel-edit">put channel/:id</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Update a channel.</p>
@@ -362,8 +417,8 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968061.js?file=gistfile1.json"></script>
 </div>
 
-<h3 id="resources-plays">plays</h3>
-<h4>/plays</h4>
+<h3 id="resources-plays">Plays</h3>
+<h4 id="resources-plays-list">/plays</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a playlist.</p>
@@ -377,7 +432,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/956363.js"> </script>
 </div>
 
-<h4>/play/:id</h4>
+<h4 id="resources-play-single">/play/:id</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Returns a single play.</p>
@@ -389,8 +444,8 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/968064.js?file=gistfile1.json"></script>
 </div>
 
-<h3 id="resources-chart">charts</h3>
-<h4>/chart/artist</h4>
+<h3 id="resources-chart">Charts</h3>
+<h4 id="resources-chart-artist">/chart/artist</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>A chart of most played artists for a given period.</p>
@@ -405,7 +460,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/973721.js?file=gistfile1.json"></script>
 </div>
 
-<h4>/chart/track</h4>
+<h4 id="resources-chart-track">/chart/track</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>A chart of most played tracks for a given period.</p>
@@ -420,7 +475,7 @@ Some useful observation about the model:
 	<script src="https://gist.github.com/973726.js?file=gistfile1.json"></script>
 </div>
 
-<h4>/chart/album</h4>
+<h4 id="resources-chart-album">/chart/album</h4>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>A chart of most played albums for a given period.</p>
@@ -436,7 +491,7 @@ Some useful observation about the model:
 </div>
 
 
-<h3 id="resources-search">search</h3>
+<h3 id="resources-search">Search</h3>
 <div class='resource'>
 	<h5>Description</h5>
 	<p>Search for artists (tracks and albums to come).</p>
@@ -453,6 +508,7 @@ Some useful observation about the model:
 
 </section>
 <style type="text/css" media="screen">
+
 .gist-syntax .s2 {
 color: black;
 }

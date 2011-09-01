@@ -52,9 +52,12 @@ get "/#{@version}/artist/:id/details" do
     result["tracks"] = @tracks.collect {|o| {:count => o.play_count, :title => o.title, :track_id => o.id} }
     
     @albums = @artist.tracks.albums
-    result["albums"]  = @albums.collect {|o| {:count => o.id, :album_id => o.id, :albumname => o.albumname, :albumimage => o.albumimage} }  
+    result["albums"]  = @albums.collect {|o| {:album_id => o.id, :albumname => o.albumname, :albumimage => o.albumimage} }  
     
     result["play_count"] = @play_count.size
+    
+    programs = repository(:default).adapter.select("select count(plays.id) as play_count, program_id from plays, tracks, artist_tracks, artists where artists.id=#{@artist.id} AND artists.id = artist_tracks.artist_id AND artist_tracks.track_id=tracks.id and tracks.id=plays.track_id AND plays.program_id !='' group by program_id")
+    result["programs"] = programs.collect {|o| {:play_count => o.play_count, :program_id => o.program_id} }
     
     first_play = @play_count.first
     #puts 'first played on '+Time.parse(first_play.playedtime.to_s).to_s
@@ -78,35 +81,41 @@ get "/#{@version}/artist/:id/details" do
     #puts 'Position on all time chart '+real_index.to_s
     result["chart_pos"] = real_index
     
-    #@play_count_range
-    @time_range = (Time.parse(last_play.playedtime.to_s) - Time.parse(first_play.playedtime.to_s))
-    @slice = @time_range / 10
-    hat = Time.parse(first_play.playedtime.to_s)
-    i = 0
-    result_array = []
+    #@play_count_range, divides last - first into 10 time slots
+    if @play_count.size > 1 #only makes sense if more than one play
+      @time_range = (Time.parse(last_play.playedtime.to_s) - Time.parse(first_play.playedtime.to_s))
+      @slice = @time_range / 10
+      hat = Time.parse(first_play.playedtime.to_s)
+      i = 0
+      result_array = []
 
-    while i < 10 do
-       from = hat
-       hat = hat + @slice
-       to = hat
-       to_from = "AND playedtime <= '#{to.strftime("%Y-%m-%d %H:%M:%S")}' AND playedtime >= '#{from.strftime("%Y-%m-%d %H:%M:%S")}'"
-       @play_counter = repository(:default).adapter.select("SELECT plays.playedtime, tracks.title FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} #{channel} #{to_from} order by playedtime")
-       item = Hash.new
-       item["from"] = from.to_s
-       item["to"] = to.to_s
-       item["count"] = @play_counter.size.to_s
-       result_array[i] = item
-       i += 1
+      while i < 10 do
+         from = hat
+         hat = hat + @slice
+         to = hat
+         to_from = "AND playedtime <= '#{to.strftime("%Y-%m-%d %H:%M:%S")}' AND playedtime >= '#{from.strftime("%Y-%m-%d %H:%M:%S")}'"
+         @play_counter = repository(:default).adapter.select("SELECT plays.playedtime, tracks.title FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} #{channel} #{to_from} order by playedtime")
+         item = Hash.new
+         item["from"] = from.to_s
+         item["to"] = to.to_s
+         item["count"] = @play_counter.size.to_s
+         result_array[i] = item
+         i += 1
+      end
+      #puts 'time sliced play count '+result_array.inspect
+      result["time_sliced"] = result_array
+      
+      #average play counts per week from first played to now
+      #@play_count.size
+      @new_time_range = (Time.now - Time.parse(first_play.playedtime.to_s))
+      avg = @play_count.size/(@new_time_range/(60*60*24*7))
+      #puts 'avg plays per week '+ avg.to_s
+      result["avg_play_week"] = avg
+    else
+      #when only 1 play:
+      result["time_sliced"] = []
+      result["avg_play_week"] = 0    
     end
-    #puts 'time sliced play count '+result_array.inspect
-    result["time_sliced"] = result_array
-
-    #average play counts per week from first played to now
-    #@play_count.size
-    @new_time_range = (Time.now - Time.parse(first_play.playedtime.to_s))
-    avg = @play_count.size/(@new_time_range/(60*60*24*7))
-    #puts 'avg plays per week '+ avg.to_s
-    result["avg_play_week"] = avg
 
     #played on other channels?
     channel_result = Hash.new

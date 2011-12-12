@@ -42,16 +42,23 @@ require 'chronic'
 #require 'memcached'
 #require './throttler'
 
+require 'rack/cors'
 #for serving different content types
 require 'sinatra/respond_to'
 Sinatra::Application.register Sinatra::RespondTo
 require 'bigdecimal'
+#require "sinatra/reloader" if development?
 
 
 configure do
   #use Throttler, :min => 300.0, :cache => Memcached.new, :key_prefix => :throttle
   #use Rack::Throttle::Throttler, :min => 1.0, :cache => Memcached.new, :key_prefix => :throttle
-  
+  use Rack::Cors do
+    allow do
+      origins '*'
+      resource '/*', :headers => :any, :methods => :get
+    end
+  end
   #logging
   DataMapper::Logger.new('log/datamapper.log', :warn )
   DataMapper::Model.raise_on_save_failure = true

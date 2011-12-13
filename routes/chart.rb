@@ -4,7 +4,7 @@ get "/#{@version}/chart/track" do
   limit = get_limit(params[:limit])
   to_from = make_to_from(params[:from], params[:to])
   channel = get_channel(params[:channel])
-  @tracks = repository(:default).adapter.select("select *, count(distinct plays.id) as cnt from tracks Left Outer Join album_tracks ON album_tracks.track_id = tracks.id Left Outer Join albums ON album_tracks.album_id = albums.id Inner Join artist_tracks ON artist_tracks.track_id = tracks.id Inner Join artists ON artists.id = artist_tracks.artist_id Inner Join plays ON tracks.id = plays.track_id where tracks.id #{channel} #{to_from} #{program} group by tracks.id order by cnt DESC limit #{limit}")
+  @tracks = repository(:default).adapter.select("select *, cnt from (select tracks.id, tracks.title, tracks.trackmbid, tracks.tracknote, tracks.tracklink, tracks.show, tracks.talent, tracks.aust, tracks.duration, tracks.publisher,tracks.datecopyrighted, tracks.created_at, count(*) as cnt from tracks,plays where tracks.id = plays.track_id #{channel} #{to_from} #{program} group by tracks.id order by cnt DESC limit #{limit}) as tracks Left Outer Join album_tracks ON album_tracks.track_id = tracks.id Left Outer Join albums ON album_tracks.album_id = albums.id Inner Join artist_tracks ON artist_tracks.track_id = tracks.id Inner Join artists ON artists.id = artist_tracks.artist_id")
   hat = @tracks.collect {|o| {:count => o.cnt, :title => o.title, :track_id => o.id, :artistname => o.artistname,:artistmbid => o.artistmbid, :trackmbid => o.trackmbid, :albumname => o.albumname, :albummbid => o.albummbid, :albumimage => o.albumimage} }
   respond_to do |wants|
     wants.html { erb :track_chart }
@@ -20,7 +20,7 @@ get "/#{@version}/chart/artist" do
  to_from = make_to_from(params[:from], params[:to])
  limit = get_limit(params[:limit])
  channel = get_channel(params[:channel])
- @artists = repository(:default).adapter.select("select artists.artistname, artists.id, artist_tracks.artist_id, artists.artistmbid, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id=artists.id #{channel} #{to_from} #{program} group by artists.id order by cnt desc limit #{limit}")
+ @artists = repository(:default).adapter.select("select artists.id, artists.artistname, artists.artistmbid,count(*) as cnt from (select artist_tracks.artist_id from plays, tracks, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id #{channel} #{to_from} #{program}) as artist_tracks, artists where artist_tracks.artist_id=artists.id group by artists.id order by cnt desc limit #{limit}")
  
  #@artists = repository(:default).adapter.select("select sum(cnt) as count, har.artistname, har.id from (select artists.artistname, artists.id, artist_tracks.artist_id, count(*) as cnt from tracks, plays, artists, artist_tracks where tracks.id=plays.track_id AND tracks.id=artist_tracks.track_id AND artist_tracks.artist_id= artists.id #{to_from} group by tracks.id, plays.playedtime) as har group by har.artistname order by count desc limit #{limit}")
   hat = @artists.collect {|o| {:count => o.cnt, :artistname => o.artistname, :id => o.id, :artistmbid => o.artistmbid} }

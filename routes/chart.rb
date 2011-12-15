@@ -36,7 +36,7 @@ get "/#{@version}/chart/album" do
   to_from = make_to_from(params[:from], params[:to])
   limit = get_limit(params[:limit])
   channel = get_channel(params[:channel])
-  @albums = repository(:default).adapter.select("select artists.artistname, artists.artistmbid, albums.albumname, albums.albumimage, albums.id as album_id,  albums.albummbid, count(distinct plays.id) as cnt from tracks, artists, plays, albums, album_tracks, artist_tracks where tracks.id=plays.track_id AND albums.id=album_tracks.album_id AND album_tracks.track_id=tracks.id AND tracks.id=artist_tracks.track_id AND artists.id=artist_tracks.artist_id #{channel} #{to_from} #{program} group by albums.id order by cnt DESC limit #{limit}")
+  @albums = repository(:default).adapter.select("select artists.artistname, artists.artistmbid, albums.albumname, albums.albumimage, albums.id as album_id,  albums.albummbid, count(distinct album_tracks.pid) as cnt from (select album_tracks.album_id as aid, tracks.id as tid, plays.id as pid from tracks, plays, album_tracks where tracks.id = plays.track_id AND album_tracks.track_id = tracks.id #{channel} #{to_from} #{program}) as album_tracks, albums, artists, artist_tracks where albums.id = album_tracks.aid AND album_tracks.tid = artist_tracks.track_id AND artists.id = artist_tracks.artist_id group by albums.id order by cnt DESC limit #{limit}")
   hat = @albums.collect {|o| {:count => o.cnt, :artistname => o.artistname, :artistmbid => o.artistmbid, :albumname => o.albumname, :album_id => o.album_id, :albummbid => o.albummbid,:albumimage => o.albumimage} }
   
   respond_to do |wants|

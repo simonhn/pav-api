@@ -3,3 +3,12 @@ config/settings.yml
 config/deploy.rb
 config/deploy/*
 .bundle\n
+.yardoc/
+Capfile
+Rakefile
+config/capistrano_database.rb
+config/deploy.rb.old
+doc/
+log/
+*.pid
+*.output

@@ -48,7 +48,7 @@ get "/#{@version}/artist/:id/details" do
   @play_count = repository(:default).adapter.select("SELECT plays.playedtime, tracks.title FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} #{channel} order by playedtime")
   
   if !@play_count.empty?
-    @tracks = repository(:default).adapter.select("SELECT count(plays.id) as play_count, tracks.title, tracks.id FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} group by tracks.id order by playedtime")
+    @tracks = repository(:default).adapter.select("SELECT count(plays.id) as play_count, tracks.title, tracks.id FROM `artists` INNER JOIN `artist_tracks` ON `artists`.`id` = `artist_tracks`.`artist_id` INNER JOIN `tracks` ON `artist_tracks`.`track_id` = `tracks`.`id` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE `artists`.`id` = #{@artist.id} #{channel} group by tracks.id order by playedtime")
     result["tracks"] = @tracks.collect {|o| {:count => o.play_count, :title => o.title, :track_id => o.id} }
     
     @albums = @artist.tracks.albums

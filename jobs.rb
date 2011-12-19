@@ -118,8 +118,12 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
        artist_array = item['artist']['artistname'].split("+")
        artist_array.each{ |artist_item|
        begin
+         artist = artist_item.strip.force_encoding('UTF-8')
+         track = item['title'].force_encoding('UTF-8')
+         album = item['album']['albumname'].force_encoding('UTF-8')
          #for each item, lookup in musicbrainz. Returns hash with mbids for track, album and artist if found
-         mbid_hash = mbid_lookup(artist_item.strip, item['title'], item['album']['albumname'])
+         mbid_hash = mbid_lookup(artist,track,album)
+         puts mbid_hash.inspect
         rescue StandardError => e
            $LOG.info("Issue while processing #{artist_item.strip} - #{item['title']} - #{e.backtrace}")  
         end
@@ -184,7 +188,7 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
 
     #we can only hit mbrainz once a second so we take a nap
     sleep 1
-    service = MusicBrainz::Webservice::Webservice.new(:user_agent => 'pavapi/1.0')
+    service = MusicBrainz::Webservice::Webservice.new(:user_agent => 'hat')
     q = MusicBrainz::Webservice::Query.new(service)
     #TRACK
     if !album.empty?
@@ -193,7 +197,7 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
       t_filter = MusicBrainz::Webservice::TrackFilter.new(:artist=>artist, :title=>track, :limit => 5)
     end
     t_results = q.get_tracks(t_filter)
-
+    puts t_results.inspect
     #No results from the 'advanced' query, so trying artist and album individualy
     if t_results.count == 0
       #ARTIST

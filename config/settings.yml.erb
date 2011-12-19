@@ -5,11 +5,11 @@
 
 adapter: mysql
 host: localhost
-username: simonhn
-database:  <%= Capistrano::CLI.ui.ask("Enter MySQL database to connect to: ") %>
+username: <%= Capistrano::CLI.ui.ask("Enter MySQL user: ") %>
 password: <%= Capistrano::CLI.ui.ask("Enter MySQL database password: ") %>
+database:  <%= Capistrano::CLI.ui.ask("Enter MySQL database to connect to: ") %>
 encoding: utf8
 timeout: 5000
 
-authuser:  admin
+authuser:  <%= Capistrano::CLI.ui.ask("Enter http auth user: ") %>
 authpass: <%= Capistrano::CLI.ui.ask("Enter http auth password: ") %>

@@ -188,7 +188,7 @@ $LOG = Logger.new(pwd+'/log/queue.log', 'monthly')
 
     #we can only hit mbrainz once a second so we take a nap
     sleep 1
-    service = MusicBrainz::Webservice::Webservice.new(:user_agent => 'hat')
+    service = MusicBrainz::Webservice::Webservice.new(:user_agent => 'pavapi/1.0 (simonhn@gmail.com)')
     q = MusicBrainz::Webservice::Query.new(service)
     #TRACK
     if !album.empty?

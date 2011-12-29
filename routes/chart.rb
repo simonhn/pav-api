@@ -1,3 +1,5 @@
+class PavApi < Sinatra::Base
+
 # chart of top tracks
 get "/#{@version}/chart/track" do
   program = get_program(params[:program])
@@ -44,4 +46,5 @@ get "/#{@version}/chart/album" do
       wants.xml { builder :album_chart }
       wants.json {hat.to_json}
   end
+end
 end

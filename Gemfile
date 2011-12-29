@@ -1,5 +1,5 @@
 source :rubygems
-gem 'sinatra', '=1.2.6'
+gem 'sinatra'
 gem 'json' 
 gem 'rack' 
 gem 'rack-contrib', :require => 'rack/contrib'
@@ -14,7 +14,7 @@ gem 'crack'
 gem 'chronic_duration'
 gem 'chronic'
 
-gem 'sinatra-respond_to', '=0.7.0'
+gem 'sinatra-respond_to'
 
 gem 'dm-core'
 gem 'dm-mysql-adapter'

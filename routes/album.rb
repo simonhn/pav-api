@@ -1,3 +1,5 @@
+class PavApi < Sinatra::Base
+
 #show all albums
 get "/#{@version}/albums" do
   limit = get_limit(params[:limit])
@@ -70,4 +72,5 @@ get "/#{@version}/album/:id/tracks" do
     wants.xml { builder :album_tracks }
     wants.json {@tracks.to_json }
   end
+end
 end

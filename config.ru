@@ -1,10 +1,6 @@
 require 'rubygems'
-require 'bundler'
-Bundler.require
-require './pavapi'
+require File.join(File.dirname(__FILE__), 'pavapi.rb')
 
-#set :environment,  :production
-disable :run
-enable :logging, :dump_errors, :raise_errors, :show_exceptions
+#require './pavapi'
 
-run Sinatra::Application
+run PavApi

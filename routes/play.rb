@@ -1,3 +1,5 @@
+class PavApi < Sinatra::Base
+
 #PLAY
 get "/#{@version}/plays" do
   #DATE_FORMAT(playedtime, '%d %m %Y %H %i %S')
@@ -31,4 +33,5 @@ get "/#{@version}/play/:id" do
   respond_to do |wants|
     wants.json { @play.to_json }
   end
+end
 end

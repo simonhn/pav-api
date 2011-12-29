@@ -1,3 +1,5 @@
+class PavApi < Sinatra::Base
+
 #show all artists, defaults to 10, ordered by created date
 get "/#{@version}/artists" do
   limit = get_limit(params[:limit])
@@ -217,4 +219,5 @@ get "/#{@version}/artist/:id/plays" do
     wants.xml { builder :artist_plays }
     wants.json { hat.to_json }
   end
+end
 end

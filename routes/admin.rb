@@ -10,11 +10,11 @@ end
 get "/admin/stats" do
   json_outout = {}
   
-  @dig_duration_avg = repository(:default).adapter.select("SELECT ROUND(AVG(duration),0) FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE tracks.duration < 500 AND`plays`.`channel_id` = 1")
-  json_outout['dig_duration_avg'] = @dig_duration_avg.first.to_i.to_s
+  #@dig_duration_avg = repository(:default).adapter.select("SELECT ROUND(AVG(duration),0) FROM `tracks` INNER JOIN `plays` ON `tracks`.`id` = `plays`.`track_id` WHERE tracks.duration < 500 AND`plays`.`channel_id` = 1")
+  #json_outout['dig_duration_avg'] = @dig_duration_avg.first.to_i.to_s
   
-  @all_duration_avg = Track.avg(:duration, :duration.lt => 500) 
-  json_outout['all_duration_avg'] = @all_duration_avg.to_i.to_s
+  #@all_duration_avg = Track.avg(:duration, :duration.lt => 500) 
+  #json_outout['all_duration_avg'] = @all_duration_avg.to_i.to_s
   
   @artistcount = Artist.count
   json_outout['all_artistcount'] = @artistcount
@@ -90,6 +90,8 @@ post "/admin/merge/artist" do
      #delete old artist
      old_artist.destroy!
    end
+   redirect back
+   
 end
 
 get "/admin/duplicate/album" do
@@ -134,6 +136,7 @@ post "/admin/merge/album" do
       #delete old album
       old_album.destroy!
    end
+   redirect back
    
 end
 
@@ -148,5 +151,6 @@ end
 post "/admin/merge/track" do
    protected!
    
-   merge_tracks(params[:id_old], params[:id_new]) 
+   merge_tracks(params[:id_old], params[:id_new])
+   redirect back
 end

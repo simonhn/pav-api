@@ -22,3 +22,4 @@ ul li ul li a{
   float:right;
 }
 
+form{position: fixed;left: 800px;top:0px}

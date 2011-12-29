@@ -4,7 +4,8 @@
 			<input type="text" name="id_old" />
 			<label for="id_new">Artist to keep</label>
 			<input type="text" name="id_new" />
-		<input type="submit" value="Merge!" />
+			<input class="btn small danger" type="submit" value="Merge!" />
+			<input class="btn small" type="reset"/>
 	</form>
 </p>
 <p>
@@ -18,6 +19,8 @@
 		<tbody>
 	<% @list.each do |track| %>
 		<tr>
+			<td><button class="keep btn small" data-keep="<%= track.id %>">keep</button></td>
+			<td><button class="delete btn small" data-delete="<%= track.id %>">delete</button></td>
 			<td><a href="/v1/artist/<%= track.id %>"><%= track.id %></td>
 			<td>
 					<span><% if !track.artistmbid.nil? %><a href="http://musicbrainz.org/artist/<%= track.artistmbid %>.html"><%= track.artistname %></a>
@@ -29,3 +32,18 @@
 	 	</tbody>
 	</table>
 </p>
+
+<script>
+  $('.keep').bind('click', function(e) {
+	  $("input[name='id_new']").val('');
+	  var id = $(this).attr('data-keep');
+	  $("input[name='id_new']").val(id);
+  });
+  
+  $('.delete').bind('click', function(e) {
+      $("input[name='id_old']").val('');
+	  var id = $(this).attr('data-delete');
+	  $("input[name='id_old']").val(id);
+  });
+  
+ </script>

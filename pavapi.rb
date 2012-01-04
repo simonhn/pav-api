@@ -1,12 +1,9 @@
-#versioning
-@version = "v1"
-
 #core stuff
 require 'rubygems'
 gem 'sinatra'
 require 'sinatra/base'
-require './models'
-require './store_methods'
+require_relative 'models'
+require_relative 'store_methods'
 #Queueing with delayed job
 #require 'delayed_job'
 #require 'delayed_job_data_mapper'
@@ -33,11 +30,6 @@ require 'logger'
 require 'chronic_duration'
 require 'chronic'
 
-# Enable New Relic    
-#configure :production do
-  #require 'newrelic_rpm'
-#end
-
 #throttling
 #require 'rack/throttle'
 #require 'memcached'
@@ -47,18 +39,19 @@ require 'chronic'
 gem 'sinatra-respond_to'
 require 'sinatra/respond_to'
 require 'bigdecimal'
-#require "sinatra/reloader" if development?
 
 class PavApi < Sinatra::Base
+  
   configure do
+    set :environment, :development
+    
+    #versioning
+    @version = "v1"
+    
     register Sinatra::RespondTo
     
     #use Throttler, :min => 300.0, :cache => Memcached.new, :key_prefix => :throttle
     #use Rack::Throttle::Throttler, :min => 1.0, :cache => Memcached.new, :key_prefix => :throttle
-    #logging
-    DataMapper::Logger.new('log/datamapper.log', :warn )
-    DataMapper::Model.raise_on_save_failure = true
-    $LOG = Logger.new('log/pavstore.log', 'monthly')
   
     # MySQL connection:
     @config = YAML::load( File.open( 'config/settings.yml' ) )
@@ -69,6 +62,24 @@ class PavApi < Sinatra::Base
     #DataMapper.auto_upgrade!
     #DataMapper::auto_migrate!
     set :default_content, :html
+    
+  end
+  
+  configure :production do
+    set :show_exceptions, false
+    set :haml, { :ugly=>true, :format => :html5 }
+    set :clean_trace, true
+    #logging
+    DataMapper::Logger.new('log/datamapper.log', :warn )  
+    require 'newrelic_rpm'  
+  end
+
+  configure :development do
+    set :show_exceptions, true
+    set :haml, { :ugly=>false, :format => :html5 }
+    enable :logging
+    DataMapper::Logger.new('log/datamapper.log', :debug )
+    $LOG = Logger.new('log/pavstore.log', 'monthly')    
   end
 
   #Caching
@@ -253,21 +264,21 @@ class PavApi < Sinatra::Base
     erb :front
   end
 
-  require './routes/admin'
+  require_relative 'routes/admin'
 
-  require './routes/artist'
+  require_relative 'routes/artist'
 
-  require './routes/track'
+  require_relative 'routes/track'
 
-  require './routes/album'
+  require_relative 'routes/album'
 
-  require './routes/channel'
+  require_relative 'routes/channel'
 
-  require './routes/play'
+  require_relative 'routes/play'
 
-  require './routes/chart'
+  require_relative 'routes/chart'
 
-  require './routes/demo'
+  require_relative 'routes/demo'
 
 
   # search artist by name

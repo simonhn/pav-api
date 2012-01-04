@@ -44,6 +44,7 @@ class PavApi < Sinatra::Base
   
   configure do
     set :environment, :development
+    set :app_file, File.join(File.dirname(__FILE__), 'pavapi.rb')
     #versioning
     @version = "v1"
     

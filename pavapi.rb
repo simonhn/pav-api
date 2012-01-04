@@ -3,7 +3,7 @@
 
 #core stuff
 require 'rubygems'
-gem 'sinatra', '=1.2.6'
+gem 'sinatra', '=1.2.8'
 require 'sinatra'
 require './models'
 require './store_methods'
@@ -44,7 +44,7 @@ require 'chronic'
 #require './throttler'
 
 #for serving different content types
-gem 'sinatra-respond_to', '=0.7.0'
+gem 'sinatra-respond_to', '=0.8.0'
 require 'sinatra/respond_to'
 Sinatra::Application.register Sinatra::RespondTo
 require 'bigdecimal'

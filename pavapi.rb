@@ -38,7 +38,7 @@ require 'chronic'
 #require './throttler'
 
 #for serving different content types
-gem 'sinatra-respond_to', '=0.8.0'
+gem 'sinatra-respond_to', '=0.7.0'
 require 'sinatra/respond_to'
 require 'bigdecimal'
 

@@ -1,3 +1,5 @@
+class PavApi < Sinatra::Base
+
 # show all channels
 get "/#{@version}/channels" do
     @channels = Channel.all
@@ -29,4 +31,5 @@ get "/#{@version}/channel/:id" do
       wants.xml { @channel.to_xml }
       wants.json { @channel.to_json }  
     end
+end
 end

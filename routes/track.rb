@@ -1,3 +1,5 @@
+class PavApi < Sinatra::Base
+
 #add new track item (an item in the playout xml)
 post "/#{@version}/track" do
    protected!
@@ -126,4 +128,5 @@ get "/#{@version}/track/:id/plays" do
     wants.xml { builder :track_plays }
     wants.json {@plays.to_json}
   end
+end
 end

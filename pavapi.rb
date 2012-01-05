@@ -49,7 +49,6 @@ class PavApi < Sinatra::Base
     set :app_file, File.join(File.dirname(__FILE__), 'pavapi.rb')
     #versioning
     @version = "v1"
-    use Rack::JSONP
     register Sinatra::RespondTo
     
     #use Throttler, :min => 300.0, :cache => Memcached.new, :key_prefix => :throttle

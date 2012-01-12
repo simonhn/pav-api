@@ -12,3 +12,4 @@ doc/
 log/
 *.pid
 *.output
+storetrackjob.rb

@@ -1,3 +1,4 @@
+module V1
 class PavApi < Sinatra::Base
 
 get '/demo/?' do
@@ -123,5 +124,6 @@ all = Hash.new
       wants.html { erb :jjj }  
       wants.json { all.to_json }  
     end
+end
 end
 end

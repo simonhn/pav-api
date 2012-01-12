@@ -4,7 +4,7 @@
 <h2>Artist</h2>
 <p><%= @artist.artistname %> - <%= @artist.id %></p>
 
-<form action='/v1/artist/<%= @artist.id %>/edit' method="POST">	
+<form action='/<%= options.version %>/artist/<%= @artist.id %>/edit' method="POST">	
 	
 	<label for="artistmbid">Artist name</label>
 	<input type="text" name="artistname" value="<%= @artist.artistname %>"/>

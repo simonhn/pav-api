@@ -1,11 +1,13 @@
+module V1
 class PavApi < Sinatra::Base
 
 #add new track item (an item in the playout xml)
-post "/#{@version}/track" do
+post "/track" do
    protected!
    begin
    
    data = JSON.parse params[:payload].to_json
+   puts Play.count(:playedtime => data['item']['playedtime'], :channel_id => data['channel'])==0
    if !data['item']['artist']['artistname'].nil? && Play.count(:playedtime => data['item']['playedtime'], :channel_id => data['channel'])==0
       Stalker.enqueue('track.store', :item => data['item'],:channel => data['channel'])
       
@@ -19,7 +21,7 @@ post "/#{@version}/track" do
 end
 
 #show tracks
-get "/#{@version}/tracks" do
+get "/tracks" do
   limit = get_limit(params[:limit])
   channel = params[:channel]
   if channel
@@ -35,7 +37,7 @@ get "/#{@version}/tracks" do
 end
 
 # show track
-get "/#{@version}/track/:id" do
+get "/track/:id" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @track = Track.first(:trackmbid => params[:id])
   else
@@ -49,7 +51,7 @@ get "/#{@version}/track/:id" do
 end
 
 # edit track from id. if ?type=mbid is added, it will perform a mbid lookup
-get "/#{@version}/track/:id/edit" do
+get "/track/:id/edit" do
   protected!
   if params[:type] == 'mbid' || params[:id].length == 36
      @track = Track.first(:trackmbid => params[:id])
@@ -61,7 +63,7 @@ get "/#{@version}/track/:id/edit" do
   end
 end
 
-post "/#{@version}/track/:id/edit" do
+post "/track/:id/edit" do
   protected!
   @track = Track.get(params[:id])  
   raise not_found unless @track
@@ -80,11 +82,11 @@ post "/#{@version}/track/:id/edit" do
     }
 
   @track.save
-  redirect "/v1/track/#{@track.id}"
+  redirect "/#{options.version}/track/#{@track.id}"
 end
 
 #show artists for a track
-get "/#{@version}/track/:id/artists" do
+get "/track/:id/artists" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @track = Track.first(:trackmbid => params[:id])
   else
@@ -100,7 +102,7 @@ get "/#{@version}/track/:id/artists" do
 end
 
 #show albums for a track
-get "/#{@version}/track/:id/albums" do
+get "/track/:id/albums" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @track = Track.first(:trackmbid => params[:id])
   else
@@ -116,7 +118,7 @@ get "/#{@version}/track/:id/albums" do
 end
 
 # show plays for a track
-get "/#{@version}/track/:id/plays" do
+get "/track/:id/plays" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @track = Track.first(:trackmbid => params[:id])
   else
@@ -128,5 +130,6 @@ get "/#{@version}/track/:id/plays" do
     wants.xml { builder :track_plays }
     wants.json {@plays.to_json}
   end
+end
 end
 end

@@ -1,7 +1,8 @@
+module V1
 class PavApi < Sinatra::Base
 
 # chart of top tracks
-get "/#{@version}/chart/track" do
+get "/chart/track" do
   program = get_program(params[:program])
   limit = get_limit(params[:limit])
   to_from = make_to_from(params[:from], params[:to])
@@ -17,7 +18,7 @@ end
 
 
 # chart of top artist by name
-get "/#{@version}/chart/artist" do
+get "/chart/artist" do
  program = get_program(params[:program])
  to_from = make_to_from(params[:from], params[:to])
  limit = get_limit(params[:limit])
@@ -33,7 +34,7 @@ get "/#{@version}/chart/artist" do
   end
 end
 
-get "/#{@version}/chart/album" do
+get "/chart/album" do
   program = get_program(params[:program])
   to_from = make_to_from(params[:from], params[:to])
   limit = get_limit(params[:limit])
@@ -46,5 +47,6 @@ get "/#{@version}/chart/album" do
       wants.xml { builder :album_chart }
       wants.json {hat.to_json}
   end
+end
 end
 end

@@ -1,7 +1,8 @@
+module V1
 class PavApi < Sinatra::Base
 
 #show all albums
-get "/#{@version}/albums" do
+get "/albums" do
   limit = get_limit(params[:limit])
   channel = params[:channel]
   if channel
@@ -17,7 +18,7 @@ get "/#{@version}/albums" do
 end
 
 # show album from id
-get "/#{@version}/album/:id" do 
+get "/album/:id" do 
   if params[:type] == 'mbid' || params[:id].length == 36
     @album = Album.first(:albummbid => params[:id])
   else
@@ -31,7 +32,7 @@ get "/#{@version}/album/:id" do
 end
 
 # edit track from id. if ?type=mbid is added, it will perform a mbid lookup
-get "/#{@version}/album/:id/edit" do
+get "/album/:id/edit" do
   protected!
   if params[:type] == 'mbid' || params[:id].length == 36
      @album = Album.first(:albummbid => params[:id])
@@ -43,7 +44,7 @@ get "/#{@version}/album/:id/edit" do
   end
 end
 
-post "/#{@version}/album/:id/edit" do
+post "/album/:id/edit" do
   protected!
   @album = Album.get(params[:id])  
   raise not_found unless @album
@@ -56,11 +57,11 @@ post "/#{@version}/album/:id/edit" do
     }
   
   @album.save
-  redirect "/v1/album/#{@album.id}"
+  redirect "/#{options.version}/album/#{@album.id}"
 end
 
 # show tracks for an album
-get "/#{@version}/album/:id/tracks" do
+get "/album/:id/tracks" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @album = Album.first(:albummbid => params[:id])
   else
@@ -72,5 +73,6 @@ get "/#{@version}/album/:id/tracks" do
     wants.xml { builder :album_tracks }
     wants.json {@tracks.to_json }
   end
+end
 end
 end

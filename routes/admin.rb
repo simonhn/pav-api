@@ -1,4 +1,5 @@
-class PavApi < Sinatra::Base
+module V1
+  class PavApi < Sinatra::Base
 
 #admin dashboard
 get "/admin" do
@@ -155,5 +156,6 @@ post "/admin/merge/track" do
    
    merge_tracks(params[:id_old], params[:id_new])
    redirect back
+end
 end
 end

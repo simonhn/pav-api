@@ -4,7 +4,7 @@
 <h2>album</h2>
 <p><%= @album.albumname %> - <%= @album.id %></p>
 
-<form action='/v1/album/<%= @album.id %>/edit' method="POST">	
+<form action='/<%= options.version %>/album/<%= @album.id %>/edit' method="POST">	
 	
 	<label for="albumname">title</label>
 	<input type="text" name="albumname" value="<%= @album.albumname %>"/>

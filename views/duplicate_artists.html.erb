@@ -21,7 +21,7 @@
 		<tr>
 			<td><button class="keep btn small" data-keep="<%= track.id %>">keep</button></td>
 			<td><button class="delete btn small" data-delete="<%= track.id %>">delete</button></td>
-			<td><a href="/v1/artist/<%= track.id %>"><%= track.id %></td>
+			<td><a href="/<%= options.version %>/artist/<%= track.id %>"><%= track.id %></td>
 			<td>
 					<span><% if !track.artistmbid.nil? %><a href="http://musicbrainz.org/artist/<%= track.artistmbid %>.html"><%= track.artistname %></a>
 						<% else %> <%= track.artistname %><% end %></span>

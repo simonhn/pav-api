@@ -1,7 +1,8 @@
+module V1
 class PavApi < Sinatra::Base
 
 #PLAY
-get "/#{@version}/plays" do
+get "/plays" do
   #DATE_FORMAT(playedtime, '%d %m %Y %H %i %S')
   artist_query = get_artist_query(params[:artist_query])
   track_query = get_track_query(params[:track_query])
@@ -28,10 +29,11 @@ get "/#{@version}/plays" do
   end
 end
 
-get "/#{@version}/play/:id" do
+get "/play/:id" do
 @play = Play.get(params[:id])
   respond_to do |wants|
     wants.json { @play.to_json }
   end
+end
 end
 end

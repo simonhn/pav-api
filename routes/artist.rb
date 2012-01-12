@@ -1,7 +1,8 @@
+module V1
 class PavApi < Sinatra::Base
 
 #show all artists, defaults to 10, ordered by created date
-get "/#{@version}/artists" do
+get "/artists" do
   limit = get_limit(params[:limit])
   channel = params[:channel]
   if channel
@@ -17,7 +18,7 @@ get "/#{@version}/artists" do
 end
 
 # show artist from id. if ?type=mbid is added, it will perform a mbid lookup
-get "/#{@version}/artist/:id" do
+get "/artist/:id" do
   if params[:type] == 'mbid' || params[:id].length == 36
      @artist = Artist.first(:artistmbid => params[:id])
   else
@@ -31,7 +32,7 @@ get "/#{@version}/artist/:id" do
   end
 end
 
-get "/#{@version}/artist/:id/details" do
+get "/artist/:id/details" do
   result = Hash.new
   
   #if no channel parameter provided, we assume all channels
@@ -137,7 +138,7 @@ get "/#{@version}/artist/:id/details" do
   end
 end
 # edit artist from id. if ?type=mbid is added, it will perform a mbid lookup
-get "/#{@version}/artist/:id/edit" do
+get "/artist/:id/edit" do
   protected!
   if params[:type] == 'mbid' || params[:id].length == 36
      @artist = Artist.first(:artistmbid => params[:id])
@@ -149,7 +150,7 @@ get "/#{@version}/artist/:id/edit" do
   end
 end
 
-post "/#{@version}/artist/:id/edit" do
+post "/artist/:id/edit" do
   protected!
   @artist = Artist.get(params[:id])
   raise not_found unless @artist
@@ -161,12 +162,12 @@ post "/#{@version}/artist/:id/edit" do
     :artistnote => params["artistnote"]
   }    
   @artist.save
-  redirect "/v1/artist/#{@artist.id}"
+  redirect "/#{options.version}/artist/#{@artist.id}"
 end
 
 
 # show tracks from artist
-get "/#{@version}/artist/:id/tracks" do
+get "/artist/:id/tracks" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @artist = Artist.first(:artistmbid => params[:id])
   else
@@ -183,7 +184,7 @@ get "/#{@version}/artist/:id/tracks" do
 end
 
 # show albums from artist
-get "/#{@version}/artist/:id/albums" do
+get "/artist/:id/albums" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @artist = Artist.first(:artistmbid => params[:id])
   else
@@ -199,7 +200,7 @@ get "/#{@version}/artist/:id/albums" do
 end
 
 # show plays from artist
-get "/#{@version}/artist/:id/plays" do
+get "/artist/:id/plays" do
   if params[:type] == 'mbid' || params[:id].length == 36
     @artist = Artist.first(:artistmbid => params[:id])
   else
@@ -219,5 +220,6 @@ get "/#{@version}/artist/:id/plays" do
     wants.xml { builder :artist_plays }
     wants.json { hat.to_json }
   end
+end
 end
 end

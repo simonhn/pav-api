@@ -41,21 +41,24 @@ require 'chronic'
 gem 'sinatra-respond_to', '=0.7.0'
 require 'sinatra/respond_to'
 require 'bigdecimal'
-
-class PavApi < Sinatra::Base
+module V1
+  class PavApi < Sinatra::Base
   
   configure do
     set :environment, :development
     set :app_file, File.join(File.dirname(__FILE__), 'pavapi.rb')
+    set :views, File.join(File.dirname(__FILE__), '/views')
+    set :public, File.join(File.dirname(__FILE__), '/public')
+
     #versioning
-    @version = "v1"
+    set :version, 'v1'
     register Sinatra::RespondTo
     
     #use Throttler, :min => 300.0, :cache => Memcached.new, :key_prefix => :throttle
     #use Rack::Throttle::Throttler, :min => 1.0, :cache => Memcached.new, :key_prefix => :throttle
   
     # MySQL connection:
-    @config = YAML::load( File.open( 'config/settings.yml' ) )
+    @config = YAML::load( File.open(File.join(File.dirname(__FILE__), 'config/settings.yml') ) )
     @connection = "#{@config['adapter']}://#{@config['username']}:#{@config['password']}@#{@config['host']}/#{@config['database']}";
     DataMapper.setup(:default, @connection)  
     DataMapper.finalize
@@ -63,7 +66,6 @@ class PavApi < Sinatra::Base
     #DataMapper.auto_upgrade!
     #DataMapper::auto_migrate!
     set :default_content, :html
-    
   end
   
   configure :production do
@@ -71,7 +73,7 @@ class PavApi < Sinatra::Base
     set :haml, { :ugly=>true, :format => :html5 }
     set :clean_trace, true
     #logging
-    DataMapper::Logger.new('log/datamapper.log', :warn )  
+    DataMapper::Logger.new(File.join(File.dirname(__FILE__), 'log/datamapper.log'), :warn )
     require 'newrelic_rpm'  
   end
 
@@ -79,23 +81,22 @@ class PavApi < Sinatra::Base
     set :show_exceptions, true
     set :haml, { :ugly=>false, :format => :html5 }
     enable :logging
-    DataMapper::Logger.new('log/datamapper.log', :debug )
-    $LOG = Logger.new('log/pavstore.log', 'monthly')    
+    DataMapper::Logger.new(File.join(File.dirname(__FILE__), 'log/datamapper.log'), :debug )
+    $LOG = Logger.new(File.join(File.dirname(__FILE__),'log/pavstore.log'), 'monthly')    
   end
-
+  
   #Caching
   before '/*' do
-    cache_control :public, :must_revalidate, :max_age => 60 
+   cache_control :public, :must_revalidate, :max_age => 60  
   end
-
+ 
   before '/demo/*' do
-    cache_control :public, :must_revalidate, :max_age => 3600
+   cache_control :public, :must_revalidate, :max_age => 3600
   end
-
+ 
   before '*/chart/*' do
-    cache_control :public, :must_revalidate, :max_age => 3600
+   cache_control :public, :must_revalidate, :max_age => 3600
   end
-
 
   # Error 404 Page Not Found
   not_found do
@@ -117,7 +118,7 @@ class PavApi < Sinatra::Base
 
       def authorized?
         @auth ||=  Rack::Auth::Basic::Request.new(request.env)
-        @config = YAML::load( File.open( 'config/settings.yml' ) )
+        @config = YAML::load( File.open(File.join(File.dirname(__FILE__), 'config/settings.yml') ) )
          @user = @config['authuser']
          @pass = @config['authpass']
         @auth.provided? && @auth.basic? && @auth.credentials && @auth.credentials == [@user.to_s, @pass.to_s]
@@ -283,7 +284,7 @@ class PavApi < Sinatra::Base
 
 
   # search artist by name
-  get "/#{@version}/search/:q" do
+  get "/search/:q" do
     limit = get_limit(params[:limit])
     @artists = Artist.all(:artistname.like =>'%'+params[:q]+'%', :limit => limit.to_i)
     respond_to do |wants|
@@ -292,4 +293,5 @@ class PavApi < Sinatra::Base
       wants.json { @artists.to_json }
     end
   end
+end
 end

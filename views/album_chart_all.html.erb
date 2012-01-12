@@ -11,7 +11,7 @@
       <div class="image_text_replacement"></div>
     </div>
     <div class="top_wrapper">
-			<img src='/images/triplejlogo.gif'>
+			<img src='./../images/triplejlogo.gif'>
 			<ul class="kwicks-jjj">
 			</ul>
 		</div>
@@ -22,7 +22,7 @@
       <div class="image_text_replacement"></div>
     </div>
     <div class="top_wrapper">
-			<img src='/images/abcdigmusiclogo.gif'>
+			<img src='./../images/abcdigmusiclogo.gif'>
 			<ul class="kwicks-dig">
 			</ul>
 		</div>
@@ -33,7 +33,7 @@
       <div class="image_text_replacement"></div>
     </div>
     <div class="top_wrapper">
-			<img src='/images/abcjazzlogo.gif'>
+			<img src='./../images/abcjazzlogo.gif'>
 			<ul class="kwicks-jazz">
 			</ul>
 		</div>
@@ -44,7 +44,7 @@
       <div class="image_text_replacement"></div>
     </div>
     <div class="top_wrapper">
-			<img src='/images/abccountrylogo.gif'>
+			<img src='./../images/abccountrylogo.gif'>
 			<ul class="kwicks-country">
 			</ul>
 		</div>
@@ -55,7 +55,7 @@
       <div class="image_text_replacement"></div>
     </div>
     <div class="top_wrapper">
-			<img src='/images/abcradiologo.gif'>
+			<img src='./../images/abcradiologo.gif'>
 			<h5>Combined view of triple j, ABC Dig Music, ABC Jazz and ABC Country</h5>
 			<ul class="kwicks-combined">
 			</ul>
@@ -69,7 +69,7 @@ $().ready(function() {
 
 
 		$("<img id='loader'></img>")
-			.attr('src', "/images/ajax_loader.gif")
+			.attr('src', "./../images/ajax_loader.gif")
 			.appendTo(".kwicks-jjj");
 	 		$.ajax({
 				url: "http://96.126.96.51/v1/chart/album",
@@ -97,7 +97,7 @@ $().ready(function() {
 				    }
 	    });
 		$("<img id='loader'></img>")
-		.attr('src', "/images/ajax_loader.gif")
+		.attr('src', "./../images/ajax_loader.gif")
 			.appendTo(".kwicks-dig");
 	 		$.ajax({
 				url: "http://96.126.96.51/v1/chart/album",
@@ -128,7 +128,7 @@ $().ready(function() {
 	    });
 	
 			$("<img id='loader'></img>")
-			.attr('src', "/images/ajax_loader.gif")
+			.attr('src', "./../images/ajax_loader.gif")
 				.appendTo(".kwicks-jazz");
 		 		$.ajax({
 					url: "http://96.126.96.51/v1/chart/album",
@@ -159,7 +159,7 @@ $().ready(function() {
 		    });
 		
 				$("<img id='loader'></img>")
-				.attr('src', "/images/ajax_loader.gif")
+				.attr('src', "./../images/ajax_loader.gif")
 					.appendTo(".kwicks-country");
 			 		$.ajax({
 						url: "http://96.126.96.51/v1/chart/album",
@@ -190,7 +190,7 @@ $().ready(function() {
 			    });
 			
 					$("<img id='loader'></img>")
-					.attr('src', "/images/ajax_loader.gif")
+					.attr('src', "./../images/ajax_loader.gif")
 						.appendTo(".kwicks-combined");
 				 		$.ajax({
 							url: "http://96.126.96.51/v1/chart/album",

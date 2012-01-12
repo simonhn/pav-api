@@ -1,5 +1,5 @@
 <p>
-	<form action='/admin/merge/track' method="POST" class="form-stacked">
+	<form action='/<%= options.version %>/admin/merge/track' method="POST" class="form-stacked">
 			<label for="id_old">Track to delete</label>
 			<input type="text" name="id_old" />
 			<label for="id_new">Track to keep</label>
@@ -21,7 +21,7 @@
 		<tr>
 			<td><button class="keep btn small" data-keep="<%= track.id %>">keep</button></td>
 			<td><button class="delete btn small" data-delete="<%= track.id %>">delete</button></td>
-			<td><a href="/v1/track/<%= track.id %>"><%= track.id %></td>
+			<td><a href="/<%= options.version %>/track/<%= track.id %>"><%= track.id %></td>
 			<td>
 					<span><% if !track.trackmbid.nil? %><a href="http://musicbrainz.org/track/<%= track.trackmbid %>.html"><%= track.title %></a>
 						<% else %> <%= track.title %><% end %></span>

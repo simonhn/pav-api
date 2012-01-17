@@ -4,12 +4,8 @@ require 'rubygems'
 gem 'sinatra', '=1.2.6'
 require 'sinatra/base'
 require_relative 'models'
-require_relative 'store_methods'
 
-#Queueing with delayed job
-#require 'delayed_job'
-#require 'delayed_job_data_mapper'
-#require './storetrackjob'
+#Queueing with stalker/beanstalkd
 require 'stalker'
 
 #template systems
@@ -41,6 +37,7 @@ require 'chronic'
 gem 'sinatra-respond_to', '=0.7.0'
 require 'sinatra/respond_to'
 require 'bigdecimal'
+
 module V1
   class PavApi < Sinatra::Base
   

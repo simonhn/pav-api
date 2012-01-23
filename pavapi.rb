@@ -279,6 +279,7 @@ module V1
 
   require_relative 'routes/demo'
 
+  require_relative 'routes/info'
 
   # search artist by name
   get "/search/:q" do

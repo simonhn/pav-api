@@ -5,7 +5,7 @@ require 'dm-timestamps'
 require 'dm-aggregates'
 require 'dm-migrations'
 
-require './models.rb'
+require_relative 'models'
 
 #template systems
 require 'yajl/json_gem'

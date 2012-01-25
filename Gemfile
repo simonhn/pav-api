@@ -29,3 +29,6 @@ gem 'newrelic_rpm'
 
 gem 'stalker'
 gem 'i18n'
+
+gem 'foreman'
+gem 'daemons'

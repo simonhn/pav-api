@@ -196,7 +196,7 @@ module V1
       end
       
       def get_order(order)
-        if (order.downcase=='asc')
+        if (order && order.downcase=='asc')
           return "ASC"
         else 
           return "DESC"

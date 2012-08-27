@@ -17,6 +17,7 @@
 					<li><code>to</code> (to date) in yyyy-mm-dd hh:mm:ss format. The hh:mm:ss part is optional, assumes 12:00:00 if absent</li>
 					<li><code>from</code> (from date) in yyyy-mm-dd hh:mm:ss format. The hh:mm:ss part is optional, assumes 12:00:00 if absent</li>
 					<li><code>order_by</code>, for ordering results. Default is playedtime. Allowed values are artist and track</li>
+					<li><code>order</code>, sort order. Default is DESC. Allowed values are ASC and DESC. Using ASC without at least a from date is not recommended.</li>
 					<li><code>q</code>, a query for searching for track title, album name and artist name</li>
 					<li><code>artist_query</code>, searching for an artist name</li>
 					<li><code>track_query</code>, searching for a track title</li>
@@ -426,7 +427,7 @@ Some useful observation about the model:
 	<p>Returns a playlist.</p>
 
 	<h5>Parameters</h5>
-	<p>Supports the following parameters: <code>to</code>, <code>from</code>, <code>limit</code>, <code>channel</code>, <code>program</code>, <code>artist_query</code>, <code>track_query</code>, <code>album_query</code>, <code>q</code> (query artist, channel and track name), <code>order_by</code>.</p>
+	<p>Supports the following parameters: <code>to</code>, <code>from</code>, <code>limit</code>, <code>channel</code>, <code>program</code>, <code>artist_query</code>, <code>track_query</code>, <code>album_query</code>, <code>q</code> (query artist, channel and track name), <code>order_by</code>, <code>order</code>.</p>
 	<h5>Example query</h5>
 	<code><a href="/<%= options.version %>/plays.json?channel=1&limit=3">/plays.json?channel=1&limit=3</a></code>
 	

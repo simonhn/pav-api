@@ -194,13 +194,22 @@ module V1
           return "AND (albums.albumname LIKE '%#{q}%' OR albums.albumname LIKE '%#{q}%' OR artists.artistname LIKE '%#{q}%') "
         end
       end
+      
+      def get_order(order)
+        if (order.downcase=='asc')
+          return "ASC"
+        else 
+          return "DESC"
+        end
+      end
+      
       def get_order_by(order)
         if (order=='artist')
-          return "artists.artistname ASC, plays.playedtime DESC"
+          return "artists.artistname ASC, plays.playedtime"
         elsif (order=='track')
-          return "tracks.title ASC, plays.playedtime DESC"
+          return "tracks.title ASC, plays.playedtime"
         else 
-          return "plays.playedtime DESC"
+          return "plays.playedtime"
         end
       end
     

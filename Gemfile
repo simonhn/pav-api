@@ -32,3 +32,4 @@ gem 'i18n'
 
 gem 'foreman'
 gem 'daemons'
+gem 'capistrano'
